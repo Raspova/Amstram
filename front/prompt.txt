@@ -1,0 +1,115 @@
+Objective: Develop the homepage for AMSTRAM, a customized vehicle transport service, using SvelteKit, Tailwind CSS, and Lucide Icons.
+Project Context
+AMSTRAM is a vehicle delivery platform that allows users to transport their vehicles from point A to point B. The site offers two main options: "The Express Driver" (direct driving) and "The Rolling Cocoon" (truck transport).
+Technologies to Use
+
+SvelteKit for application structure
+Tailwind CSS for styling
+Lucide Icons for iconography
+Responsive design for all devices
+
+Basic Homepage Structure
+<main>
+    <header>
+        <div>
+            <h1>AMSTRAM</h1>
+            <div>Livraison de véhicule sur mesure</div>
+        </div>
+        <div>
+            <button>Login</button>
+            <button>FR</button>
+        </div>
+    </header>
+
+    <section>
+        <h2>Votre véhicule, notre route</h2>
+        <form>
+            <div>
+                <input type="text" placeholder="Lieux de départ" />
+            </div>
+            <div>
+                <input type="text" placeholder="Lieux de livraison" />
+            </div>
+            <div>
+                <select>
+                    <option>Type de Véhicule</option>
+                </select>
+            </div>
+            <button>Reserver</button>
+        </form>
+    </section>
+
+    <section>
+        <div>
+            <p>Livraison sur mesure dans toute l'Europe</p>
+            <p>
+                Que vous soyez un particulier ou une entreprise, AMSTRAM vous
+                offre une solution de transport de véhicules adaptée à vos
+                besoins.
+            </p>
+        </div>
+        <div>
+            <img src="/europe-map.png" alt="Carte de l'Europe" />
+        </div>
+    </section>
+
+    <section>
+        <div>
+            <h3>1. Le Pilote Express</h3>
+            <p>
+                Un chauffeur professionnel prend le volant de votre véhicule
+                pour une livraison en conduite directe.
+            </p>
+        </div>
+        <div>
+            <h3>2. Le Cocon Roulant</h3>
+            <p>
+                Votre véhicule voyage confortablement dans un camion spécialisé,
+                préservant son kilométrage et son état.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Pourquoi choisir AMSTRAM ?</h2>
+        <ul>
+            <li>Flexibilité maximale : Du sur-mesure pour chaque trajet</li>
+            <li>
+                Sécurité garantie : Chauffeurs expérimentés et véhicules adaptés
+            </li>
+            <li>
+                Rapport qualité-prix imbattable : Des tarifs compétitifs pour un
+                service premium
+            </li>
+            <li>
+                Sérénité : Un paiement différé, vous ne payez que quand votre
+                véhicule est arrivé à destination.
+            </li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>
+            Faites confiance à AMSTRAM pour le transport de votre véhicule et
+            vivez une expérience de livraison sans précédent !
+        </p>
+    </footer>
+</main>
+
+
+Specific Tasks
+
+Implement the basic structure using appropriate SvelteKit components.
+Apply Tailwind CSS styles to achieve a modern and consistent design.
+Integrate Lucide icons to enhance the user interface.
+Ensure responsive design for mobile devices, tablets, and desktop computers.
+Optimize performance following SvelteKit best practices.
+ 
+Expected Deliverables
+
+Source code of SvelteKit components, no React, i nedd SvelteKit code .
+Tailwind CSS configuration files
+Brief documentation on project structure and design choices
+
+Feel free to ask questions or request clarifications on specific aspects of the project before computing . 
+i put images in the context so you can have an idea of what i want it should look like , you can use them or not .
