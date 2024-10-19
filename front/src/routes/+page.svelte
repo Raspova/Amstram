@@ -4,43 +4,11 @@
 
   import { onMount } from 'svelte';
   import AOS from 'aos';
-  import { tweened } from 'svelte/motion';
-  import { cubicOut } from 'svelte/easing';
   import Logo from '$lib/components/Logo.svelte';
   import Eumap from  '$lib/components/Eumap.svelte';
   let currentSection = 0;
 
-  let sections: HTMLElement[];
-  let currentSectionIndex = 0;
-  let scrollY = tweened(0, {
-    duration: 1000,
-    easing: cubicOut
-  });
-
-  let isScrolling = false;
-
-  function scrollToSection(index: number) {
-    if (isScrolling) return;
-    isScrolling = true;
-    currentSectionIndex = index;
-    const targetSection = sections[index];
-    if (targetSection) {
-      scrollY.set(targetSection.offsetTop).then(() => {
-        isScrolling = false;
-      });
-    }
-  }
-
-  function handleWheel(event: WheelEvent) {
-    if (isScrolling) return;
-    
-    const direction = event.deltaY > 0 ? 1 : -1;
-    const targetIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex + direction));
-    
-    if (targetIndex !== currentSectionIndex) {
-      scrollToSection(targetIndex);
-    }
-  }
+  // Suppression des variables et fonctions liées au défilement par section
 
   function updateParallax() {
     const parallaxElements = document.querySelectorAll('.parallax-bg');
@@ -74,23 +42,14 @@
         mirror: true,
       });
 
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('wheel', handleWheel, { passive: true });
-
-      sections = Array.from(document.querySelectorAll('.section'));
+      window.addEventListener('scroll', onScroll);
 
       return () => {
         window.removeEventListener('scroll', onScroll);
-        window.removeEventListener('wheel', handleWheel);
       };
     }
   });
-
-  $: if (browser) {
-    window.scrollTo(0, $scrollY);
-  }
 </script>
-
 <svelte:head>
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </svelte:head>
@@ -246,6 +205,7 @@
     </div>
   </footer>
 </main>
+<!-- Le reste du HTML reste inchangé -->
 
 <style>
   .parallax-bg {
@@ -267,4 +227,4 @@
   }
 </style>
 
-<svelte:window on:wheel={handleWheel} />
+<!-- Suppression de l'écouteur d'événement de la roue de la souris -->
