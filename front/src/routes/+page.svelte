@@ -8,7 +8,29 @@
   import Eumap from  '$lib/components/Eumap.svelte';
   let currentSection = 0;
 
-  // Suppression des variables et fonctions liées au défilement par section
+  let isScrolling = false;
+  let lastScrollTime = 0;
+
+  let departInput: HTMLInputElement;
+
+  function handleScroll(event: WheelEvent) {
+    event.preventDefault();
+    const now = new Date().getTime();
+    if (now - lastScrollTime < 1000 || isScrolling) return;
+
+    isScrolling = true;
+    lastScrollTime = now;
+
+    if (event.deltaY > 0 && currentSection < 2) {
+      scrollToSection(currentSection + 1);
+    } else if (event.deltaY < 0 && currentSection > 0) {
+      scrollToSection(currentSection - 1);
+    }
+
+    setTimeout(() => {
+      isScrolling = false;
+    }, 1000);
+  }
 
   function updateParallax() {
     const parallaxElements = document.querySelectorAll('.parallax-bg');
@@ -34,6 +56,27 @@
     updateScrollIndicators();
   }
 
+  function scrollToSection(sectionIndex: number) {
+    const sections = document.querySelectorAll('.section');
+    if (sections[sectionIndex]) {
+      const yOffset = 0; // Ajustez cette valeur si nécessaire pour tenir compte de l'en-tête fixe
+      const y = sections[sectionIndex].getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({top: y, behavior: 'smooth'});
+    }
+  }
+
+  function scrollToSection1() {
+    scrollToSection(0);
+  }
+
+  function scrollToSection2() {
+    scrollToSection(1);
+  }
+
+  function scrollToSection3() {
+    scrollToSection(2);
+  }
+
   onMount(() => {
     if (browser) {
       AOS.init({
@@ -43,9 +86,14 @@
       });
 
       window.addEventListener('scroll', onScroll);
+      window.addEventListener('wheel', handleScroll, { passive: false });
+
+      // Ajoutez cette ligne pour focus l'input de départ
+      if (departInput) departInput.focus();
 
       return () => {
         window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('wheel', handleScroll);
       };
     }
   });
@@ -78,7 +126,12 @@
         <form class="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div class="relative">
             <MapPin class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input type="text" placeholder="Lieux de départ" class="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-amstram-black text-lg" />
+            <input 
+              bind:this={departInput}
+              type="text" 
+              placeholder="Lieu de départ" 
+              class="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-amstram-black text-lg" 
+            />
           </div>
           <div class="relative">
             <MapPin class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -191,9 +244,9 @@
   <!-- Indicateurs de position de défilement -->
   <div class="fixed right-4 top-1/2 transform -translate-y-1/2 z-50">
     <div class="flex flex-col space-y-2">
-      {#each Array(3) as _, i}
-        <div class="w-3 h-3 rounded-full bg-amstram-purple scroll-indicator" class:active={currentSection === i}></div>
-      {/each}
+      <div class="w-3 h-3 rounded-full bg-amstram-purple scroll-indicator cursor-pointer" class:active={currentSection === 0} on:click={scrollToSection1}></div>
+      <div class="w-3 h-3 rounded-full bg-amstram-purple scroll-indicator cursor-pointer" class:active={currentSection === 1} on:click={scrollToSection2}></div>
+      <div class="w-3 h-3 rounded-full bg-amstram-purple scroll-indicator cursor-pointer" class:active={currentSection === 2} on:click={scrollToSection3}></div>
     </div>
   </div>
 
@@ -226,5 +279,8 @@
     transition: background-color 1s ease;
   }
 </style>
-
 <!-- Suppression de l'écouteur d'événement de la roue de la souris -->
+
+
+
+
