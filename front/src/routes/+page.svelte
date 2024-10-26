@@ -1,7 +1,7 @@
 <script lang="ts">
   import { browser } from '$app/environment';
   import { MapPin, ChevronDown, LogIn } from 'lucide-svelte'
-
+  import * as Card from "$lib/components/ui/card/index.js";
   import { onMount } from 'svelte';
   import AOS from 'aos';
   import Logo from '$lib/components/Logo.svelte';
@@ -129,7 +129,7 @@
             <input 
               bind:this={departInput}
               type="text" 
-              placeholder="Lieu de départ" 
+              placeholder="Lieu de départ (France)" 
               class="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-amstram-black text-lg" 
             />
           </div>
@@ -158,6 +158,15 @@
           <Eumap />
         </div>
       </section>
+      <img 
+        src="/truck.webp" 
+        alt="Truck" 
+        class="absolute left-0 bottom-0 w-1/8 md:w-1/12 truck-animation hidden md:block" 
+        data-aos="fade-left" 
+        data-aos-duration="2000"
+        data-aos-delay="1000"
+        data-aos-offset="0"
+      />
     </div>
   </div>
 
@@ -168,28 +177,37 @@
     <div class="min-h-screen flex flex-col justify-center py-12 relative" style="z-index: 2;">
       <h2 class="text-5xl font-bold mb-5 text-center text-amstram-black" data-aos="fade-up" data-aos-duration="1500">Nos offres</h2>
       <section class="max-w-7xl mx-auto mt-12 px-4 sm:px-8 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div class="outline outline-1 outline-amstram-black p-8 rounded-xl flex flex-col items-center relative pt-16" data-aos="fade-right" data-aos-duration="1500">
-          <h3 class="text-3xl font-bold mb-4 absolute -top-0.5 left-1/2 transform -translate-x-1/2 z-10 text-amstram-black text-center w-full px-4">1. Le Pilote Express</h3>
-          <img src="driver.webp" alt="Pilote Express" class="w-full h-48 object-cover rounded-lg mb-6" />
-          <p class="text-gray-700 text-lg text-center">
-            Un chauffeur professionnel prend le volant de votre véhicule pour une livraison en conduite directe. Idéal pour une livraison rapide et personnalisée.
-          </p>
-          <ul class="text-gray-700 mt-4 list-disc pl-5">
-            <li>Livraison porte-à-porte</li>
-            <li>Chauffeurs expérimentés et certifiés</li>
-          </ul>
-        </div>
-        <div class="outline outline-1 outline-amstram-black p-8 rounded-xl flex flex-col items-center relative pt-16" data-aos="fade-left" data-aos-duration="1500">
-          <h3 class="text-3xl font-bold mb-4 absolute -top-0.5 left-1/2 transform -translate-x-1/2 z-10 text-amstram-black text-center w-full px-4">2. Le Cocon Roulant</h3>
-          <img src="porte-voitures.webp" alt="Cocon Roulant" class="w-full h-48 object-cover rounded-lg mb-6" />
-          <p class="text-gray-700 text-lg text-center">
-            Votre véhicule voyage confortablement dans un camion spécialisé, préservant son kilométrage et son état. Parfait pour les véhicules de luxe ou de collection.
-          </p>
-          <ul class="text-gray-700 mt-4 list-disc pl-5">
-            <li>Protection maximale contre les intempéries</li>
-            <li>Transport multi-véhicules possible</li>
-          </ul>
-        </div>
+        <Card.Root class="relative bg-white bg-opacity-40 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-right" data-aos-duration="1500">
+          <Card.Header class="pt-16">
+            <Card.Title class="text-3xl font-bold mb-4 absolute -top-0.5 left-1/2 transform -translate-x-1/2 z-10 text-amstram-black text-center w-full px-4 mt-4">1. Le Pilote Express</Card.Title>
+          </Card.Header>
+          <Card.Content>
+            <img src="driver.webp" alt="Pilote Express" class="w-full h-48 object-cover rounded-lg mb-6" />
+            <p class="text-gray-700 text-lg text-center">
+              Un chauffeur professionnel prend le volant de votre véhicule pour une livraison en conduite directe. Idéal pour une livraison rapide et personnalisée.
+            </p>
+            <ul class="text-gray-700 mt-4 list-disc pl-5">
+              <li>Livraison porte-à-porte</li>
+              <li>Chauffeurs expérimentés et certifiés</li>
+            </ul>
+          </Card.Content>
+        </Card.Root>
+
+        <Card.Root class="relative bg-white bg-opacity-40 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-left" data-aos-duration="1500">
+          <Card.Header class="pt-16">
+            <Card.Title class="text-3xl font-bold mb-4 absolute -top-0.5 left-1/2 transform -translate-x-1/2 z-10 text-amstram-black text-center w-full px-4 mt-4">2. Le Cocon Roulant</Card.Title>
+          </Card.Header>
+          <Card.Content>
+            <img src="porte-voitures1.webp" alt="Cocon Roulant" class="w-full h-48 object-cover rounded-lg mb-6" />
+            <p class="text-gray-700 text-lg text-center">
+              Votre véhicule voyage confortablement dans un camion spécialisé, préservant son kilométrage et son état. Parfait pour les véhicules de luxe ou de collection.
+            </p>
+            <ul class="text-gray-700 mt-4 list-disc pl-5">
+              <li>Protection maximale contre les intempéries</li>
+              <li>Transport multi-véhicules possible</li>
+            </ul>
+          </Card.Content>
+        </Card.Root>
       </section>
     </div>
   </div>
@@ -278,8 +296,33 @@
   .section {
     transition: background-color 1s ease;
   }
+
+  @keyframes truckMove {
+    0% {
+      transform: translateX(0);
+      opacity: 0.3;
+    }
+    70% {
+      transform: translateX(65vw);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(90vw);
+      opacity: 0;
+    }
+  }
+
+  .truck-animation {
+    animation: truckMove 2s ease-in-out 1s forwards;
+  }
 </style>
 <!-- Suppression de l'écouteur d'événement de la roue de la souris -->
+
+
+
+
+
+
 
 
 
