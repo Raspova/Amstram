@@ -106,10 +106,10 @@
   <div class="section min-h-screen flex flex-col relative transition-colors duration-1000">
     <img src="/side.webp" alt="Décoration latérale" class="absolute left-0 top-20 h-full object-cover hidden md:block parallax-bg" style="z-index: -1;" />
     <header class="flex justify-between items-center p-4 max-w-7xl mx-auto">
-      <div class="absolute left-0 top-0 mt-5">
+      <div class="absolute left-0 top-0 mt-5 ml-10">
         <Logo />
       </div>
-      <div class="absolute right-1 top-0 mt-5 flex items-center space-x-4 md:mr-20 mr-1 md:mt-5 mt-14">
+      <div class="absolute right-1 top-3 md:top-9 mt-10 flex items-center space-x-4 md:mr-20 mr-1 md:mt-5 mt-14">
         <button class="flex items-center space-x-1 bg-amstram-purple px-3 py-1 rounded">
           <LogIn class="w-4 h-4" />
           <span>Login</span>
@@ -121,9 +121,9 @@
       </div>
     </header>
     <div class="w-full flex-grow" data-aos="fade-up" data-aos-duration="1500">
-      <section class="max-w-7xl mx-auto mt-24 px-4 sm:px-8">
-        <h2 class="text-5xl font-bold mb-12">Votre véhicule, notre route</h2>
-        <form class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <section class="max-w-7xl mx-auto  mt-24 px-4 sm:px-8">
+        <h2 class="text-5xl font-bold mb-12 text-center md:text-left">Votre véhicule, notre route</h2>
+        <form class="grid grid-cols-1 md:grid-cols-4 gap-6 ml-10 mr-10">
           <div class="relative">
             <MapPin class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input 
@@ -148,13 +148,13 @@
       </section>
 
       <section class="max-w-7xl mx-auto mr-20 mt-24 px-4 sm:px-8 flex flex-col md:flex-row items-center">
-        <div class="md:w-1/2 mb-12  md:mb-0 md:pr-12">
-          <p class="text-3xl font-bold mb-6">Livraison sur mesure dans toute l'Europe</p>
-          <p class="text-gray-300 text-xl">
-            Que vous soyez un particulier ou une entreprise, AMSTRAM vous offre une solution de transport de véhicul  es adaptée à vos besoins.
+        <div class="md:w-1/2 mb-12  md:mb-0">
+          <p class="text-5xl font-bold mb-6">Livraison sur mesure dans toute l'Europe</p>
+          <p class="text-gray-300 text-3xl ">
+            Que vous soyez un particulier ou une entreprise, AMSTRAM vous offre une solution de transport de véhicules adaptée à vos besoins.
           </p>
         </div>
-        <div class="hidden md:block ">
+        <div class="hidden lg:block ">
           <Eumap />
         </div>
       </section>
@@ -257,6 +257,15 @@
         </div>
       </div>
     </section>
+    <img 
+    src="/truck.webp" 
+    alt="Truck" 
+    class="absolute right-0 bottom-0 w-1/8 md:w-1/12 truck-animation1 hidden md:block" 
+    data-aos="fade-bottom" 
+    data-aos-duration="2000"
+    data-aos-delay="1000"
+    data-aos-offset="0"
+    />
   </div>
 
   <!-- Indicateurs de position de défilement -->
@@ -312,11 +321,35 @@
     }
   }
 
+  @keyframes truckMove1 {
+    0% {
+      transform: translateY(100vh);
+      opacity:1;
+    }
+    20% {
+      opacity: 1;
+    }
+    80% {
+      transform: translateY(20vh);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+
   .truck-animation {
     animation: truckMove 2s ease-in-out 1s forwards;
   }
+  .truck-animation1 {
+    animation: truckMove1 2s ease-in-out 1s forwards;
+  }
 </style>
 <!-- Suppression de l'écouteur d'événement de la roue de la souris -->
+
+
 
 
 
