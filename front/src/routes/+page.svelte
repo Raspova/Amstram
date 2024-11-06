@@ -111,6 +111,7 @@
 
   async function handleDepart(event: InputEvent) {
     const val = (event.target as HTMLInputElement).value;  
+    alert(val)
     depart_set = false;
     if (val.length == 0) {
       autocompleteResults = [];
