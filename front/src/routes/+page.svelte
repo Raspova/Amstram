@@ -194,7 +194,7 @@
               type="text" 
               placeholder="Lieu de départ (France)" 
               class="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-amstram-black text-lg {depart_set ? 'outline outline-2 outline-amstram-purple' : ''}" 
-              on:keypress={handleDepart}
+              on:input={handleDepart}
             />
             {#if  autocompleteResults   && autocompleteResults.length > 0}
               <ul class="absolute z-10 bg-white border border-gray-300 w-full mt-1 rounded-md shadow-lg">
@@ -216,7 +216,7 @@
               type="text" 
               placeholder="Lieux de livraison" 
               class="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-amstram-black text-lg {arrival_set ? 'outline outline-2 outline-amstram-purple' : ''}" 
-              on:keypress={handleArrival}
+              on:input={handleArrival}
               
             />
             {#if arrivalAutocompleteResults && arrivalAutocompleteResults.length > 0}
