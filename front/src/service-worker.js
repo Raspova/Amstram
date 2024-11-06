@@ -15,7 +15,7 @@ const CACHE = 'cache-' + version;
 const DB_NAME = "easyimmo"
 const DB_VERSION = 1
 const API_URL = "https://easyimmo.com/api/";
-console.log('build', build , files, version);
+//console.log('build', build , files, version);
 
 
 // self.addEventListener('install', async (event) => {
