@@ -3,23 +3,18 @@
   import { MapPin, ChevronDown, LogIn } from 'lucide-svelte'
   import * as Card from "$lib/components/ui/card/index.js";
   import { onMount } from 'svelte';
-  import { Client, Functions, ExecutionMethod } from "appwrite";
   import AOS from 'aos';
   import Logo from '$lib/components/Logo.svelte';
   import Eumap from  '$lib/components/Eumap.svelte';
+  import { handleAutocomplete , calculatePrice } from '$lib/appwrite';
   let currentSection = 0;
 
   let isScrolling = false;
   let lastScrollTime = 0;
-
   let departInput: HTMLInputElement;
   let arrivalInput: HTMLInputElement;
+  let selectedVehicle: string | null = null; 
 
-  //apwrite
-  const client = new Client();
-  const functions = new Functions(client);
-  
-  client.setProject('6718cd3b00059671fa73');
   function handleScroll(event: WheelEvent) {
     event.preventDefault();
     const now = new Date().getTime();
@@ -97,7 +92,9 @@
 
       // Ajoutez cette ligne pour focus l'input de départ
       if (departInput) departInput.focus();
-
+      if (window.location.hostname !== 'localhost') {
+        alert("Site en développement, veuillez patienter pour utiliser les ce service.");
+      }
       return () => {
         window.removeEventListener('scroll', onScroll);
         window.removeEventListener('wheel', handleScroll);
@@ -127,8 +124,25 @@
       arrivalAutocompleteResults = [];
       return;
     }
-    const data = await handleAutocomplete(val);
+    const data = await handleAutocomplete(val, false);
     arrivalAutocompleteResults = data;
+  }
+  let price_set : boolean = false;
+  let price_car : number = 0;
+  let price_truck : number = 0;
+
+
+  async function handlePrice() {
+    try {
+      const data = await calculatePrice(departInput.value, arrivalInput.value, selectedVehicle || "");
+      price_set = true;
+      price_car = data["car"]["price"];
+      price_truck = data["truck"]["price"];
+      scrollToSection(1);
+      console.log(data);
+    } catch (error) {
+      console.error('Erreur:', error);
+    }
   }
 
   function selectLocation(location: string) {
@@ -142,24 +156,7 @@
     arrivalAutocompleteResults = [];
   }
 
-  async function handleAutocomplete(val: string) {
   
-  try {
-  const result = await functions.createExecution( // Modifiez cette ligne
-    'autocomplete-location', // ID de la fonction
-    JSON.stringify(""), // Corps de la requête
-    false, // Exécutions programmées doivent être asynchrones
-    '/autocomplete/address?query=' +encodeURIComponent(val), // Chemin (optionnel)
-    ExecutionMethod.GET, // Méthode (optionnel)
-    // Planifier l'exécution (optionnel)
-  );
-    return (JSON.parse(result.responseBody)["result"]);
-  } catch (error) {
-    console.error('Erreur:', error);
-  }
-  }
-
-  let selectedVehicle: string | null = null;
 </script>
 <svelte:head>
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
@@ -239,7 +236,7 @@
             </select>
             <ChevronDown class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
-          <button   disabled={!selectedVehicle || !depart_set || !arrival_set} class="{(selectedVehicle && depart_set && arrival_set) ? 'bg-amstram-purple scale-105 transition-all duration-1000' : 'bg-black bg-opacity-10'} text-white py-3 px-6 rounded-lg text-lg font-semibold">Reserver</button>
+          <button on:click={handlePrice} disabled={!selectedVehicle || !depart_set || !arrival_set} class="{(selectedVehicle && depart_set && arrival_set) ? 'bg-amstram-purple scale-105 transition-all duration-1000' : 'bg-black bg-opacity-10'} text-white py-3 px-6 rounded-lg text-lg font-semibold">Reserver</button>
         </form>
       </section>
 
@@ -277,6 +274,11 @@
         <Card.Root class="relative bg-white bg-opacity-40 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-right" data-aos-duration="1500">
           <Card.Header class="pt-16">
             <Card.Title class="text-3xl font-bold mb-4 absolute -top-0.5 left-1/2 transform -translate-x-1/2 z-10 text-amstram-black text-center w-full px-4 mt-4">1. Le Pilote Express</Card.Title>
+            {#if price_set}
+              <p class="text-gray-700 text-2xl text-center">
+                {price_car} €
+              </p>
+            {/if}
           </Card.Header>
           <Card.Content>
             <img src="driver.webp" alt="Pilote Express" class="w-full h-48 object-cover rounded-lg mb-6" />
@@ -287,12 +289,20 @@
               <li>Livraison porte-à-porte</li>
               <li>Chauffeurs expérimentés et certifiés</li>
             </ul>
+            {#if price_set}
+              <button class="w-full bg-amstram-purple text-white px-4 py-2 rounded-lg mt-4">Réserver</button>
+            {/if}
           </Card.Content>
         </Card.Root>
 
         <Card.Root class="relative bg-white bg-opacity-40 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-left" data-aos-duration="1500">
           <Card.Header class="pt-16">
             <Card.Title class="text-3xl font-bold mb-4 absolute -top-0.5 left-1/2 transform -translate-x-1/2 z-10 text-amstram-black text-center w-full px-4 mt-4">2. Le Cocon Roulant</Card.Title>
+            {#if price_set}
+              <p class="text-gray-700 text-2xl text-center">
+                {price_truck} €
+              </p>
+            {/if}
           </Card.Header>
           <Card.Content>
             <img src="porte-voitures1.webp" alt="Cocon Roulant" class="w-full h-48 object-cover rounded-lg mb-6" />
@@ -303,6 +313,9 @@
               <li>Protection maximale contre les intempéries</li>
               <li>Transport multi-véhicules possible</li>
             </ul>
+            {#if price_set}
+              <button class="100 w-full bg-amstram-purple text-white px-4 py-2 rounded-lg mt-4">Réserver</button>
+            {/if}
           </Card.Content>
         </Card.Root>
       </section>
