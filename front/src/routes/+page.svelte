@@ -9,11 +9,12 @@
   import { handleAutocomplete , calculatePrice } from '$lib/appwrite';
   let currentSection = 0;
 
+  let lang = "fr";
   let isScrolling = false;
   let lastScrollTime = 0;
   let departInput: HTMLInputElement;
   let arrivalInput: HTMLInputElement;
-  let selectedVehicle: string | null = null; 
+  let selectedVehicle: string ; 
 
   function handleScroll(event: WheelEvent) {
     event.preventDefault();
@@ -93,7 +94,9 @@
       // Ajoutez cette ligne pour focus l'input de départ
       if (departInput) departInput.focus();
       if (window.location.hostname !== 'localhost') {
-        alert("Site en développement, veuillez patienter pour utiliser les ce service.");
+      alert("Site en développement, veuillez patienter pour utiliser ce service\n\
+Experts en développement web, nous créons votre solution numérique de A à Z. Du site web à l'intelligence artificielle, en passant par le SEO et l'analyse de données - nous transformons votre vision en réalité digitale.\n\n\
+layduhurdevelopment@gmail.com");
       }
       return () => {
         window.removeEventListener('scroll', onScroll);
@@ -113,7 +116,7 @@
       autocompleteResults = [];
       return;
     }
-    const data = await handleAutocomplete(val);
+    const data = await handleAutocomplete(val, true, lang);
     autocompleteResults = data;
   }
 
@@ -124,7 +127,7 @@
       arrivalAutocompleteResults = [];
       return;
     }
-    const data = await handleAutocomplete(val, false);
+    const data = await handleAutocomplete(val, false , lang);
     arrivalAutocompleteResults = data;
   }
   let price_set : boolean = false;

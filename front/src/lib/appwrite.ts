@@ -16,11 +16,12 @@ async function execute(func_name : string, val : string) {
     );
 }
 
-export async function handleAutocomplete(val: string, inFrance : boolean = true) {
+export async function handleAutocomplete(val: string, inFrance : boolean = true, lang : string = "fr") {
     try {
         val = '/autocomplete/address?query=' + encodeURIComponent(val);
         if (inFrance == false)
             val+="&countryCode=" + encodeURIComponent("FRA,CHE,ITA,ESP,NLD,BEL,DEU,POL")
+        val += "&lang=" + encodeURIComponent(lang);
         const result = await execute('autocomplete-location' , val);
         return (JSON.parse(result.responseBody)["result"]);
     } catch (error) {
