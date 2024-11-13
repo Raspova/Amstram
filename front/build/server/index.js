@@ -1,4 +1,5 @@
 import { c as create_ssr_component, a as setContext, v as validate_component, m as missing_component, n as noop, k as safe_not_equal } from './chunks/hooks.server-CKpkIbms.js';
+import { j as json, t as text } from './chunks/index-BIAFQWR9.js';
 import { d as decode_pathname, h as has_data_suffix, s as strip_data_suffix, a as decode_params, n as normalize_path, b as disable_search, c as add_data_suffix, m as make_trackable, r as resolve } from './chunks/exports-CTha0ECg.js';
 
 let base = "";
@@ -178,7 +179,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "mhl8u6"
+  version_hash: "1xx22nw"
 };
 async function get_hooks() {
   return {
@@ -1541,36 +1542,6 @@ class ActionFailure {
     this.status = status;
     this.data = data;
   }
-}
-function json(data, init2) {
-  const body2 = JSON.stringify(data);
-  const headers2 = new Headers(init2?.headers);
-  if (!headers2.has("content-length")) {
-    headers2.set("content-length", encoder$3.encode(body2).byteLength.toString());
-  }
-  if (!headers2.has("content-type")) {
-    headers2.set("content-type", "application/json");
-  }
-  return new Response(body2, {
-    ...init2,
-    headers: headers2
-  });
-}
-const encoder$3 = new TextEncoder();
-function text(body2, init2) {
-  const headers2 = new Headers(init2?.headers);
-  if (!headers2.has("content-length")) {
-    const encoded = encoder$3.encode(body2);
-    headers2.set("content-length", encoded.byteLength.toString());
-    return new Response(encoded, {
-      ...init2,
-      headers: headers2
-    });
-  }
-  return new Response(body2, {
-    ...init2,
-    headers: headers2
-  });
 }
 function coalesce_to_error(err) {
   return err instanceof Error || err && /** @type {any} */
