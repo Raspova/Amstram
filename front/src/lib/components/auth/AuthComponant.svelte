@@ -1,0 +1,96 @@
+<script>
+    import { loginGoogle, loginEmail, signupEmail } from "$lib/appwrite";
+    let isSignIn = true; // État pour basculer entre la connexion et l'inscription
+    let email = '';
+    let password = '';
+    let passwordConfirmation = '';
+
+    const handleSignIn = () => {
+        loginEmail(email, password);
+    };
+
+    async function handleSignUp() {
+        let res = await signupEmail(email, password, passwordConfirmation);
+        console.log("signupEmail", res);
+    };
+
+    const handleGoogleSignIn = () => {
+        loginGoogle();
+    };
+</script>
+
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-900 p-4">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-xl overflow-hidden">
+        <div class="flex justify-center p-4 bg-gray-200">
+            <button 
+                on:click={() => isSignIn = true} 
+                class="{isSignIn ? 'bg-white text-gray-900' : 'bg-gray-200 text-gray-600'} px-4 py-2 rounded-tl-lg rounded-tr-lg font-semibold transition duration-300 ease-in-out hover:bg-white hover:text-gray-900"
+            >
+                Sign In
+            </button>
+            <button 
+                on:click={() => isSignIn = false} 
+                class="{!isSignIn ? 'bg-white text-gray-900' : 'bg-gray-200 text-gray-600'} px-4 py-2 rounded-tl-lg rounded-tr-lg font-semibold transition duration-300 ease-in-out hover:bg-white hover:text-gray-900"
+            >
+                Sign Up
+            </button>
+        </div>
+
+        <div class="p-8">
+            {#if isSignIn}
+                <form on:submit|preventDefault={handleSignIn} class="space-y-6">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input id="email" type="email" bind:value={email} placeholder="Enter your email" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input id="password" type="password" bind:value={password} placeholder="Enter your password" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
+                    </div>
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                        Sign In
+                    </button>
+                    <div class="text-sm">
+                        <a href="#" class="font-medium text-black hover:text-gray-600 transition duration-300 ease-in-out">Forgot your password?</a>
+                    </div>
+                </form>
+            {:else}
+                <form on:submit|preventDefault={handleSignUp} class="space-y-6">
+                    <div>
+                        <label for="signup-email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input id="signup-email" type="email" bind:value={email} placeholder="Enter your email" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
+                    </div>
+                    <div>
+                        <label for="signup-password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input id="signup-password" type="password" bind:value={password} placeholder="Enter your password" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
+                    </div>
+                    <div>
+                        <label for="password-confirmation" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                        <input id="password-confirmation" type="password" bind:value={passwordConfirmation} placeholder="Confirm your password" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
+                    </div>
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                        Sign Up
+                    </button>
+                </form>
+            {/if}
+
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <button on:click={handleGoogleSignIn} class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition duration-300 ease-in-out">
+                        <img src="icons/Google_logo.svg.webp" alt="Google Logo" class="h-5 w-5 mr-2" />
+                        Sign in with Google
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

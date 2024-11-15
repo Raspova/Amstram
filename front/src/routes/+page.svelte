@@ -109,15 +109,20 @@ layduhurdevelopment@gmail.com");
   let arrival_set: boolean = false;
   let arrivalAutocompleteResults: string[] = [];
 
+  let showAutocomplete: boolean = false;
+  let showArrivalAutocomplete: boolean = false;
+
   async function handleDepart(event: InputEvent) {
     const val = (event.target as HTMLInputElement).value;  
     depart_set = false;
     if (val.length == 0) {
       autocompleteResults = [];
+      showAutocomplete = false;
       return;
     }
     const data = await handleAutocomplete(val, true, lang);
     autocompleteResults = data;
+    showAutocomplete = autocompleteResults.length > 0;
   }
 
   async function handleArrival(event: InputEvent) {
@@ -125,11 +130,29 @@ layduhurdevelopment@gmail.com");
     arrival_set = false;
     if (val.length == 0) {
       arrivalAutocompleteResults = [];
+      showArrivalAutocomplete = false;
       return;
     }
-    const data = await handleAutocomplete(val, false , lang);
+    const data = await handleAutocomplete(val, false, lang);
     arrivalAutocompleteResults = data;
+    showArrivalAutocomplete = arrivalAutocompleteResults.length > 0;
   }
+
+  function handleClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.autocomplete-container')) {
+        showAutocomplete = false;
+        showArrivalAutocomplete = false;
+    }
+  }
+
+  onMount(() => {
+    window.addEventListener('click', handleClickOutside);
+    return () => {
+        window.removeEventListener('click', handleClickOutside);
+    };
+  });
+
   let price_set : boolean = false;
   let price_car : number = 0;
   let price_truck : number = 0;
@@ -196,7 +219,7 @@ layduhurdevelopment@gmail.com");
               class="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-amstram-black text-lg {depart_set ? 'outline outline-2 outline-amstram-purple' : ''}" 
               on:input={handleDepart}
             />
-            {#if  autocompleteResults   && autocompleteResults.length > 0}
+            {#if showAutocomplete}
               <ul class="absolute z-10 bg-white border border-gray-300 w-full mt-1 rounded-md shadow-lg">
                 {#each autocompleteResults as result}
                   <li class="cursor-pointer p-2 text-black hover:bg-gray-200" on:click={() => selectLocation(result)}>
@@ -219,7 +242,7 @@ layduhurdevelopment@gmail.com");
               on:input={handleArrival}
               
             />
-            {#if arrivalAutocompleteResults && arrivalAutocompleteResults.length > 0}
+            {#if showArrivalAutocomplete}
               <ul class="absolute z-10 bg-white border border-gray-300 w-full mt-1 rounded-md shadow-lg">
                 {#each arrivalAutocompleteResults as result}
                   <li class="cursor-pointer p-2 text-black hover:bg-gray-200" on:click={() => selectLocation1(result)}>
