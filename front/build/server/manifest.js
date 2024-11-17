@@ -10,14 +10,14 @@ return {
 	assets: new Set(["bw_separetor.svg","driver.webp","europe-map.png","europe-map.webp","favicon.ico","favicon.png","icons/Google_logo.svg.webp","icons/apple-icon-180.png","icons/apple-splash-1125-2436.jpg","icons/apple-splash-1136-640.jpg","icons/apple-splash-1170-2532.jpg","icons/apple-splash-1179-2556.jpg","icons/apple-splash-1242-2208.jpg","icons/apple-splash-1242-2688.jpg","icons/apple-splash-1284-2778.jpg","icons/apple-splash-1290-2796.jpg","icons/apple-splash-1334-750.jpg","icons/apple-splash-1488-2266.jpg","icons/apple-splash-1536-2048.jpg","icons/apple-splash-1620-2160.jpg","icons/apple-splash-1640-2360.jpg","icons/apple-splash-1668-2224.jpg","icons/apple-splash-1668-2388.jpg","icons/apple-splash-1792-828.jpg","icons/apple-splash-2048-1536.jpg","icons/apple-splash-2048-2732.jpg","icons/apple-splash-2160-1620.jpg","icons/apple-splash-2208-1242.jpg","icons/apple-splash-2224-1668.jpg","icons/apple-splash-2266-1488.jpg","icons/apple-splash-2360-1640.jpg","icons/apple-splash-2388-1668.jpg","icons/apple-splash-2436-1125.jpg","icons/apple-splash-2532-1170.jpg","icons/apple-splash-2556-1179.jpg","icons/apple-splash-2688-1242.jpg","icons/apple-splash-2732-2048.jpg","icons/apple-splash-2778-1284.jpg","icons/apple-splash-2796-1290.jpg","icons/apple-splash-640-1136.jpg","icons/apple-splash-750-1334.jpg","icons/apple-splash-828-1792.jpg","icons/manifest-icon-192.maskable.png","icons/manifest-icon-512.maskable.png","manifest.json","porte-voitures.webp","porte-voitures1.webp","side.webp","side0.webp","side1.webp","side2.webp","truck.png","truck.webp","service-worker.js"]),
 	mimeTypes: {".svg":"image/svg+xml",".webp":"image/webp",".png":"image/png",".jpg":"image/jpeg",".json":"application/json"},
 	_: {
-		client: {"start":"_app/immutable/entry/start.V7YqUn79.js","app":"_app/immutable/entry/app.D3C70_SK.js","imports":["_app/immutable/entry/start.V7YqUn79.js","_app/immutable/chunks/entry.BPltEkFX.js","_app/immutable/chunks/scheduler._PVTacox.js","_app/immutable/entry/app.D3C70_SK.js","_app/immutable/chunks/scheduler._PVTacox.js","_app/immutable/chunks/index.A_hTBk2P.js"],"stylesheets":[],"fonts":[],"uses_env_dynamic_public":false},
+		client: {"start":"_app/immutable/entry/start.Cptu1aye.js","app":"_app/immutable/entry/app.Udc97ZV-.js","imports":["_app/immutable/entry/start.Cptu1aye.js","_app/immutable/chunks/entry.xbHZ-VRi.js","_app/immutable/chunks/scheduler._PVTacox.js","_app/immutable/entry/app.Udc97ZV-.js","_app/immutable/chunks/scheduler._PVTacox.js","_app/immutable/chunks/index.A_hTBk2P.js"],"stylesheets":[],"fonts":[],"uses_env_dynamic_public":false},
 		nodes: [
 			__memo(() => import('./chunks/0-DPCRRpBQ.js')),
-			__memo(() => import('./chunks/1-Ck_Qtpsi.js')),
-			__memo(() => import('./chunks/2-D92je5TC.js')),
+			__memo(() => import('./chunks/1-CaLU8bda.js')),
+			__memo(() => import('./chunks/2-yFGPERef.js')),
 			__memo(() => import('./chunks/3-Bj-ylQj1.js')),
 			__memo(() => import('./chunks/4-y4RfhbTC.js')),
-			__memo(() => import('./chunks/5-aoQYOhcg.js'))
+			__memo(() => import('./chunks/5-CVHbr5b4.js'))
 		],
 		routes: [
 			{
