@@ -1,11 +1,11 @@
 import { Client, Functions, ExecutionMethod, Account, ID , OAuthProvider} from "appwrite";
- 
+import {PUBLIC_APPWRITE_PROJECT_ID, PUBLIC_APPWRITE_URL} from '$env/static/public';
 const client = new Client();
 const functions = new Functions(client);
 const account = new Account(client);
-const url_base = "https://amstram.eu";
+const url_base = PUBLIC_APPWRITE_URL;
 
-client.setProject('6718cd3b00059671fa73');
+client.setProject(PUBLIC_APPWRITE_PROJECT_ID!);
 
 async function execute(func_name : string, val : string) {
   return await functions.createExecution( // Modifiez cette ligne
@@ -43,13 +43,15 @@ export async function calculatePrice(departure: string, arrival: string, vehicle
 }
 
 
-export async function signupEmail(email: string, password: string , passwordConfirmation: string) {
+export async function signupEmail(email: string, password: string , passwordConfirmation: string , name: string = "") {
     try {
         if (password != passwordConfirmation) {
             console.error('Erreur:', "Les mots de passe ne correspondent pas");
             alert("Les mots de passe ne correspondent pas");
             return null;
         }
+        if (name != "")
+            return await account.create(ID.unique(), email, password, name);
         return await account.create(ID.unique(), email, password);
     } catch (error) {
         alert("Erreur lors de la création de l'utilisateur : " + error);

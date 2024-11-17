@@ -1,6 +1,7 @@
 <script lang="ts">
   import { browser } from '$app/environment';
-  import { MapPin, ChevronDown, LogIn } from 'lucide-svelte'
+  import { MapPin, ChevronDown  } from 'lucide-svelte'
+  import  Login  from "$lib/components/auth/Login.svelte";  
   import * as Card from "$lib/components/ui/card/index.js";
   import { onMount } from 'svelte';
   import AOS from 'aos';
@@ -112,31 +113,100 @@ layduhurdevelopment@gmail.com");
   let showAutocomplete: boolean = false;
   let showArrivalAutocomplete: boolean = false;
 
-  async function handleDepart(event: InputEvent) {
+  let isLoadingDepart: boolean = false;
+  let isLoadingArrival: boolean = false;
+
+  let selectedIndex: number = -1; // Index de l'élément actuellement sélectionné pour le départ
+  let selectedArrivalIndex: number = -1; // Index de l'élément actuellement sélectionné pour l'arrivée
+
+  function handleDepart(event: InputEvent) {
     const val = (event.target as HTMLInputElement).value;  
     depart_set = false;
+    selectedIndex = -1; // Réinitialiser l'index lors d'une nouvelle saisie
     if (val.length == 0) {
       autocompleteResults = [];
       showAutocomplete = false;
       return;
     }
-    const data = await handleAutocomplete(val, true, lang);
-    autocompleteResults = data;
-    showAutocomplete = autocompleteResults.length > 0;
+    
+    isLoadingDepart = true;
+    handleAutocomplete(val, true, lang).then((data) => {
+      autocompleteResults = data;
+      showAutocomplete = autocompleteResults.length > 0;
+      showArrivalAutocomplete = false;
+    }).finally(() => {
+      isLoadingDepart = false;
+    });
   }
 
-  async function handleArrival(event: InputEvent) {
+  function handleArrival(event: InputEvent) {
     const val = (event.target as HTMLInputElement).value;  
     arrival_set = false;
+    selectedArrivalIndex = -1; // Réinitialiser l'index lors d'une nouvelle saisie
     if (val.length == 0) {
       arrivalAutocompleteResults = [];
       showArrivalAutocomplete = false;
       return;
     }
-    const data = await handleAutocomplete(val, false, lang);
-    arrivalAutocompleteResults = data;
-    showArrivalAutocomplete = arrivalAutocompleteResults.length > 0;
+    
+    isLoadingArrival = true;
+    handleAutocomplete(val, false, lang).then((data) => {
+      arrivalAutocompleteResults = data;
+      showArrivalAutocomplete = arrivalAutocompleteResults.length > 0;
+      showAutocomplete = false;
+    }).finally(() => {
+      isLoadingArrival = false;
+    });
   }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    if (showAutocomplete) {
+      if (event.key === 'ArrowDown') {
+        selectedIndex = (selectedIndex + 1) % autocompleteResults.length; // Naviguer vers le bas
+        event.preventDefault(); // Empêcher le défilement de la page
+      } else if (event.key === 'ArrowUp') {
+        selectedIndex = (selectedIndex - 1 + autocompleteResults.length) % autocompleteResults.length; // Naviguer vers le haut
+        event.preventDefault(); // Empêcher le défilement de la page
+      } else if (event.key === 'Enter') {
+        if (selectedIndex >= 0) {
+          selectLocation(autocompleteResults[selectedIndex]); // Sélectionner l'élément actuellement surligné
+          event.preventDefault(); // Empêcher le comportement par défaut
+        }
+      }
+    } else if (showArrivalAutocomplete) {
+      if (event.key === 'ArrowDown') {
+        selectedArrivalIndex = (selectedArrivalIndex + 1) % arrivalAutocompleteResults.length; // Naviguer vers le bas
+        event.preventDefault(); // Empêcher le défilement de la page
+      } else if (event.key === 'ArrowUp') {
+        selectedArrivalIndex = (selectedArrivalIndex - 1 + arrivalAutocompleteResults.length) % arrivalAutocompleteResults.length; // Naviguer vers le haut
+        event.preventDefault(); // Empêcher le défilement de la page
+      } else if (event.key === 'Enter') {
+        if (selectedArrivalIndex >= 0) {
+          selectLocation1(arrivalAutocompleteResults[selectedArrivalIndex]); // Sélectionner l'élément actuellement surligné
+          event.preventDefault(); // Empêcher le comportement par défaut
+        }
+      }
+    } else {
+    if (event.key === 'ArrowDown') {
+        if (currentSection < 2 && currentSection >= 0) {
+            scrollToSection(currentSection + 1); // Changer de section vers le bas
+            event.preventDefault(); // Empêcher le défilement de la page
+        }
+    } else if (event.key === 'ArrowUp') {
+        if (currentSection > 0 && currentSection <= 2) {
+            scrollToSection(currentSection - 1); // Changer de section vers le haut
+            event.preventDefault(); // Empêcher le défilement de la page
+        }
+    }}
+  }
+
+  // Ajoutez l'écouteur d'événements pour les touches
+  onMount(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  });
 
   function handleClickOutside(event: MouseEvent) {
     const target = event.target as HTMLElement;
@@ -157,7 +227,7 @@ layduhurdevelopment@gmail.com");
   let price_car : number = 0;
   let price_truck : number = 0;
 
-
+  let reserveButton: HTMLButtonElement;
   async function handlePrice() {
     try {
       const data = await calculatePrice(departInput.value, arrivalInput.value, selectedVehicle || "");
@@ -165,6 +235,7 @@ layduhurdevelopment@gmail.com");
       price_car = data["car"]["price"];
       price_truck = data["truck"]["price"];
       scrollToSection(1);
+      reserveButton.focus();
       console.log(data);
     } catch (error) {
       console.error('Erreur:', error);
@@ -175,11 +246,13 @@ layduhurdevelopment@gmail.com");
     departInput.value = location;
     depart_set = true;
     autocompleteResults = [];
+    showAutocomplete = false;
   }
   function selectLocation1(location: string) {
     arrivalInput.value = location;
     arrival_set = true;
     arrivalAutocompleteResults = [];
+    showArrivalAutocomplete = false;
   }
 
   
@@ -196,10 +269,7 @@ layduhurdevelopment@gmail.com");
         <Logo />
       </div>
       <div class="absolute right-1 top-3 md:top-9 mt-10 flex items-center space-x-4 md:mr-20 mr-1 md:mt-5 mt-14">
-        <button class="flex items-center space-x-1 bg-amstram-purple px-3 py-1 rounded">
-          <LogIn class="w-4 h-4" />
-          <span>Login</span>
-        </button>
+         <Login />
         <button class="flex items-center space-x-1 border border-amstram-white px-2 py-1 rounded">
           <span>FR</span>
           <ChevronDown class="w-4 h-4" />
@@ -216,13 +286,13 @@ layduhurdevelopment@gmail.com");
               bind:this={departInput}
               type="text" 
               placeholder="Lieu de départ (France)" 
-              class="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-amstram-black text-lg {depart_set ? 'outline outline-2 outline-amstram-purple' : ''}" 
+              class="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-amstram-black text-lg {depart_set ? 'outline outline-2 outline-amstram-purple' : ''} {isLoadingDepart ? 'opacity-50' : ''}" 
               on:input={handleDepart}
             />
             {#if showAutocomplete}
               <ul class="absolute z-10 bg-white border border-gray-300 w-full mt-1 rounded-md shadow-lg">
-                {#each autocompleteResults as result}
-                  <li class="cursor-pointer p-2 text-black hover:bg-gray-200" on:click={() => selectLocation(result)}>
+                {#each autocompleteResults as result, index}
+                  <li class="cursor-pointer p-2 text-black hover:bg-gray-200 {selectedIndex === index ? 'bg-gray-200' : ''}" on:click={() => selectLocation(result)}>
                     {result}
                   </li>
                 {/each}
@@ -238,14 +308,14 @@ layduhurdevelopment@gmail.com");
               bind:this={arrivalInput}
               type="text" 
               placeholder="Lieux de livraison" 
-              class="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-amstram-black text-lg {arrival_set ? 'outline outline-2 outline-amstram-purple' : ''}" 
+              class="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-amstram-black text-lg {arrival_set ? 'outline outline-2 outline-amstram-purple' : ''} {isLoadingArrival ? 'opacity-50' : ''}" 
               on:input={handleArrival}
               
             />
             {#if showArrivalAutocomplete}
               <ul class="absolute z-10 bg-white border border-gray-300 w-full mt-1 rounded-md shadow-lg">
-                {#each arrivalAutocompleteResults as result}
-                  <li class="cursor-pointer p-2 text-black hover:bg-gray-200" on:click={() => selectLocation1(result)}>
+                {#each arrivalAutocompleteResults as result, index}
+                  <li class="cursor-pointer p-2 text-black hover:bg-gray-200 {selectedArrivalIndex === index ? 'bg-gray-200' : ''}" on:click={() => selectLocation1(result)}>
                     {result}
                   </li>
                 {/each}
@@ -262,7 +332,7 @@ layduhurdevelopment@gmail.com");
             </select>
             <ChevronDown class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
-          <button on:click={handlePrice} disabled={!selectedVehicle || !depart_set || !arrival_set} class="{(selectedVehicle && depart_set && arrival_set) ? 'bg-amstram-purple scale-105 transition-all duration-1000' : 'bg-black bg-opacity-10'} text-white py-3 px-6 rounded-lg text-lg font-semibold">Reserver</button>
+          <button on:click={handlePrice} bind:this={reserveButton} disabled={!selectedVehicle || !depart_set || !arrival_set} class="{(selectedVehicle && depart_set && arrival_set) ? 'bg-amstram-purple scale-105 transition-all duration-1000' : 'bg-black bg-opacity-10'} text-white py-3 px-6 rounded-lg text-lg font-semibold">Reserver</button>
         </form>
       </section>
 
@@ -412,8 +482,7 @@ layduhurdevelopment@gmail.com");
       </p>
     </div>
   </footer>
-</main>
-<!-- Le reste du HTML reste inchangé -->
+</main> 
 
 <style>
   .parallax-bg {
@@ -476,6 +545,14 @@ layduhurdevelopment@gmail.com");
   }
 </style>
 <!-- Suppression de l'écouteur d'événement de la roue de la souris -->
+
+{#if isLoadingDepart}
+  <div class="loader">Chargement départ...</div>
+{/if}
+
+{#if isLoadingArrival}
+  <div class="loader">Chargement arrivée...</div>
+{/if}
 
 
 
