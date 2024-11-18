@@ -91,17 +91,40 @@
 
       window.addEventListener('scroll', onScroll);
       window.addEventListener('wheel', handleScroll, { passive: false });
+      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('click', handleClickOutside);
 
       // Ajoutez cette ligne pour focus l'input de départ
       if (departInput) departInput.focus();
       if (window.location.hostname !== 'localhost') {
-      alert("Site en développement, veuillez patienter pour utiliser ce service\n\
+        alert("Site en développement, veuillez patienter pour utiliser ce service\n\
 Experts en développement web, nous créons votre solution numérique de A à Z. Du site web à l'intelligence artificielle, en passant par le SEO et l'analyse de données - nous transformons votre vision en réalité digitale.\n\n\
 layduhurdevelopment@gmail.com");
+      }
+
+      // Vérifiez si les valeurs sont définies dans l'URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const depart = urlParams.get('r1');
+      const arrival = urlParams.get('r2');
+      const vehicle = urlParams.get('selected');
+
+      if (depart) {
+        selectLocation(depart); // Utiliser la fonction pour définir la valeur
+      }
+      if (arrival) {
+        selectLocation1(arrival); // Utiliser la fonction pour définir la valeur
+      }
+      if (vehicle) {
+        selectedVehicle = vehicle; // Définir le véhicule sélectionné
+      }
+      if (depart && arrival && vehicle) {
+        handlePrice(false); 
       }
       return () => {
         window.removeEventListener('scroll', onScroll);
         window.removeEventListener('wheel', handleScroll);
+        window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('click', handleClickOutside);
       };
     }
   });
@@ -200,14 +223,6 @@ layduhurdevelopment@gmail.com");
     }}
   }
 
-  // Ajoutez l'écouteur d'événements pour les touches
-  onMount(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  });
-
   function handleClickOutside(event: MouseEvent) {
     const target = event.target as HTMLElement;
     if (!target.closest('.autocomplete-container')) {
@@ -216,24 +231,28 @@ layduhurdevelopment@gmail.com");
     }
   }
 
-  onMount(() => {
-    window.addEventListener('click', handleClickOutside);
-    return () => {
-        window.removeEventListener('click', handleClickOutside);
-    };
-  });
-
   let price_set : boolean = false;
   let price_car : number = 0;
   let price_truck : number = 0;
 
   let reserveButton: HTMLButtonElement;
-  async function handlePrice() {
+  async function handlePrice(set_param : boolean = true) {
     try {
       const data = await calculatePrice(departInput.value, arrivalInput.value, selectedVehicle || "");
       price_set = true;
       price_car = data["car"]["price"];
       price_truck = data["truck"]["price"];
+      
+      // Ajout des paramètres à l'URL
+      if (set_param) {
+      const params = new URLSearchParams({
+        r1: departInput.value,
+        r2: arrivalInput.value,
+          selected: selectedVehicle || ""
+        });
+        window.history.replaceState({}, '', `/?${params.toString()}`);
+      }
+
       scrollToSection(1);
       reserveButton.focus();
       console.log(data);
@@ -255,6 +274,101 @@ layduhurdevelopment@gmail.com");
     showArrivalAutocomplete = false;
   }
 
+ const contenu = {
+    fr : {
+      title : "Votre véhicule, notre route",
+      subtitle : "Livraison sur mesure dans toute l'Europe",
+      description : "Que vous soyez un particulier ou une entreprise, AMSTRAM vous offre une solution de transport de véhicules adaptée à vos besoins.",
+      reserve : "Réserver",
+      offersTitle: "Nos offres",
+      deliveryDescription: "Livraison sur mesure dans toute l'Europe",
+      flexibility: "Flexibilité maximale",
+      flexibilityDescription: "Du sur-mesure pour chaque trajet. Nous adaptons nos services à vos besoins spécifiques, que ce soit pour le type de véhicule, le timing ou les exigences particulières.",
+      security: "Sécurité garantie",
+      securityDescription: "Chauffeurs expérimentés et véhicules adaptés. Nos professionnels sont formés pour manipuler tous types de véhicules, et notre flotte est équipée des dernières technologies de sécurité.",
+      qualityPrice: "Rapport qualité-prix imbattable",
+      qualityPriceDescription: "Des tarifs compétitifs pour un service premium. Nous offrons une transparence totale sur nos prix, sans frais cachés, tout en maintenant un niveau de service exceptionnel.",
+      peaceOfMind: "Sérénité totale",
+      peaceOfMindDescription: "Un paiement différé, vous ne payez que quand votre véhicule est arrivé à destination. Cette politique de paiement vous assure une tranquillité d'esprit tout au long du processus de livraison.",
+      departLocation: "Lieux de départ (France)",
+      arrivalLocation: "Lieux d'arrivée",
+      vehicleType: "Type de véhicule",
+      citadine: "Citadine",
+      moto: "Moto",
+      camion: "Camion",
+      piloteExpress: {
+        title: "1. Le Pilote Express",
+        description: "Un chauffeur professionnel prend le volant de votre véhicule pour une livraison en conduite directe. Idéal pour une livraison rapide et personnalisée.",
+        features: [
+          "Livraison porte-à-porte",
+          "Chauffeurs expérimentés et certifiés"
+        ]
+      },
+      coconRoulant: {
+        title: "2. Le Cocon Roulant",
+        description: "Votre véhicule voyage confortablement dans un camion spécialisé, préservant son kilométrage et son état. Parfait pour les véhicules de luxe ou de collection.",
+        features: [
+          "Protection maximale contre les intempéries",
+          "Transport multi-véhicules possible"
+        ]
+      },
+      card1Title: "Flexibilité maximale",
+      card1Description: "Du sur-mesure pour chaque trajet. Nous adaptons nos services à vos besoins spécifiques, que ce soit pour le type de véhicule, le timing ou les exigences particulières.",
+      card2Title: "Sécurité garantie",
+      card2Description: "Chauffeurs expérimentés et véhicules adaptés. Nos professionnels sont formés pour manipuler tous types de véhicules, et notre flotte est équipée des dernières technologies de sécurité.",
+      card3Title: "Rapport qualité-prix imbattable",
+      card3Description: "Des tarifs compétitifs pour un service premium. Nous offrons une transparence totale sur nos prix, sans frais cachés, tout en maintenant un niveau de service exceptionnel.",
+      card4Title: "Sérénité totale",
+      card4Description: "Un paiement différé, vous ne payez que quand votre véhicule est arrivé à destination. Cette politique de paiement vous assure une tranquillité d'esprit tout au long du processus de livraison.",
+    },
+    en : {
+      title : "Your vehicle, our route",
+      subtitle : "Custom delivery across Europe",
+      description : "Whether you're a private individual or a business, AMSTRAM offers a vehicle transport solution tailored to your needs.",
+      reserve : "Reserve",
+      offersTitle: "Our Offers",
+      deliveryDescription: "Custom delivery across Europe",
+      flexibility: "Maximum flexibility",
+      flexibilityDescription: "Tailored for each trip. We adapt our services to your specific needs, whether it's for the type of vehicle, timing, or special requirements.",
+      security: "Guaranteed security",
+      securityDescription: "Experienced drivers and suitable vehicles. Our professionals are trained to handle all types of vehicles, and our fleet is equipped with the latest safety technologies.",
+      qualityPrice: "Unbeatable value for money",
+      qualityPriceDescription: "Competitive rates for premium service. We offer complete transparency on our prices, with no hidden fees, while maintaining an exceptional level of service.",
+      peaceOfMind: "Total peace of mind",
+      peaceOfMindDescription: "Deferred payment, you only pay when your vehicle has arrived at its destination. This payment policy ensures you peace of mind throughout the delivery process.",
+      departLocation: "Departure (France)",
+      arrivalLocation: "Arrival Locations",
+      vehicleType: "Vehicle Type",
+      citadine: "City car",
+      moto: "Motorbike",
+      camion: "Truck",
+      piloteExpress: {
+        title: "1. The Express Driver",
+        description: "A professional driver takes the wheel of your vehicle for direct delivery. Ideal for fast and personalized delivery.",
+        features: [
+          "Door-to-door delivery",
+          "Experienced and certified drivers"
+        ]
+      },
+      coconRoulant: {
+        title: "2. The Rolling Cocoon",
+        description: "Your vehicle travels comfortably in a specialized truck, preserving its mileage and condition. Perfect for luxury or collectible vehicles.",
+        features: [
+          "Maximum protection against the elements",
+          "Multi-vehicle transport possible"
+        ]
+      },
+      card1Title: "Maximum flexibility",
+      card1Description: "Tailored for each trip. We adapt our services to your specific needs, whether it's for the type of vehicle, timing, or special requirements.",
+      card2Title: "Guaranteed security",
+      card2Description: "Experienced drivers and suitable vehicles. Our professionals are trained to handle all types of vehicles, and our fleet is equipped with the latest safety technologies.",
+      card3Title: "Unbeatable value for money",
+      card3Description: "Competitive rates for premium service. We offer complete transparency on our prices, with no hidden fees, while maintaining an exceptional level of service.",
+      card4Title: "Total peace of mind",
+      card4Description: "Deferred payment, you only pay when your vehicle has arrived at its destination. This payment policy ensures you peace of mind throughout the delivery process.",
+    }
+  }
+ 
   
 </script>
 <svelte:head>
@@ -269,23 +383,23 @@ layduhurdevelopment@gmail.com");
         <Logo />
       </div>
       <div class="absolute right-1 top-3 md:top-9 mt-10 flex items-center space-x-4 md:mr-20 mr-1 md:mt-5 mt-14">
-         <Login />
-        <button class="flex items-center space-x-1 border border-amstram-white px-2 py-1 rounded">
-          <span>FR</span>
-          <ChevronDown class="w-4 h-4" />
-        </button>
+         <Login lang={lang}/>
+        <select bind:value={lang} class="flex items-center space-x-1 border border-amstram-white px-2 py-1 rounded bg-transparent text-amstram-white">
+          <option value="fr" class="text-amstram-black bg-gray-600">FR</option>
+          <option value="en" class="text-amstram-black bg-gray-600">EN</option>
+        </select>
       </div>
     </header>
     <div class="w-full flex-grow" data-aos="fade-up" data-aos-duration="1500">
       <section class="max-w-7xl mx-auto  mt-24 px-4 sm:px-8">
-        <h2 class="text-5xl font-bold mb-12 text-center md:text-left">Votre véhicule, notre route</h2>
+        <h2 class="text-5xl font-bold mb-12 text-center md:text-left">{contenu[lang].title}</h2>
         <form class="grid grid-cols-1 md:grid-cols-4 gap-6 ml-10 mr-10">
           <div class="relative">
             <MapPin class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input 
               bind:this={departInput}
               type="text" 
-              placeholder="Lieu de départ (France)" 
+              placeholder={contenu[lang].departLocation} 
               class="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-amstram-black text-lg {depart_set ? 'outline outline-2 outline-amstram-purple' : ''} {isLoadingDepart ? 'opacity-50' : ''}" 
               on:input={handleDepart}
             />
@@ -307,7 +421,7 @@ layduhurdevelopment@gmail.com");
             <input 
               bind:this={arrivalInput}
               type="text" 
-              placeholder="Lieux de livraison" 
+              placeholder={contenu[lang].arrivalLocation} 
               class="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-amstram-black text-lg {arrival_set ? 'outline outline-2 outline-amstram-purple' : ''} {isLoadingArrival ? 'opacity-50' : ''}" 
               on:input={handleArrival}
               
@@ -325,22 +439,22 @@ layduhurdevelopment@gmail.com");
           </div>
           <div class="relative">
              <select class="w-full pl-4 pr-12 py-3 rounded-lg bg-white text-amstram-black appearance-none text-lg {selectedVehicle  ? 'outline outline-2 outline-amstram-purple' : ''}" bind:value={selectedVehicle}>
-              <option  disabled selected value="">Type de Véhicule</option>
-              <option value="citadine">Citadine</option>
-              <option value="moto">Moto</option>
-              <option value="camion">Camion de moins de 3.5 tonnes</option> 
+              <option  disabled selected value="">{contenu[lang].vehicleType}</option>
+              <option value="citadine">{contenu[lang].citadine}</option>
+              <option value="moto">{contenu[lang].moto}</option>
+              <option value="camion">{contenu[lang].camion}</option> 
             </select>
             <ChevronDown class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
-          <button on:click={handlePrice} bind:this={reserveButton} disabled={!selectedVehicle || !depart_set || !arrival_set} class="{(selectedVehicle && depart_set && arrival_set) ? 'bg-amstram-purple scale-105 transition-all duration-1000' : 'bg-black bg-opacity-10'} text-white py-3 px-6 rounded-lg text-lg font-semibold">Reserver</button>
+          <button on:click={handlePrice} bind:this={reserveButton} disabled={!selectedVehicle || !depart_set || !arrival_set} class="{(selectedVehicle && depart_set && arrival_set) ? 'bg-amstram-purple scale-105 transition-all duration-1000' : 'bg-black bg-opacity-10'} text-white py-3 px-6 rounded-lg text-lg font-semibold">{contenu[lang].reserve}</button>
         </form>
       </section>
 
       <section class="max-w-7xl mx-auto mr-20 mt-24 px-4 sm:px-8 flex flex-col md:flex-row items-center">
         <div class="md:w-1/2 mb-12  md:mb-0">
-          <p class="text-5xl font-bold mb-6">Livraison sur mesure dans toute l'Europe</p>
+          <p class="text-5xl font-bold mb-6">{contenu[lang].subtitle}</p>
           <p class="text-gray-300 text-3xl ">
-            Que vous soyez un particulier ou une entreprise, AMSTRAM vous offre une solution de transport de véhicules adaptée à vos besoins.
+            {contenu[lang].description}
           </p>
         </div>
         <div class="hidden lg:block ">
@@ -365,11 +479,11 @@ layduhurdevelopment@gmail.com");
   <div class="section w-full bg-gray-100 bg-hero-patern-b relative overflow-hidden transition-colors duration-1000">
     <img src="/side2.webp" alt="Décoration latérale" class="absolute right-0 bottom-0 object-cover hidden lg:block opacity-50 parallax-bg" style="z-index: 1;" />
     <div class="min-h-screen flex flex-col justify-center py-12 relative" style="z-index: 2;">
-      <h2 class="text-5xl font-bold mb-5 text-center text-amstram-black" data-aos="fade-up" data-aos-duration="1500">Nos offres</h2>
+      <h2 class="text-5xl font-bold mb-5 text-center text-amstram-black" data-aos="fade-up" data-aos-duration="1500">{contenu[lang].offersTitle}</h2>
       <section class="max-w-7xl mx-auto mt-12 px-4 sm:px-8 grid grid-cols-1 md:grid-cols-2 gap-12">
         <Card.Root class="relative bg-white bg-opacity-40 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-right" data-aos-duration="1500">
           <Card.Header class="pt-16">
-            <Card.Title class="text-3xl font-bold mb-4 absolute -top-0.5 left-1/2 transform -translate-x-1/2 z-10 text-amstram-black text-center w-full px-4 mt-4">1. Le Pilote Express</Card.Title>
+            <Card.Title class="text-3xl font-bold mb-4 absolute -top-0.5 left-1/2 transform -translate-x-1/2 z-10 text-amstram-black text-center w-full px-4 mt-4">{contenu[lang].piloteExpress.title}</Card.Title>
             {#if price_set}
               <p class="text-gray-700 text-2xl text-center">
                 {price_car} €
@@ -379,21 +493,21 @@ layduhurdevelopment@gmail.com");
           <Card.Content>
             <img src="driver.webp" alt="Pilote Express" class="w-full h-48 object-cover rounded-lg mb-6" />
             <p class="text-gray-700 text-lg text-center">
-              Un chauffeur professionnel prend le volant de votre véhicule pour une livraison en conduite directe. Idéal pour une livraison rapide et personnalisée.
+              {contenu[lang].piloteExpress.description}
             </p>
             <ul class="text-gray-700 mt-4 list-disc pl-5">
-              <li>Livraison porte-à-porte</li>
-              <li>Chauffeurs expérimentés et certifiés</li>
+              <li>{contenu[lang].piloteExpress.features[0]}</li> 
+              <li>{contenu[lang].piloteExpress.features[1]}</li>
             </ul>
             {#if price_set}
-              <button class="w-full bg-amstram-purple text-white px-4 py-2 rounded-lg mt-4">Réserver</button>
+              <button class="w-full bg-amstram-purple text-white px-4 py-2 rounded-lg mt-4">{contenu[lang].reserve}</button>
             {/if}
           </Card.Content>
         </Card.Root>
 
         <Card.Root class="relative bg-white bg-opacity-40 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-left" data-aos-duration="1500">
           <Card.Header class="pt-16">
-            <Card.Title class="text-3xl font-bold mb-4 absolute -top-0.5 left-1/2 transform -translate-x-1/2 z-10 text-amstram-black text-center w-full px-4 mt-4">2. Le Cocon Roulant</Card.Title>
+            <Card.Title class="text-3xl font-bold mb-4 absolute -top-0.5 left-1/2 transform -translate-x-1/2 z-10 text-amstram-black text-center w-full px-4 mt-4">{contenu[lang].coconRoulant.title}</Card.Title>
             {#if price_set}
               <p class="text-gray-700 text-2xl text-center">
                 {price_truck} €
@@ -403,14 +517,14 @@ layduhurdevelopment@gmail.com");
           <Card.Content>
             <img src="porte-voitures1.webp" alt="Cocon Roulant" class="w-full h-48 object-cover rounded-lg mb-6" />
             <p class="text-gray-700 text-lg text-center">
-              Votre véhicule voyage confortablement dans un camion spécialisé, préservant son kilométrage et son état. Parfait pour les véhicules de luxe ou de collection.
+              {contenu[lang].coconRoulant.description}
             </p>
             <ul class="text-gray-700 mt-4 list-disc pl-5">
-              <li>Protection maximale contre les intempéries</li>
-              <li>Transport multi-véhicules possible</li>
+              <li>{contenu[lang].coconRoulant.features[0]}</li>
+              <li>{contenu[lang].coconRoulant.features[1]}</li>
             </ul>
             {#if price_set}
-              <button class="100 w-full bg-amstram-purple text-white px-4 py-2 rounded-lg mt-4">Réserver</button>
+              <button class="100 w-full bg-amstram-purple text-white px-4 py-2 rounded-lg mt-4">{contenu[lang].reserve}</button>
             {/if}
           </Card.Content>
         </Card.Root>
@@ -430,36 +544,36 @@ layduhurdevelopment@gmail.com");
             <svg class="w-10 h-10 text-amstram-purple mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path>
             </svg>
-            <h3 class="text-4xl font-semibold text-amstram-white">Flexibilité maximale</h3>
+            <h3 class="text-4xl font-semibold text-amstram-white">{contenu[lang].card1Title}</h3>
           </div>
-          <p class="text-gray-300 text-2xl">Du sur-mesure pour chaque trajet. Nous adaptons nos services à vos besoins spécifiques, que ce soit pour le type de véhicule, le timing ou les exigences particulières.</p>
+          <p class="text-gray-300 text-2xl">{contenu[lang].card1Description}</p>
         </div>
         <div class="bg-black bg-opacity-80 outline outline-1 outline-white p-6 rounded-xl" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay="200">
           <div class="flex items-start mb-4">
             <svg class="w-10 h-10 text-amstram-purple mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
             </svg>
-            <h3 class="text-4xl font-semibold text-amstram-white">Sécurité garantie</h3>
+            <h3 class="text-4xl font-semibold text-amstram-white">{contenu[lang].card2Title}</h3>
           </div>
-          <p class="text-gray-300 text-2xl">Chauffeurs expérimentés et véhicules adaptés. Nos professionnels sont formés pour manipuler tous types de véhicules, et notre flotte est équipée des dernières technologies de sécurité.</p>
+          <p class="text-gray-300 text-2xl">{contenu[lang].card2Description}</p>
         </div>
         <div class="bg-black bg-opacity-90 outline outline-1 outline-white p-6 rounded-xl" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay="300">
           <div class="flex items-start mb-4">
             <svg class="w-10 h-10 text-amstram-purple mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08 .402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <h3 class="text-4xl font-semibold text-amstram-white">Rapport qualité-prix imbattable</h3>
+            <h3 class="text-4xl font-semibold text-amstram-white">{contenu[lang].card3Title}</h3>
           </div>
-          <p class="text-gray-300 text-2xl">Des tarifs compétitifs pour un service premium. Nous offrons une transparence totale sur nos prix, sans frais cachés, tout en maintenant un niveau de service exceptionnel.</p>
+          <p class="text-gray-300 text-2xl">{contenu[lang].card3Description}</p>
         </div>
         <div class="bg-black bg-opacity-80 outline outline-1 outline-white p-6 rounded-xl" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay="400">
           <div class="flex items-start mb-4">
             <svg class="w-10 h-10 text-amstram-purple mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <h3 class="text-4xl font-semibold text-amstram-white">Sérénité totale</h3>
+            <h3 class="text-4xl font-semibold text-amstram-white">{contenu[lang].card4Title}</h3>
           </div>
-          <p class="text-gray-300 text-2xl">Un paiement différé, vous ne payez que quand votre véhicule est arrivé à destination. Cette politique de paiement vous assure une tranquillité d'esprit tout au long du processus de livraison.</p>
+          <p class="text-gray-300 text-2xl">{contenu[lang].card4Description}</p>
         </div>
       </div>
     </section>

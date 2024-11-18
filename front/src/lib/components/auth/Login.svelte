@@ -7,7 +7,19 @@
     let user: any = null;
     let isLoggedIn = false;
     let showAuthComponent = false;
-    
+    export let lang = "fr";
+    const contenu: any = {
+        fr: {
+            welcome: "Bienvenue",
+            login: "Se connecter",
+            logout: "Se déconnecter"
+        },
+        en: {
+            welcome: "Welcome",
+            login: "Login",
+            logout: "Logout"
+        }
+    }
 
     async function refreshUser() {
         user = await getUser();
@@ -25,7 +37,7 @@
 {#if !isLoggedIn && !showAuthComponent}
     <button on:click={() => showAuthComponent = true} class="flex items-center space-x-1 bg-amstram-purple px-3 py-1 rounded">
         <LogIn class="w-4 h-4" />
-        <span>Login</span>
+        <span>{contenu[lang].login}</span>
     </button>    
 {:else if showAuthComponent}
     <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -37,13 +49,13 @@
             >
                 <X class="w-6 h-6" />
             </button>
-            <AuthComponant on:login={() => {refreshUser().then(() => {showAuthComponent = false;});}} />
+            <AuthComponant lang={lang} on:login={() => {refreshUser().then(() => {showAuthComponent = false;});}} />
         </div>
     </div>
 {/if}
 
 {#if isLoggedIn && !showAuthComponent}
-    <p class="text-s">Bienvenue, {user.name}</p>
+    <p class="text-sm">{contenu[lang].welcome}, {user.name}</p>
     <button 
         on:click={() => {
             logout().then(() => {
@@ -53,6 +65,6 @@
         }} 
         class="w-1/2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amstram-purple hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition duration-300 ease-in-out"
     >
-        Logout
+        {contenu[lang].logout}
     </button>
 {/if}
