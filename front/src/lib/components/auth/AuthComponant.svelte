@@ -1,25 +1,49 @@
-<script>
-    import { loginGoogle, loginEmail, signupEmail } from "$lib/appwrite";
+<script lang="ts">
+    import { loginGoogle, loginEmail, signupEmail, getUser, logout } from "$lib/appwrite";
+    import { onMount } from "svelte";
     let isSignIn = true; // État pour basculer entre la connexion et l'inscription
     let email = '';
     let password = '';
+    let name = '';
     let passwordConfirmation = '';
+    export let user: any = null;
+    let isLoggedIn = false;
+    import { createEventDispatcher } from 'svelte'
+	
+  
+  
+    const dispatch = createEventDispatcher()
 
-    const handleSignIn = () => {
-        loginEmail(email, password);
+    async function handleSignIn() {
+        await loginEmail(email, password);
+        user = await getUser();
+        isLoggedIn = user ? true : false;
+        dispatch('login');
     };
 
     async function handleSignUp() {
-        let res = await signupEmail(email, password, passwordConfirmation);
-        console.log("signupEmail", res);
+        let res = await signupEmail(email, password, passwordConfirmation, name);
+        user = await getUser();
+        isLoggedIn = user ? true : false;
+        dispatch('login');
     };
 
     const handleGoogleSignIn = () => {
         loginGoogle();
     };
+
+    async function getUserInfo() {
+        user = await getUser();
+        console.log("->>>  getUser", user);
+        isLoggedIn = user ? true : false;
+    }
+    onMount(() => {
+        getUserInfo();
+    });
 </script>
 
-<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-900 p-4">
+{#if !isLoggedIn}
+<div class="flex flex-col items-center justify-center  bg-gray-100 text-gray-900 p-4">
     <div class="w-full max-w-md bg-white rounded-lg shadow-xl overflow-hidden">
         <div class="flex justify-center p-4 bg-gray-200">
             <button 
@@ -61,6 +85,10 @@
                         <input id="signup-email" type="email" bind:value={email} placeholder="Enter your email" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
                     </div>
                     <div>
+                        <label for="signup-name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <input id="signup-name" type="text" bind:value={name} placeholder="Enter your name" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
+                    </div>
+                    <div>
                         <label for="signup-password" class="block text-sm font-medium text-gray-700">Password</label>
                         <input id="signup-password" type="password" bind:value={password} placeholder="Enter your password" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
                     </div>
@@ -94,3 +122,18 @@
         </div>
     </div>
 </div>
+{:else if user }
+    <div class="flex flex-col items-center justify-center bg-gray-100 text-gray-900 p-4">
+        <div class="w-full max-w-md bg-white rounded-lg shadow-xl overflow-hidden">
+            <div class="flex justify-center p-4 bg-gray-200">
+                <h2 class="text-lg font-semibold">Bienvenue, {user.name}!</h2>
+            </div>
+            <div class="p-8">
+                <p class="text-sm">Email: {user.email}</p>
+                <button on:click={() => {logout().then(() => getUserInfo())}} class="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition duration-300 ease-in-out">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </div>
+{/if}

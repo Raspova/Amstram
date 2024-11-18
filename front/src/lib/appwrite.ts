@@ -82,10 +82,19 @@ export async function loginGoogle() {
     try {
         return await account.createOAuth2Session(
             OAuthProvider.Google,
-        url_base + "/home",
+        url_base + "/",
         url_base + "/failure"
         //,["profile", "email"]
     );
+    } catch (error) {
+        console.error('Erreur:', error);
+        return null;
+    }
+}
+
+export async function getUser() {
+    try {
+        return await account.get();
     } catch (error) {
         console.error('Erreur:', error);
         return null;
