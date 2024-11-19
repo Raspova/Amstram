@@ -55,8 +55,8 @@ export async function signupEmail(email: string, password: string , passwordConf
         let res  = await account.create(ID.unique(), email, password, name);
         await account.createEmailPasswordSession(email, password);
         account.createVerification(url_base + "/verify_email")
-        //await account.updatePhone(telephone, password);
-        //await account.createPhoneVerification();
+        await account.updatePhone(telephone, password);
+        await account.createPhoneVerification();
         return await account.get();
     } catch (error) {
         alert("Erreur lors de la création de l'utilisateur : " + error);

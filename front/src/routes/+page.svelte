@@ -107,6 +107,10 @@ layduhurdevelopment@gmail.com");
       const depart = urlParams.get('r1');
       const arrival = urlParams.get('r2');
       const vehicle = urlParams.get('selected');
+      const lang_buffer = urlParams.get('lang');
+      if (lang_buffer) {
+        lang = lang_buffer;
+      }
 
       if (depart) {
         selectLocation(depart); // Utiliser la fonction pour définir la valeur
@@ -248,8 +252,9 @@ layduhurdevelopment@gmail.com");
       const params = new URLSearchParams({
         r1: departInput.value,
         r2: arrivalInput.value,
-          selected: selectedVehicle || ""
-        });
+        selected: selectedVehicle || "",
+        lang: lang
+      });
         window.history.replaceState({}, '', `/?${params.toString()}`);
       }
 
@@ -279,6 +284,7 @@ layduhurdevelopment@gmail.com");
       title : "Votre véhicule, notre route",
       subtitle : "Livraison sur mesure dans toute l'Europe",
       description : "Que vous soyez un particulier ou une entreprise, AMSTRAM vous offre une solution de transport de véhicules adaptée à vos besoins.",
+      why_choose_us : "Pourquoi nous choisir ?",
       reserve : "Réserver",
       offersTitle: "Nos offres",
       deliveryDescription: "Livraison sur mesure dans toute l'Europe",
@@ -324,6 +330,7 @@ layduhurdevelopment@gmail.com");
     en : {
       title : "Your vehicle, our route",
       subtitle : "Custom delivery across Europe",
+      why_choose_us : "Why choose us ?",
       description : "Whether you're a private individual or a business, AMSTRAM offers a vehicle transport solution tailored to your needs.",
       reserve : "Reserve",
       offersTitle: "Our Offers",
@@ -537,7 +544,7 @@ layduhurdevelopment@gmail.com");
     <section class="max-w-7xl mx-auto mt-24 px-4 sm:px-8 flex-grow relative">
       <img src="/side0.webp" alt="Décoration latérale" class="absolute right-0 bottom-10 w-1/3  w-50 object-cover hidden lg:block parallax-bg" style="z-index: -1;" />
 
-      <h2 class="text-4xl font-bold mb-12 text-center text-amstram-white" data-aos="fade-up" data-aos-duration="1500">Pourquoi choisir AMSTRAM ?</h2>
+      <h2 class="text-4xl font-bold mb-12 text-center text-amstram-white" data-aos="fade-up" data-aos-duration="1500">{contenu[lang].why_choose_us}</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
         <div class="bg-black bg-opacity-80 outline outline-1 outline-white p-6 rounded-xl" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay="100">
           <div class="flex items-start mb-4">

@@ -25,7 +25,7 @@
             googleSignIn: "Se connecter avec Google",
             orContinueWith: "Ou continuez avec",
             telephone: "Telephone",
-            phoneNumber: "Numéro de téléphone (commencez par + , +337 ou +336 )",
+            phoneNumber: "Numéro de téléphone commence par + (+337 ou +336)",
             enterPhoneNumber: "Entrez votre numéro de téléphone"
         },
         en: {
@@ -40,7 +40,7 @@
             googleSignIn: "Login with Google",
             orContinueWith: "Or continue with",
             telephone: "Telephone",
-            phoneNumber: "Phone number",
+            phoneNumber: "Phone number start with + (+337 or +336)",
             enterPhoneNumber: "Enter your phone number"
         }
     }
@@ -55,7 +55,7 @@
     };
 
     async function handleSignUp() {
-        let res = await signupEmail(email, password, passwordConfirmation, name);
+        let res = await signupEmail(email, password, passwordConfirmation, name, telephone);
         user = await getUser();
         isLoggedIn = user ? true : false;
         dispatch('login');
