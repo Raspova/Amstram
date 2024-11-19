@@ -43,16 +43,21 @@ export async function calculatePrice(departure: string, arrival: string, vehicle
 }
 
 
-export async function signupEmail(email: string, password: string , passwordConfirmation: string , name: string = "") {
+export async function signupEmail(email: string, password: string , passwordConfirmation: string , name: string , telephone: string) {
     try {
         if (password != passwordConfirmation) {
             console.error('Erreur:', "Les mots de passe ne correspondent pas");
             alert("Les mots de passe ne correspondent pas");
             return null;
         }
-        if (name != "")
-            return await account.create(ID.unique(), email, password, name);
-        return await account.create(ID.unique(), email, password);
+        //if (name != "")
+        //    await account.create(ID.unique(), email, password, name);
+        let res  = await account.create(ID.unique(), email, password, name);
+        await account.createEmailPasswordSession(email, password);
+        account.createVerification(url_base + "/verify_email")
+        //await account.updatePhone(telephone, password);
+        //await account.createPhoneVerification();
+        return await account.get();
     } catch (error) {
         alert("Erreur lors de la création de l'utilisateur : " + error);
         console.error('Erreur:', error);
@@ -99,4 +104,26 @@ export async function getUser() {
         console.error('Erreur:', error);
         return null;
     }
+}
+export async function verifyPhone(code: string) {
+    try {
+        let id = (await account.get()).$id;
+        return await account.updatePhoneVerification(id, code);
+    } catch (error) {
+        console.error('Erreur:', error);
+        return null;
+    }
+}
+
+export async function verifyEmail(id: string, secret: string) {
+    try {
+        return await account.updateVerification(id, secret);
+    } catch (error) {
+        console.error('Erreur:', error);
+        return null;
+    }
+}
+
+export async function sendEmailVerification() {
+    return await account.createVerification(url_base + "/verify_email")
 }

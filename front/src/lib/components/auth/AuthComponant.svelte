@@ -9,6 +9,7 @@
     export let user: any = null;
     let isLoggedIn = false;
     import { createEventDispatcher } from 'svelte'
+    let telephone = '';
 	
     export let lang = "fr";
     const contenu: any = {
@@ -23,7 +24,9 @@
             passwordConfirmation: "Confirmation du mot de passe",
             googleSignIn: "Se connecter avec Google",
             orContinueWith: "Ou continuez avec",
-             
+            telephone: "Telephone",
+            phoneNumber: "Numéro de téléphone (commencez par + , +337 ou +336 )",
+            enterPhoneNumber: "Entrez votre numéro de téléphone"
         },
         en: {
             welcome: "Welcome",
@@ -35,7 +38,10 @@
             password : "Password",
             passwordConfirmation: "Password confirmation",
             googleSignIn: "Login with Google",
-            orContinueWith: "Or continue with"
+            orContinueWith: "Or continue with",
+            telephone: "Telephone",
+            phoneNumber: "Phone number",
+            enterPhoneNumber: "Enter your phone number"
         }
     }
   
@@ -108,22 +114,30 @@
                 <form on:submit|preventDefault={handleSignUp} class="space-y-6">
                     <div>
                         <label for="signup-email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input id="signup-email" type="email" bind:value={email} placeholder="Enter your email" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
+                        <input id="signup-email" type="email" bind:value={email} placeholder="Enter your email" class="mt-1 text-black block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
                     </div>
                     <div>
                         <label for="signup-name" class="block text-sm font-medium text-gray-700">{contenu[lang].name}</label>
-                        <input id="signup-name" type="text" bind:value={name} placeholder="Enter your name" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
+                        <input id="signup-name" type="text" bind:value={name} placeholder="Enter your name" class=" text-black mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
                     </div>
                     <div>
-                        <label for="signup-password" class="block text-sm font-medium text-gray-700">{contenu[lang].password}</label>
-                        <input id="signup-password" type="password" bind:value={password} placeholder="Enter your password" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
+                        <label for="signup-password" class="block text-sm font-medium text-amstram-black">{contenu[lang].password}</label>
+                        <input id="signup-password" type="password" bind:value={password} placeholder="Enter your password" class=" text-black mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
                     </div>
                     <div>
-                        <label for="password-confirmation" class="block text-sm font-medium text-gray-700">{contenu[lang].passwordConfirmation}</label>
-                        <input id="password-confirmation" type="password" bind:value={passwordConfirmation} placeholder="Confirm your password" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
+                        <label for="password-confirmation" class="block text-sm font-medium text-amstram-black">{contenu[lang].passwordConfirmation}</label>
+                        <input id="password-confirmation" type="password" bind:value={passwordConfirmation} placeholder="Confirm your password" class=" text-black mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required />
                     </div>
-                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                        {contenu[lang].signUp}
+                    <div>
+                        <label for="telephone" class="block text-sm font-medium text-amstram-black">{contenu[lang].phoneNumber}</label>
+                        <input id="telephone" type="text" bind:value={telephone} placeholder={contenu[lang].enterPhoneNumber} class=" text-black mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black" required pattern="^\+.*" title="Le numéro de téléphone doit commencer par un +." on:input={e => {
+                            if (telephone.startsWith('0')) {
+                                telephone = '+33' + telephone.slice(1);
+                            }
+                        }} />
+                    </div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                            {contenu[lang].signUp}
                     </button>
                 </form>
             {/if}
