@@ -4,10 +4,11 @@
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
     
-    let id = $page.params.id || '';
-    let secret = $page.params.secret || '';
+    let id = $page.url.searchParams.get('userId') || '';
+    let secret = $page.url.searchParams.get('secret') || '';
     console.log(id, secret)
     onMount(async () =>  {
+        console.log("id : ", id, "secret : ", secret)
         const res = await verifyEmail(id, secret)
         if (! res) {
             alert("Erreur lors de la vérification de l'email, veuillez réessayer")
