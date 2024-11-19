@@ -1,19 +1,28 @@
 <script>
     import { page } from '$app/stores';
-    import { verifyEmail, sendEmailVerification } from '$lib/appwrite';
+    import { verifyEmail, sendEmailVerification, getUser } from '$lib/appwrite';
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
+    import AuthComponant from '$lib/components/auth/AuthComponant.svelte';
     
     let id = $page.url.searchParams.get('userId') || '';
     let secret = $page.url.searchParams.get('secret') || '';
+    let isAuthenticated = true;
     console.log(id, secret)
+    function handleLogin() {
+        isAuthenticated = true;
+        window.location.reload();
+    }
     onMount(async () =>  {
-        console.log("id : ", id, "secret : ", secret)
+        
         const res = await verifyEmail(id, secret)
         if (! res) {
             alert("Erreur lors de la vérification de l'email, veuillez réessayer")
             try {
-                await sendEmailVerification()
+                if (!await getUser())
+                    isAuthenticated = false;
+                else
+                    await sendEmailVerification()
             } catch (error) {
                 alert("Erreur lors du renvoi de l'email,vous etes possiblement pas connecter" + error)
                 console.error(error)
@@ -33,9 +42,9 @@
         align-items: center;
         justify-content: center;
         height: 100vh;
-        font-size: 40px;
     }
-    h1 {
+    #titleEmail {
+        font-size: 40px;
         color: #333;
         margin-bottom: 20px;
         background: #f9f9f9;
@@ -58,6 +67,10 @@
 </style>
 
 <div class="container">
-    <h1  >Vérification de l'email</h1>
+    {#if !isAuthenticated}
+    <AuthComponant  on:login={handleLogin}/> <!-- Affiche le composant d'authentification si l'utilisateur n'est pas connecté -->
+    {:else}
+    <h1 id="titleEmail"   >Vérification de l'email</h1>
     <div class="loader"></div>
+    {/if}
 </div>
