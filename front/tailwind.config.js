@@ -65,7 +65,7 @@ const config = {
 			},
 			fontFamily: {
 				
-				'sans': ['Roboto', 'sans-serif'],
+				'sans': ['Arial', 'sans-serif'],
 			}
 		}
 	},
