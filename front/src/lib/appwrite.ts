@@ -7,17 +7,8 @@ const url_base = PUBLIC_APPWRITE_URL;
 
 client.setProject(PUBLIC_APPWRITE_PROJECT_ID!);
 
-async function execute(func_name : string, val : string) {
-  return await functions.createExecution( // Modifiez cette ligne
-      func_name, // ID de la fonction
-      JSON.stringify(""), // Corps de la requête
-      false, // Exécutions programmées doivent être asynchrones
-      val, // Chemin (optionnel)
-      ExecutionMethod.GET, // Méthode (optionnel)
-      // Planifier l'exécution (optionnel)
-    );
-}
 
+// project specific
 export async function handleAutocomplete(val: string, inFrance : boolean = true, lang : string = "fr") {
     try {
         val = '/autocomplete/address?query=' + encodeURIComponent(val);
@@ -41,6 +32,19 @@ export async function calculatePrice(departure: string, arrival: string, vehicle
         console.error('Erreur:', error);
     }
 }
+
+//
+async function execute(func_name : string, val : string) {
+  return await functions.createExecution( // Modifiez cette ligne
+      func_name, // ID de la fonction
+      JSON.stringify(""), // Corps de la requête
+      false, // Exécutions programmées doivent être asynchrones
+      val, // Chemin (optionnel)
+      ExecutionMethod.GET, // Méthode (optionnel)
+      // Planifier l'exécution (optionnel)
+    );
+}
+
 
 
 export async function signupEmail(email: string, password: string , passwordConfirmation: string , name: string , telephone: string) {
@@ -101,7 +105,7 @@ export async function getUser() {
     try {
         return await account.get();
     } catch (error) {
-        console.error('Erreur:', error);
+        console.log("Get user failed : user probably not logged in");
         return null;
     }
 }

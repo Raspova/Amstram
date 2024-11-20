@@ -38,10 +38,10 @@
 
   function updateParallax() {
     const parallaxElements = document.querySelectorAll('.parallax-bg');
-    parallaxElements.forEach((el: HTMLElement) => {
+    parallaxElements.forEach((el: Element) => {
       const speed = 0.5;
       const yPos = -(window.scrollY * speed);
-      el.style.transform = `translateY(${yPos}px)`;
+      (el as HTMLElement).style.transform = `translateY(${yPos}px)`;
     });
   }
 
@@ -279,7 +279,7 @@ layduhurdevelopment@gmail.com");
     showArrivalAutocomplete = false;
   }
 
- const contenu = {
+ const contenu : any = {
     fr : {
       title : "Votre véhicule, notre route",
       subtitle : "Livraison sur mesure dans toute l'Europe",
@@ -385,6 +385,10 @@ layduhurdevelopment@gmail.com");
   
 </script>
 <svelte:head>
+  <title>AMSTRAM - Livraison de véhicules sur mesure</title>
+  <meta name="description" content="AMSTRAM est une entreprise de livraison de véhicules sur mesure dans toute l'Europe. Nous vous proposons des solutions de transport de véhicules adaptées à vos besoins, que vous soyez un particulier ou une entreprise.">
+  <meta name="keywords" content="livraison de véhicules, transport de véhicules, livraison sur mesure, transport sur mesure, véhicules de collection, véhicules de luxe, transport de voiture, transport de camion, transport de motocyclette, service de transport de véhicules, livraison de voiture, livraison de camion, livraison de motocyclette">
+  <meta name="author" content="Jonathan Layduhur">
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </svelte:head>
 
