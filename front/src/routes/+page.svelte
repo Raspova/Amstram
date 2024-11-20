@@ -385,6 +385,7 @@ layduhurdevelopment@gmail.com");
   
 </script>
 <svelte:head>
+  <meta name="title" content="AMSTRAM - Livraison de véhicules sur mesure">
   <meta name="keywords" content="livraison de véhicules, livraison en europe, livraison en corse, transport de véhicules, livraison sur mesure, transport sur mesure, véhicules de collection, véhicules de luxe, transport de voiture, transport de camion, transport de motocyclette, service de transport de véhicules, livraison de voiture, livraison de camion, livraison de motocyclette">
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </svelte:head>

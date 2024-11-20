@@ -55,7 +55,7 @@
 {/if}
 
 {#if isLoggedIn && !showAuthComponent}
-    <p class="text-sm">{contenu[lang].welcome}, {user.name}</p>
+    <p class="text-lg text-center hidden md:block ">{contenu[lang].welcome}, {user.name}</p>
     <button 
         on:click={() => {
             logout().then(() => {
@@ -63,7 +63,7 @@
                 isLoggedIn = false;
             });
         }} 
-        class="w-1/2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amstram-purple hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition duration-300 ease-in-out"
+        class=" py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amstram-purple hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition duration-300 ease-in-out"
     >
         {contenu[lang].logout}
     </button>
