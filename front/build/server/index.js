@@ -107,7 +107,11 @@ const options = {
   root: Root,
   service_worker: true,
   templates: {
-    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<link rel="icon" href="' + assets2 + '/favicon.png" />\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\n 		<link rel="manifest" href="' + assets2 + '/manifest.json" />\n		<meta name="author" content="Jonathan Layduhur">\n		' + head + '\n	</head>\n	<body data-sveltekit-preload-data="hover">\n		<div style="display: contents">' + body + "</div>\n	</body>\n</html>\n",
+    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<link rel="icon" href="' + assets2 + '/favicon.png" />\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\n 		<link rel="manifest" href="' + assets2 + `/manifest.json" />
+		<meta name="description" content="AMSTRAM est une entreprise de livraison de véhicules sur mesure dans toute l'Europe. Nous vous proposons des solutions de transport de véhicules adaptées à vos besoins, que vous soyez un particulier ou une entreprise.">
+		<meta name="title" content="AMSTRAM - Livraison de véhicules sur mesure">
+		<meta name="author" content="Jonathan Layduhur">
+		` + head + '\n	</head>\n	<body data-sveltekit-preload-data="hover">\n		<div style="display: contents">' + body + "</div>\n	</body>\n</html>\n",
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -179,7 +183,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "tq6jyo"
+  version_hash: "1diwyla"
 };
 async function get_hooks() {
   return {
