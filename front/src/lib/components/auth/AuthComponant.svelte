@@ -48,17 +48,33 @@
     const dispatch = createEventDispatcher()
 
     async function handleSignIn() {
-        await loginEmail(email, password);
-        user = await getUser();
-        isLoggedIn = user ? true : false;
-        dispatch('login');
+        try {
+            await loginEmail(email, password);
+            user = await getUser();
+            if (!user) {
+                throw new Error("User not found");
+            }
+            isLoggedIn = user ? true : false;
+            dispatch('login');
+        } catch (error) {
+            alert("Email or password incorrect");
+            console.error("Error during login:", error);
+        }
     };
 
     async function handleSignUp() {
-        let res = await signupEmail(email, password, passwordConfirmation, name, telephone);
-        user = await getUser();
-        isLoggedIn = user ? true : false;
-        dispatch('login');
+        try {
+            let res = await signupEmail(email, password, passwordConfirmation, name, telephone);
+            user = await getUser();
+            if (!user) {
+                throw new Error("User not found");
+            }
+            isLoggedIn = user ? true : false;
+            dispatch('login');
+        } catch (error) {
+            alert("Accout Creation fail");
+            console.error("Error during signup:", error);
+        }
     };
 
     const handleGoogleSignIn = () => {

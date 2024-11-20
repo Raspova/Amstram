@@ -619,7 +619,7 @@ layduhurdevelopment@gmail.com");
         </div>
         <div class="py-2">
           Adresse : 28 Avenue Des Pepinieres, 94260 Fresnes<br>
-          Téléphone : <a href="tel:+33766842045" class="text-amstram-white hover:underline">07 66 84 20 45</a>
+          {contenu[lang].phone} : <a href="tel:+33766842045" class="text-amstram-white hover:underline">07 66 84 20 45</a>
         </div>
       </div>
     </div>
