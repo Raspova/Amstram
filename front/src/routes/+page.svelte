@@ -326,6 +326,9 @@ layduhurdevelopment@gmail.com");
       card3Description: "Des tarifs compétitifs pour un service premium. Nous offrons une transparence totale sur nos prix, sans frais cachés, tout en maintenant un niveau de service exceptionnel.",
       card4Title: "Sérénité totale",
       card4Description: "Un paiement différé, vous ne payez que quand votre véhicule est arrivé à destination. Cette politique de paiement vous assure une tranquillité d'esprit tout au long du processus de livraison.",
+      footer : "Faites confiance à AMSTRAM pour le transport de votre véhicule et vivez une expérience de livraison sans précédent !",
+      terms : "Conditions Générales",
+      privacy : "Politique de Confidentialité",
     },
     en : {
       title : "Your vehicle, our route",
@@ -373,6 +376,9 @@ layduhurdevelopment@gmail.com");
       card3Description: "Competitive rates for premium service. We offer complete transparency on our prices, with no hidden fees, while maintaining an exceptional level of service.",
       card4Title: "Total peace of mind",
       card4Description: "Deferred payment, you only pay when your vehicle has arrived at its destination. This payment policy ensures you peace of mind throughout the delivery process.",
+      footer : "Trust AMSTRAM for the transport of your vehicle and enjoy a delivery experience like no other!",
+      terms :"Terms and Conditions",
+      privacy : "Privacy Policy",
     }
   }
  
@@ -389,9 +395,9 @@ layduhurdevelopment@gmail.com");
       <div class="absolute left-0 top-0 mt-5 ml-10">
         <Logo />
       </div>
-      <div class="absolute right-1 top-3 md:top-9 mt-10 flex items-center space-x-4 md:mr-20 mr-1 md:mt-5 mt-14">
+      <div class="absolute right-1 top-3 md:top-9   flex flex-col md:flex-row items-center space-x-4 md:mr-20 mr-1 md:mt-5 mt-5">
          <Login lang={lang}/>
-        <select bind:value={lang} class="flex items-center space-x-1 border border-amstram-white px-2 py-1 rounded bg-transparent text-amstram-white">
+        <select bind:value={lang} class="flex  mt-5 md:mt-0 items-center space-x-1 border border-amstram-white px-2 py-1 rounded bg-transparent text-amstram-white">
           <option value="fr" class="text-amstram-black bg-gray-600">FR</option>
           <option value="en" class="text-amstram-black bg-gray-600">EN</option>
         </select>
@@ -597,13 +603,28 @@ layduhurdevelopment@gmail.com");
   </div>
 
   <footer class="mt-16 bg-gray-800 py-8 w-full">
-    <div class="max-w-4xl mx-auto px-4 text-center">
+    <div class="max-w-7xl mx-auto px-4 text-center">
       <p class="text-gray-300">
-        Faites confiance à AMSTRAM pour le transport de votre véhicule et vivez une expérience de livraison sans précédent !
+        {contenu[lang].footer}
       </p>
+      <p class="text-gray-300">
+        <a href="/general_condition" class="text-amstram-white hover:underline">{contenu[lang].terms}</a> | 
+        <a href="/confidentiality" class="text-amstram-white hover:underline">{contenu[lang].privacy}</a>
+      </p>
+      <div class="text-gray-300 flex flex-col md:flex-row justify-between items-center">
+        <div class="md:text-left text-center py-2">
+          (CTO) Jonathan Layduhur - <a href="mailto:layduhurdevelopment@gmail.com" class="text-amstram-white hover:underline">layduhurdevelopment@gmail.com</a><br>
+          (CEO) Abdoulatif Tall - <a href="mailto:Abd.tall124@gmail.com" class="text-amstram-white hover:underline">Abd.tall124@gmail.com</a><br>
+        </div>
+        <div class="py-2">
+          Adresse : 28 Avenue Des Pepinieres, 94260 Fresnes<br>
+          Téléphone : <a href="tel:+33766842045" class="text-amstram-white hover:underline">07 66 84 20 45</a>
+        </div>
+      </div>
     </div>
   </footer>
 </main> 
+
 
 <style>
   .parallax-bg {
@@ -666,14 +687,6 @@ layduhurdevelopment@gmail.com");
   }
 </style>
 <!-- Suppression de l'écouteur d'événement de la roue de la souris -->
-
-{#if isLoadingDepart}
-  <div class="loader">Chargement départ...</div>
-{/if}
-
-{#if isLoadingArrival}
-  <div class="loader">Chargement arrivée...</div>
-{/if}
 
 
 

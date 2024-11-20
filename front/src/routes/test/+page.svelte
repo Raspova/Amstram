@@ -6,4 +6,6 @@
 
 
 <!-- <AuthComponant /> -->
+<!--
 <PhoneVerification />
+--> 
