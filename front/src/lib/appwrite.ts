@@ -1,39 +1,119 @@
-import { Client, Functions, ExecutionMethod, Account, ID , OAuthProvider} from "appwrite";
-import {PUBLIC_APPWRITE_PROJECT_ID, PUBLIC_APPWRITE_URL} from '$env/static/public';
+import { Client, Functions, ExecutionMethod, Account, ID , OAuthProvider, Databases} from "appwrite";
+import {PUBLIC_APPWRITE_PROJECT_ID, PUBLIC_APPWRITE_URL } from '$env/static/public';
+//import { DATABASE_ID, DATABASE_ROUTE_COLLECTION_ID } from '$env/static/private';
+
 const client = new Client();
 const functions = new Functions(client);
 const account = new Account(client);
+export const database = new Databases(client);
 const url_base = PUBLIC_APPWRITE_URL;
 
-client.setProject(PUBLIC_APPWRITE_PROJECT_ID!);
 
+client.setProject(PUBLIC_APPWRITE_PROJECT_ID!) ;
+
+export interface IRoute {
+    // Required fields
+    owner: string;
+    ownerContact: string;
+    depart: string;
+    arrival: string;
+    disponibility: Date;  // Using Date for DateTime
+    vType: string;
+    vMark: string;
+    vImmatriculation: string;
+    vCap: string;
+    vBox: string;
+
+    // Optional fields
+    departContact?: string;
+    arrivalContact?: string;
+    departComment?: string;
+    arrivalComment?: string;
+    vComment?: string;
+}
+
+export interface IAppwriteRoute extends IRoute {
+    $id: string;
+    $createdAt: string;
+    $updatedAt: string;
+}
+
+
+export async function addRoute(routeinfo: IRoute) {
+    try {
+        const response = await fetch('/api/routes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+               // 'X-Appwrite-JWT': await account.getSession().then(session => session.jwt)
+            },
+            body: JSON.stringify(routeinfo)
+        });
+
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error);
+        }
+
+        return data.route;
+    } catch (error) {
+        console.error('Erreur lors de l\'ajout de la route:', error);
+        throw error;
+    }
+}
 
 // project specific
-export async function handleAutocomplete(val: string, inFrance : boolean = true, lang : string = "fr") {
+export async function handleAutocomplete(val: string, countryCode : string = "FRA" , lang : string = "fr") {
+    let result;
     try {
         val = '/autocomplete/address?query=' + encodeURIComponent(val);
-        if (inFrance == false)
-            val+="&countryCode=" + encodeURIComponent("FRA,CHE,ITA,ESP,NLD,BEL,DEU,POL")
+        val+="&countryCode=" + encodeURIComponent(countryCode)
         val += "&lang=" + encodeURIComponent(lang);
-        const result = await execute('autocomplete-location' , val);
-        return (JSON.parse(result.responseBody)["result"]);
+        result = await execute('autocomplete-location' , val);
+        console.log("!!!!!! result", result);
+        if (!result || !result.responseBody) {
+            console.log("Autocomple execution empty")
+            return null;
+        }
+        return ({
+            result: JSON.parse(result.responseBody)["result"],
+            precise: JSON.parse(result.responseBody)["precise"]
+        });
     } catch (error) {
-      console.error('Erreur:', error);
+      console.error('Erreur Autocomplete:', result?.responseBody, "error", error );
+      return null;
     }
 }
   
 
-export async function calculatePrice(departure: string, arrival: string, vehicle: string) {
+export async function updateNumber(number: string , user_id: string) {
     try {
-        const val = "/route_calculation?r1=" + encodeURIComponent(departure) + "&r2=" + encodeURIComponent(arrival);
-        const data = await execute('prices_by_location', val);
+        const val = "/update_phone?number=" + encodeURIComponent(number) + "&user_id=" + encodeURIComponent(user_id);
+        const data = await execute('674d83cf000c3a2c2341', val);
         return (JSON.parse(data.responseBody));
     } catch (error) {
         console.error('Erreur:', error);
+        return null;
     }
 }
 
-//
+export async function calculatePrice(departure: string, arrival: string, vehicle: string  = "car") {
+    try {
+        const val = "/route_calculation?r1=" + encodeURIComponent(departure) + "&r2=" + encodeURIComponent(arrival);
+        const data = await execute('prices_by_location', val);
+        if (!data) {
+            console.log("Price execution empty")
+            return null;
+        }
+        return (JSON.parse(data.responseBody));
+    } catch (error) {
+        console.error('Erreur:', error);
+        return null;
+    }
+}
+// generic
+
 async function execute(func_name : string, val : string) {
   return await functions.createExecution( // Modifiez cette ligne
       func_name, // ID de la fonction
@@ -45,8 +125,6 @@ async function execute(func_name : string, val : string) {
     );
 }
 
-
-
 export async function signupEmail(email: string, password: string , passwordConfirmation: string , name: string , telephone: string) {
     try {
         if (password != passwordConfirmation) {
@@ -54,8 +132,6 @@ export async function signupEmail(email: string, password: string , passwordConf
             alert("Les mots de passe ne correspondent pas");
             return null;
         }
-        //if (name != "")
-        //    await account.create(ID.unique(), email, password, name);
         let res  = await account.create(ID.unique(), email, password, name);
         await account.createEmailPasswordSession(email, password);
         account.createVerification(url_base + "/verify_email")
@@ -71,7 +147,12 @@ export async function signupEmail(email: string, password: string , passwordConf
 
 export async function loginEmail(email: string, password: string) {
     try {   
-        return await account.createEmailPasswordSession(email, password );
+        //return 
+        let ret = await account.createEmailPasswordSession(email, password );
+        const jwt = await account.createJWT();
+        //console.log("jwt", jwt);
+        client.setJWT(jwt.jwt);
+        return ret;
     } catch (error) {
         console.error('Erreur:', error);
         return null;
@@ -87,14 +168,20 @@ export async function logout() {
     }
 }
 
-export async function loginGoogle() {
+export async function loginGoogle( redirect_url :string = "") {
     try {
-        return await account.createOAuth2Session(
+        console.log("redirect_url ->", redirect_url);
+        let ret = await account.createOAuth2Session(
             OAuthProvider.Google,
-        url_base + "/",
+        url_base + "/?" + redirect_url,
         url_base + "/failure"
         //,["profile", "email"]
-    );
+    ).then(async session => {
+            const jwt = await account.createJWT();
+            client.setJWT(jwt.jwt);
+            return session;
+        });
+    return ret;
     } catch (error) {
         console.error('Erreur:', error);
         return null;
@@ -109,6 +196,17 @@ export async function getUser() {
         return null;
     }
 }
+
+
+export async function createPhoneVerification() {
+    try {
+        return await account.createPhoneVerification();
+    } catch (error) {
+        console.error('Erreur:', error);
+        return null;
+    }
+}
+
 export async function verifyPhone(code: string) {
     try {
         let id = (await account.get()).$id;

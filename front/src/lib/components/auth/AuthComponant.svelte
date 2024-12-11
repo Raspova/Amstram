@@ -8,6 +8,8 @@
     let passwordConfirmation = '';
     export let user: any = null;
     let isLoggedIn = false;
+    export let onLogin: (service: string) => void = () => {};
+    export let act = false;
     import { createEventDispatcher } from 'svelte'
     let telephone = '';
 	
@@ -55,6 +57,9 @@
                 throw new Error("User not found");
             }
             isLoggedIn = user ? true : false;
+            if (act) {
+               console.log("act");
+            }
             dispatch('login');
         } catch (error) {
             alert("Email or password incorrect");
@@ -70,6 +75,9 @@
                 throw new Error("User not found");
             }
             isLoggedIn = user ? true : false;
+            if (act) {
+                onLogin();
+            }
             dispatch('login');
         } catch (error) {
             alert("Accout Creation fail");
@@ -78,7 +86,8 @@
     };
 
     const handleGoogleSignIn = () => {
-        loginGoogle();
+        const params = new URLSearchParams(window.location.search);
+        loginGoogle(params.toString());
     };
 
     async function getUserInfo() {

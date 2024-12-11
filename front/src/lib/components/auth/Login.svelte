@@ -3,11 +3,16 @@
     import AuthComponant from './AuthComponant.svelte';
     import { onMount } from 'svelte';
     import { getUser, logout } from '$lib/appwrite';   
+    import { createEventDispatcher } from 'svelte'
 
+
+    const dispatch = createEventDispatcher()
     let user: any = null;
     let isLoggedIn = false;
     let showAuthComponent = false;
     export let lang = "fr";
+    
+ 
     const contenu: any = {
         fr: {
             welcome: "Bienvenue",
@@ -29,7 +34,11 @@
         await refreshUser();
     });
 
-    function closeAuthComponent() {
+    export function openAuthComponent() {
+        showAuthComponent = true;
+    }
+
+    export function closeAuthComponent() {
         showAuthComponent = false;
     }
 </script>
@@ -49,7 +58,7 @@
             >
                 <X class="w-6 h-6" />
             </button>
-            <AuthComponant lang={lang} on:login={() => {refreshUser().then(() => {showAuthComponent = false;});}} />
+            <AuthComponant  on:login={() => {dispatch('login'); refreshUser().then(() => {showAuthComponent = false;});}} lang={lang} />
         </div>
     </div>
 {/if}
