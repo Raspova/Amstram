@@ -1,0 +1,222 @@
+import { c as create_ssr_component, f as compute_rest_props, g as spread, i as escape_object, h as escape_attribute_value, b as each } from './ssr-DO2O6IHR.js';
+
+const void_element_names = /^(?:area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/;
+function is_void(name) {
+  return void_element_names.test(name) || name.toLowerCase() === "!doctype";
+}
+/**
+ * @license lucide-svelte v0.453.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const defaultAttributes = {
+  xmlns: "http://www.w3.org/2000/svg",
+  width: 24,
+  height: 24,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  "stroke-width": 2,
+  "stroke-linecap": "round",
+  "stroke-linejoin": "round"
+};
+const Icon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $$restProps = compute_rest_props($$props, ["name", "color", "size", "strokeWidth", "absoluteStrokeWidth", "iconNode"]);
+  let { name = void 0 } = $$props;
+  let { color = "currentColor" } = $$props;
+  let { size = 24 } = $$props;
+  let { strokeWidth = 2 } = $$props;
+  let { absoluteStrokeWidth = false } = $$props;
+  let { iconNode = [] } = $$props;
+  const mergeClasses = (...classes) => classes.filter((className, index, array) => {
+    return Boolean(className) && array.indexOf(className) === index;
+  }).join(" ");
+  if ($$props.name === void 0 && $$bindings.name && name !== void 0) $$bindings.name(name);
+  if ($$props.color === void 0 && $$bindings.color && color !== void 0) $$bindings.color(color);
+  if ($$props.size === void 0 && $$bindings.size && size !== void 0) $$bindings.size(size);
+  if ($$props.strokeWidth === void 0 && $$bindings.strokeWidth && strokeWidth !== void 0) $$bindings.strokeWidth(strokeWidth);
+  if ($$props.absoluteStrokeWidth === void 0 && $$bindings.absoluteStrokeWidth && absoluteStrokeWidth !== void 0) $$bindings.absoluteStrokeWidth(absoluteStrokeWidth);
+  if ($$props.iconNode === void 0 && $$bindings.iconNode && iconNode !== void 0) $$bindings.iconNode(iconNode);
+  return `<svg${spread(
+    [
+      escape_object(defaultAttributes),
+      escape_object($$restProps),
+      { width: escape_attribute_value(size) },
+      { height: escape_attribute_value(size) },
+      { stroke: escape_attribute_value(color) },
+      {
+        "stroke-width": escape_attribute_value(absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth)
+      },
+      {
+        class: escape_attribute_value(mergeClasses("lucide-icon", "lucide", name ? `lucide-${name}` : "", $$props.class))
+      }
+    ],
+    {}
+  )}>${each(iconNode, ([tag, attrs]) => {
+    return `${((tag$1) => {
+      return tag$1 ? `<${tag}${spread([escape_object(attrs)], {})}>${is_void(tag$1) ? "" : ``}${is_void(tag$1) ? "" : `</${tag$1}>`}` : "";
+    })(tag)}`;
+  })}${slots.default ? slots.default({}) : ``}</svg>`;
+});
+const contenu = {
+  fr: {
+    title: "Votre véhicule, notre route",
+    subtitle: "Livraison sur mesure dans toute l'Europe",
+    description: "Que vous soyez un particulier ou une entreprise, AMSTRAM vous offre une solution de transport de véhicules adaptée à vos besoins.",
+    why_choose_us: "Pourquoi nous choisir ?",
+    reserve: "Réserver",
+    offersTitle: "Nos offres",
+    deliveryDescription: "Livraison sur mesure dans toute l'Europe",
+    flexibility: "Flexibilité maximale",
+    flexibilityDescription: "Du sur-mesure pour chaque trajet. Nous adaptons nos services à vos besoins spécifiques, que ce soit pour le type de véhicule, le timing ou les exigences particulières.",
+    security: "Sécurité garantie",
+    securityDescription: "Chauffeurs expérimentés et véhicules adaptés. Nos professionnels sont formés pour manipuler tous types de véhicules, et notre flotte est équipée des dernières technologies de sécurité.",
+    qualityPrice: "Rapport qualité-prix imbattable",
+    qualityPriceDescription: "Des tarifs compétitifs pour un service premium. Nous offrons une transparence totale sur nos prix, sans frais cachés, tout en maintenant un niveau de service exceptionnel.",
+    peaceOfMind: "Sérénité totale",
+    peaceOfMindDescription: "Un paiement différé, vous ne payez que quand votre véhicule est arrivé à destination. Cette politique de paiement vous assure une tranquillité d'esprit tout au long du processus de livraison.",
+    departLocation: "Lieux de départ (France)",
+    arrivalLocation: "Lieux d'arrivée",
+    vehicleType: "Type de véhicule",
+    citadine: "Citadine",
+    moto: "Moto",
+    camion: "Camion",
+    comment: "Commentaire",
+    contact: "Contact",
+    needMorePreciseAddress: "Besoin d'une adresse plus précise, avec une rue.",
+    vehicleTypes: ["Moto", "Citadine", "Sport", "Berline", "VUS", "Fourgonnette", "Camion (<3.5t)", "Camion (>3.5t)"],
+    vehicle: "Véhicule",
+    makeAndModel: "Marque et modèle",
+    numberPlate: "Immatriculation",
+    seatingCapacity: "Capacité d'accueil",
+    gearbox: "Boite de vitesse",
+    piloteExpress: {
+      title: "1. Le Pilote Express",
+      description: "Un chauffeur professionnel prend le volant de votre véhicule pour une livraison en conduite directe. Idéal pour une livraison rapide et personnalisée.",
+      features: [
+        "Livraison porte-à-porte",
+        "Chauffeurs expérimentés et certifiés"
+      ]
+    },
+    coconRoulant: {
+      title: "2. Le Cocon Roulant",
+      description: "Votre véhicule voyage confortablement dans un camion spécialisé, préservant son kilométrage et son état. Parfait pour les véhicules de luxe ou de collection.",
+      features: [
+        "Protection maximale contre les intempéries",
+        "Transport multi-véhicules possible"
+      ]
+    },
+    card1Title: "Flexibilité maximale",
+    card1Description: "Du sur-mesure pour chaque trajet. Nous adaptons nos services à vos besoins spécifiques, que ce soit pour le type de véhicule, le timing ou les exigences particulières.",
+    card2Title: "Sécurité garantie",
+    card2Description: "Chauffeurs expérimentés et véhicules adaptés. Nos professionnels sont formés pour manipuler tous types de véhicules, et notre flotte est équipée des dernières technologies de sécurité.",
+    card3Title: "Rapport qualité-prix imbattable",
+    card3Description: "Des tarifs compétitifs pour un service premium. Nous offrons une transparence totale sur nos prix, sans frais cachés, tout en maintenant un niveau de service exceptionnel.",
+    card4Title: "Sérénité totale",
+    card4Description: "Un paiement différé, vous ne payez que quand votre véhicule est arrivé à destination. Cette politique de paiement vous assure une tranquillité d'esprit tout au long du processus de livraison.",
+    footer: "Faites confiance à AMSTRAM pour le transport de votre véhicule et vivez une expérience de livraison sans précédent !",
+    terms: "Conditions Générales",
+    privacy: "Politique de Confidentialité",
+    phone: "Téléphone",
+    telephone: "Telephone",
+    phoneNumber: "Numéro de téléphone commence par + (+337 ou +336)",
+    enterPhoneNumber: "Entrez votre numéro de téléphone",
+    vehiculeAvailability: "Disponibilité du véhicule",
+    collectionNoEarlierThan: "Collection pas avant",
+    deliveryUntilHelp: "La date de collection doit être au moins 3 jours après la date de collection",
+    deliveryUntil: "Livraison jusqu'au",
+    collectionNoEarlierThanHelp: "La date de collection, doit etres au moins a 24h d'aujourd'hui",
+    availabilityDescription: "Plus la période d'utilisation est longue, plus votre demande sera priorisée",
+    addContact: "Ajouter un contact",
+    cancel: "Annuler",
+    addNewContact: "Ajouter un nouveau contact",
+    selectContact: "Sélectionner un contact",
+    commentsDriver: "Commentaire pour le chauffeur",
+    myRoutes: "Mescourses"
+  },
+  en: {
+    title: "Your vehicle, our route",
+    subtitle: "Custom delivery across Europe",
+    why_choose_us: "Why choose us ?",
+    description: "Whether you're a private individual or a business, AMSTRAM offers a vehicle transport solution tailored to your needs.",
+    reserve: "Reserve",
+    offersTitle: "Our Offers",
+    deliveryDescription: "Custom delivery across Europe",
+    flexibility: "Maximum flexibility",
+    flexibilityDescription: "Tailored for each trip. We adapt our services to your specific needs, whether it's for the type of vehicle, timing, or special requirements.",
+    security: "Guaranteed security",
+    securityDescription: "Experienced drivers and suitable vehicles. Our professionals are trained to handle all types of vehicles, and our fleet is equipped with the latest safety technologies.",
+    qualityPrice: "Unbeatable value for money",
+    qualityPriceDescription: "Competitive rates for premium service. We offer complete transparency on our prices, with no hidden fees, while maintaining an exceptional level of service.",
+    peaceOfMind: "Total peace of mind",
+    peaceOfMindDescription: "Deferred payment, you only pay when your vehicle has arrived at its destination. This payment policy ensures you peace of mind throughout the delivery process.",
+    departLocation: "Departure (France)",
+    arrivalLocation: "Arrival Locations",
+    vehicle: "Vehicle",
+    vehicleType: "Vehicle Type",
+    citadine: "City car",
+    moto: "Motorbike",
+    camion: "Truck",
+    comment: "Comment",
+    needMorePreciseAddress: "Need a more precise address, with a street.",
+    contact: "Contact",
+    makeAndModel: "Make and Model",
+    numberPlate: "Number Plate",
+    seatingCapacity: "Seating Capacity",
+    gearbox: "Gearbox",
+    piloteExpress: {
+      title: "1. The Express Driver",
+      description: "A professional driver takes the wheel of your vehicle for direct delivery. Ideal for fast and personalized delivery.",
+      features: [
+        "Door-to-door delivery",
+        "Experienced and certified drivers"
+      ]
+    },
+    coconRoulant: {
+      title: "2. The Rolling Cocoon",
+      description: "Your vehicle travels comfortably in a specialized truck, preserving its mileage and condition. Perfect for luxury or collectible vehicles.",
+      features: [
+        "Maximum protection against the elements",
+        "Multi-vehicle transport possible"
+      ]
+    },
+    card1Title: "Maximum flexibility",
+    card1Description: "Tailored for each trip. We adapt our services to your specific needs, whether it's for the type of vehicle, timing, or special requirements.",
+    card2Title: "Guaranteed security",
+    card2Description: "Experienced drivers and suitable vehicles. Our professionals are trained to handle all types of vehicles, and our fleet is equipped with the latest safety technologies.",
+    card3Title: "Unbeatable value for money",
+    card3Description: "Competitive rates for premium service. We offer complete transparency on our prices, with no hidden fees, while maintaining an exceptional level of service.",
+    card4Title: "Total peace of mind",
+    card4Description: "Deferred payment, you only pay when your vehicle has arrived at its destination. This payment policy ensures you peace of mind throughout the delivery process.",
+    footer: "Trust AMSTRAM for the transport of your vehicle and enjoy a delivery experience like no other!",
+    terms: "Terms and Conditions",
+    privacy: "Privacy Policy",
+    phone: "Phone",
+    telephone: "Telephone",
+    phoneNumber: "Phone number starts with + (+337 or +336)",
+    enterPhoneNumber: "Enter your phone number",
+    vehicleTypes: ["Motorcycle", "City car", "Sports", "Sedan", "SUV", "Van", "Truck (<3.5t)", "Truck (>3.5t)"],
+    vehiculeAvailability: "Vehicle availability",
+    collectionNoEarlierThan: "Collection no earlier than",
+    deliveryUntil: "Delivery no later than",
+    availabilityDescription: "The greater the availability period, the quicker we'll find you a driver",
+    addContact: "Add a contact",
+    cancel: "Cancel",
+    addNewContact: "Add a new contact",
+    selectContact: "Select a contact",
+    deliveryUntilHelp: "The collection date must be at least 3 days after the collection date",
+    collectionNoEarlierThanHelp: "The collection date must be at least the next day",
+    commentsDriver: "Comment for the driver?",
+    myRoutes: "My routes"
+  }
+};
+const intStatus = {
+  0: "À traiter",
+  1: "Accepter",
+  2: "Annuler",
+  3: "Completer"
+};
+
+export { Icon as I, is_void as a, contenu as c, intStatus as i };
+//# sourceMappingURL=contenu-C9v4NG6M.js.map
