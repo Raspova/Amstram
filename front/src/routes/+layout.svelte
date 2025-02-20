@@ -2,12 +2,16 @@
     import "../app.css"
 </script>
 
-<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+<svelte:head>
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+</svelte:head>
+<!-- AOS -->
 <slot /> 
 
 
 <style >
-        body{
+    body{
         @apply bg-black bg-hero-pattern ;
     }  
 </style> 

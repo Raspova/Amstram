@@ -9,6 +9,8 @@
     import ServiceRecap from "$lib/components/ServiceRecap.svelte";
     import { calculatePrice, addRoute } from '$lib/appwrite';
     import type { IRoute } from '$lib/appwrite';
+    import Header from "$lib/components/Header.svelte";
+    import { goto } from "$app/navigation";
 
     let depart: TravelContainer;
     let arrival: TravelContainer;
@@ -55,7 +57,7 @@
         //arrival.selectRoute(arrival_route);
         contact = [...contact]; 
         dataPrice = await calculatePrice(depart_route, arrival_route);
-        //{car: {price: 100},  truck: {price: 150}};
+        //dataPrice = {car: {price: 100},  truck: {price: 150}};
         price = dataPrice ? (dataPrice[service] && dataPrice[service]["price"]) ? dataPrice[service]["price"] : 0 : 0;
     });
 
@@ -101,13 +103,16 @@
             departComment: depart.getComment(),
             arrivalComment: arrival.getComment(),
             departContact: departContactFull,
-            arrivalContact: arrivalContactFull
+            arrivalContact: arrivalContactFull,
+            price: price.toString(),
+            service: service,
+            status: 0
         }
         console.log(route);
         try {
             const res = await addRoute(route);
-            console.log(res);
-            alert('Form submitted');
+            
+            goto(`/route/${res.$id}`);
         } catch (error) {
             console.error(error);
         }
@@ -115,7 +120,10 @@
 </script>
 
 <div class="min-h-screen py-4 px-2 sm:px-4">
-     
+    <div class=" h-24">
+        <Header bind:lang  last_service={service} last_price={price} />
+    </div>
+    <br/>
     <div class="max-w-fit">
         <!-- Top Section with reduced spacing -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

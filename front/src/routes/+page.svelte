@@ -5,12 +5,12 @@
   import * as Card from "$lib/components/ui/card/index.js";
   import { onMount } from 'svelte';
   import AOS from 'aos';
-  import Logo from '$lib/components/Logo.svelte';
   import Eumap from  '$lib/components/Eumap.svelte';
   import {calculatePrice , getUser } from '$lib/appwrite';
   import { contenu } from "$lib/contenu";
   import AddressInput from "$lib/components/AddressInput.svelte";
   import { goto } from '$app/navigation';
+  import Header from '$lib/components/Header.svelte';
   
   let currentSection = 0;
   const totalSections = 4; // Updated to include the footer
@@ -251,24 +251,18 @@ layduhurdevelopment@gmail.com");
 <svelte:head>
 
   <meta name="keywords" content="livraison de véhicules, livraison en europe, livraison en corse, transport de véhicules, livraison sur mesure, transport sur mesure, véhicules de collection, véhicules de luxe, transport de voiture, transport de camion, transport de motocyclette, service de transport de véhicules, livraison de voiture, livraison de camion, livraison de motocyclette">
-  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </svelte:head>
 
 <main class="w-full text-amstram-white font-sans">
   <div class="section min-h-screen flex flex-col relative transition-colors duration-1000">
     <img src="/side.webp" alt="Décoration latérale" class="absolute left-0 top-20 h-full object-cover hidden md:block parallax-bg" style="z-index: -1;" />
-    <header class="flex justify-between items-center p-4 max-w-7xl mx-auto">
-      <div class="absolute left-0 top-0 mt-5 ml-10">
-        <Logo />
-      </div>
-      <div class="absolute right-1 top-3 md:top-9   flex flex-col md:flex-row items-center space-x-4 md:mr-20 mr-1 md:mt-5 mt-5">
-         <Login bind:this={loginComponent} lang={lang}   on:login={(e) => { reserve(last_service, last_price); e.preventDefault();}}/>
-        <select bind:value={lang} class="flex  mt-5 md:mt-0 items-center space-x-1 border border-amstram-white px-2 py-1 rounded bg-transparent text-amstram-white">
-          <option value="fr" class="text-amstram-black bg-gray-600">FR</option>
-          <option value="en" class="text-amstram-black bg-gray-600">EN</option>
-        </select>
-      </div>
-    </header>
+    <Header 
+      bind:lang
+      bind:loginComponent
+      last_service={last_service}
+      last_price={last_price}
+      reserve={reserve}
+    />
     <div class="w-full flex-grow" data-aos="fade-up" data-aos-duration="1500">
       <section class="max-w-7xl mx-auto  mt-24 px-4 sm:px-8">
         <h2 class="text-5xl font-bold mb-12 text-center md:text-left">{contenu[lang].title}</h2>
@@ -277,8 +271,9 @@ layduhurdevelopment@gmail.com");
           <AddressInput bind:this={arrivalInput} lang={lang} on:value_set={handleArrivalSet} placeholder={contenu[lang].arrivalLocation} countryCode="FRA,CHE,ITA,ESP,NLD,BEL,DEU,POL"/>
           
   <div class="relative">
-  <select class="w-full pl-4 pr-12 py-3 rounded-lg bg-white text-amstram-black appearance-none text-lg {selectedVehicle ? 'outline outline-2 outline-amstram-purple' : ''}"
-    bind:value={selectedVehicle}>
+    <label for="vehicleType" class="sr-only">{contenu[lang].vehicleType}</label>
+    <select id="vehicleType" class="w-full pl-4 pr-12 py-3 rounded-lg bg-white text-amstram-black appearance-none text-lg {selectedVehicle ? 'outline outline-2 outline-amstram-purple' : ''}"
+      bind:value={selectedVehicle}>
             <option disabled selected value="">{contenu[lang].vehicleType}</option>
             {#each contenu[lang].vehicleTypes as type}
               <option value={type}>{type}</option>
@@ -309,8 +304,8 @@ layduhurdevelopment@gmail.com");
         alt="Truck" 
         class="absolute left-0 bottom-0 w-1/8 md:w-1/12 truck-animation hidden md:block" 
         data-aos="fade-left" 
-        data-aos-duration="2000"
-        data-aos-delay="1000"
+        data-aos-duration="3000"
+        data-aos-delay="2000"
         data-aos-offset="0"
       />
     </div>
@@ -328,7 +323,7 @@ layduhurdevelopment@gmail.com");
             <Card.Title class="text-3xl font-bold mb-4 absolute -top-0.5 left-1/2 transform -translate-x-1/2 z-10 text-amstram-black text-center w-full px-4 mt-4">{contenu[lang].piloteExpress.title}</Card.Title>
             {#if price_set}
               <p class="text-gray-700 text-2xl text-center">
-                {price_car} €
+                {price_car} € T.T.C
               </p>
             {/if}
           </Card.Header>
@@ -352,7 +347,7 @@ layduhurdevelopment@gmail.com");
             <Card.Title class="text-3xl font-bold mb-4 absolute -top-0.5 left-1/2 transform -translate-x-1/2 z-10 text-amstram-black text-center w-full px-4 mt-4">{contenu[lang].coconRoulant.title}</Card.Title>
             {#if price_set}
               <p class="text-gray-700 text-2xl text-center">
-                {price_truck} €
+                {price_truck} € T.T.C
               </p>
             {/if}
           </Card.Header>
@@ -432,7 +427,7 @@ layduhurdevelopment@gmail.com");
     </div>
   </div>
 
-  <div class="section bg-gray-800 py-8 w-full">
+  <div class="section bg-gray-900 py-8 w-full">
     <footer class="max-w-7xl mx-auto px-4 text-center">
       <p class="text-gray-300">
         {contenu[lang].footer}
@@ -443,12 +438,12 @@ layduhurdevelopment@gmail.com");
       </p>
       <div class="text-gray-300 flex flex-col md:flex-row justify-between items-center">
         <div class="md:text-left text-center py-2">
-          (CEO) Abdoulatif Tall - <a href="mailto:Abd.tall124@gmail.com" class="text-amstram-white hover:underline">Abd.tall124@gmail.com</a><br>
-          (CTO) Jonathan Layduhur - <a href="mailto:layduhurdevelopment@gmail.com" class="text-amstram-white hover:underline">layduhurdevelopment@gmail.com</a><br>
+          Contactez-nous - <a href="mailto:administration@amstram.eu" class="text-white text-lg font-bold hover:underline ">administration@amstram.eu</a><br>
+          (CTO) Jonathan Layduhur - <a href="mailto:layduhurdevelopment@gmail.com" class="text-white text-lg font-bold hover:underline ">layduhurdevelopment@gmail.com</a><br>
         </div>
         <div class="py-2">
-          Adresse : 28 Avenue Des Pepinieres, 94260 Fresnes<br>
-          {contenu[lang].phone} : <a href="tel:+33766842045" class="text-amstram-white hover:underline">07 66 84 20 45</a>
+          Adresse : 10 Rue de la Paix, 75002 Paris<br>
+          {contenu[lang].phone} : <a href="tel:+33652940060" class="text-amstram-white hover:underline"> 06 52 94 00 60</a>
         </div>
       </div>
     </footer>
@@ -517,4 +512,3 @@ layduhurdevelopment@gmail.com");
     min-height: auto;
   }
 </style>
-

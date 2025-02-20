@@ -20,6 +20,9 @@
   export const focus: boolean = false;
   export let route: string = '';
   export let placeholder: string = contenu[lang].departLocation;
+
+  const MAX_RESULTS = 10; // Maximum number of autocomplete results to display
+
   function handleKeyDown(event: KeyboardEvent) {
     if (showAutocomplete) {
       if (event.key === 'ArrowDown') {
@@ -62,8 +65,8 @@
     }
     isLoadingDepart = true;
     handleAutocomplete(val, countryCode, lang).then((data) => {
-      autocompleteResults = data?.result || [];
-      autocompletePressions = data?.precise || [];
+      autocompleteResults = (data?.result || []).slice(0, MAX_RESULTS);
+      autocompletePressions = (data?.precise || []).slice(0, MAX_RESULTS);
       showAutocomplete = autocompleteResults && autocompleteResults.length > 0;
     }).finally(() => {
       isLoadingDepart = false;
@@ -111,29 +114,31 @@
     {/if}
   </div>
   {#if showAutocomplete}
-    <ul 
-      class="absolute z-10 bg-white border border-gray-300 w-full mt-1 rounded-md shadow-lg max-h-60 overflow-y-auto"
+    <div 
+      class="absolute z-10 w-full mt-1"
       transition:fade={{ duration: 100 }}
     >
-      {#each autocompleteResults as result, index}
-        <li>
-          <button 
-            type="button" 
-            class="w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none transition duration-150 ease-in-out {selectedIndex === index ? 'bg-gray-100 font-semibold' : ''}" 
-            on:click={() => selectLocation(result, autocompletePressions[index])}
-          >
-            {result}
-          </button>
-        </li>
-      {/each}
-    </ul>
+      <ul class="bg-white border border-gray-300 rounded-md shadow-lg">
+        {#each autocompleteResults as result, index}
+          <li>
+            <button 
+              type="button" 
+              class="w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none transition duration-150 ease-in-out {selectedIndex === index ? 'bg-gray-100 font-semibold' : ''}" 
+              on:click={() => selectLocation(result, autocompletePressions[index])}
+            >
+              {result}
+            </button>
+          </li>
+        {/each}
+      </ul>
+    </div>
   {/if}
   {#if !precise}
     <div 
       class="absolute z-20 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md shadow-lg mt-2 right-0"
       transition:fly={{ y: 10, duration: 200 }}
     >
-      {contenu[lang].needMorePreciseAddress }
+      {contenu[lang].needMorePreciseAddress}
     </div>
   {/if}
 </div>

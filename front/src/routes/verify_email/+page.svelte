@@ -4,6 +4,8 @@
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
     import AuthComponant from '$lib/components/auth/AuthComponant.svelte';
+    import {contenu} from '$lib/contenu'
+
     
     let id = $page.url.searchParams.get('userId') || '';
     let secret = $page.url.searchParams.get('secret') || '';
@@ -70,7 +72,7 @@
     {#if !isAuthenticated}
     <AuthComponant  on:login={handleLogin}/> <!-- Affiche le composant d'authentification si l'utilisateur n'est pas connecté -->
     {:else}
-    <h1 id="titleEmail"   >Vérification de l'email</h1>
+    <h1 id="titleEmail">{contenu.verifyEmail}</h1>
     <div class="loader"></div>
     {/if}
 </div>

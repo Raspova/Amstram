@@ -1,115 +1,116 @@
-Objective: Develop the homepage for AMSTRAM, a customized vehicle transport service, using SvelteKit, Tailwind CSS, and Lucide Icons.
-Project Context
-AMSTRAM is a vehicle delivery platform that allows users to transport their vehicles from point A to point B. The site offers two main options: "The Express Driver" (direct driving) and "The Rolling Cocoon" (truck transport).
-Technologies to Use
+Objective: 
 
-SvelteKit for application structure
+SvelteKit as a framework for application structure and routing ,
+I whant my answer to be in sveltekit and typescript not other languages
 Tailwind CSS for styling
 Lucide Icons for iconography
 Responsive design for all devices
-
-Basic Homepage Structure
-<main>
-    <header>
-        <div>
-            <h1>AMSTRAM</h1>
-            <div>Livraison de véhicule sur mesure</div>
-        </div>
-        <div>
-            <button>Login</button>
-            <button>FR</button>
-        </div>
-    </header>
-
-    <section>
-        <h2>Votre véhicule, notre route</h2>
-        <form>
-            <div>
-                <input type="text" placeholder="Lieux de départ" />
-            </div>
-            <div>
-                <input type="text" placeholder="Lieux de livraison" />
-            </div>
-            <div>
-                <select>
-                    <option>Type de Véhicule</option>
-                </select>
-            </div>
-            <button>Reserver</button>
-        </form>
-    </section>
-
-    <section>
-        <div>
-            <p>Livraison sur mesure dans toute l'Europe</p>
-            <p>
-                Que vous soyez un particulier ou une entreprise, AMSTRAM vous
-                offre une solution de transport de véhicules adaptée à vos
-                besoins.
-            </p>
-        </div>
-        <div>
-            <img src="/europe-map.png" alt="Carte de l'Europe" />
-        </div>
-    </section>
-
-    <section>
-        <div>
-            <h3>1. Le Pilote Express</h3>
-            <p>
-                Un chauffeur professionnel prend le volant de votre véhicule
-                pour une livraison en conduite directe.
-            </p>
-        </div>
-        <div>
-            <h3>2. Le Cocon Roulant</h3>
-            <p>
-                Votre véhicule voyage confortablement dans un camion spécialisé,
-                préservant son kilométrage et son état.
-            </p>
-        </div>
-    </section>
-
-    <section>
-        <h2>Pourquoi choisir AMSTRAM ?</h2>
-        <ul>
-            <li>Flexibilité maximale : Du sur-mesure pour chaque trajet</li>
-            <li>
-                Sécurité garantie : Chauffeurs expérimentés et véhicules adaptés
-            </li>
-            <li>
-                Rapport qualité-prix imbattable : Des tarifs compétitifs pour un
-                service premium
-            </li>
-            <li>
-                Sérénité : Un paiement différé, vous ne payez que quand votre
-                véhicule est arrivé à destination.
-            </li>
-        </ul>
-    </section>
-
-    <footer>
-        <p>
-            Faites confiance à AMSTRAM pour le transport de votre véhicule et
-            vivez une expérience de livraison sans précédent !
-        </p>
-    </footer>
-</main>
-
-
-Specific Tasks
-
-Implement the basic structure using appropriate SvelteKit components.
-Apply Tailwind CSS styles to achieve a modern and consistent design.
-Integrate Lucide icons to enhance the user interface.
+Aos for animations if needed
+you can use shadcn/ui for components if needed
 Ensure responsive design for mobile devices, tablets, and desktop computers.
 Optimize performance following SvelteKit best practices.
  
-Expected Deliverables
+ 
+The code right now is :
 
-Source code of SvelteKit components, no React, i nedd SvelteKit code .
-Tailwind CSS configuration files
-Brief documentation on project structure and design choices
+<script lang="ts">    
+    import { goto } from "$app/navigation";
+    import { getRoutes, getUser } from "$lib/appwrite";
+    import { onMount } from "svelte";
+    let routes : any;
+    let user : any;
+    onMount(async () => {
+        routes = await getRoutes();
+        user = await getUser();
+        if (!user || user.label.includes("admin")) {
+            goto("/");
+        }
+        console.log("ROUTES : ", routes);
+    });
 
-Feel free to ask questions or request clarifications on specific aspects of the project before computing . 
-i put images in the context so you can have an idea of what i want it should look like , you can use them or not .
+    
+</script>
+
+<div>
+     <p>ROUTES : {JSON.stringify(routes)}</p>
+</div>
+
+I display those information : 
+ROUTES : {"total":9,"documents":[{"owner":"673d572300232a74a207","depart":"53 Rue de Tanger, 75019 Paris, France","arrival":"11 Rue de Crèvecoeur, 93120 La Courneuve, France","disponibility":"2024-12-12T08:00:00.000+00:00","departContact":"owner","arrivalContact":"owner","departComment":null,"arrivalComment":null,"vType":"Citadine","vMark":"mercedes classe ","vImmatriculation":"AA-123-23","vCap":"5","vBox":"Automatic","vComment":null,"ownerContact":"abdoulatif - +33766842045","service":"car","price":"450","payment_capture":null,"status":0,"$id":"6759b13800097bc93d4c","$createdAt":"2024-12-11T15:35:20.455+00:00","$updatedAt":"2024-12-12T17:49:22.777+00:00","$permissions":[],"$databaseId":"67191662002c0864f95c","$collectionId":"6738e84d001e20e49755"},{"owner":"6756adfbddc9313c3e5f","depart":"20 Rue Jean-Claude Devouge, 08320 Aubrives, France","arrival":"Via Vincenzo Monti, 08100 Nuoro NU, Italie","disponibility":"2024-12-12T08:00:00.000+00:00","departContact":"owner","arrivalContact":"owner","departComment":null,"arrivalComment":null,"vType":"Moto","vMark":"a","vImmatriculation":"aa","vCap":"2","vBox":"Manual","vComment":null,"ownerContact":"Jona Jo - +33760835425","service":"car","price":"937.32","payment_capture":null,"status":0,"$id":"675a0b470000071c2b9f","$createdAt":"2024-12-11T21:59:35.188+00:00","$updatedAt":"2024-12-12T17:49:04.561+00:00","$permissions":[],"$databaseId":"67191662002c0864f95c","$collectionId":"6738e84d001e20e49755"},{"owner":"6756adfbddc9313c3e5f","depart":"20 Rue Jean-Claude Devouge, 08320 Aubrives, France","arrival":"Via Vincenzo Monti, 08100 Nuoro NU, Italie","disponibility":"2024-12-13T08:00:00.000+00:00","departContact":"owner","arrivalContact":"owner","departComment":null,"arrivalComment":null,"vType":"Moto","vMark":"ss","vImmatriculation":"ss","vCap":"2","vBox":"Manual","vComment":null,"ownerContact":"Jona Jo - +33760835425","service":"car","price":"0","payment_capture":null,"status":0,"$id":"675b5cae001af1faefa0","$createdAt":"2024-12-12T21:59:10.594+00:00","$updatedAt":"2024-12-12T21:59:10.594+00:00","$permissions":["read(\"user:6756adfbddc9313c3e5f\")","update(\"user:6756adfbddc9313c3e5f\")","delete(\"user:6756adfbddc9313c3e5f\")"],"$databaseId":"67191662002c0864f95c","$collectionId":"6738e84d001e20e49755"},{"owner":"6756adfbddc9313c3e5f","depart":"20 Rue Jean-Claude Devouge, 08320 Aubrives, France","arrival":"Via Vincenzo Monti, 08100 Nuoro NU, Italie","disponibility":"2024-12-13T08:00:00.000+00:00","departContact":"owner","arrivalContact":"owner","departComment":null,"arrivalComment":null,"vType":"Moto","vMark":"aaa","vImmatriculation":"aaa","vCap":"2","vBox":"Manual","vComment":null,"ownerContact":"Jona Jo - +33760835425","service":"car","price":"100","payment_capture":null,"status":0,"$id":"675b5ced00315b460171","$createdAt":"2024-12-12T22:00:13.984+00:00","$updatedAt":"2024-12-12T22:00:13.984+00:00","$permissions":["read(\"user:6756adfbddc9313c3e5f\")","update(\"user:6756adfbddc9313c3e5f\")","delete(\"user:6756adfbddc9313c3e5f\")"],"$databaseId":"67191662002c0864f95c","$collectionId":"6738e84d001e20e49755"},{"owner":"6756adfbddc9313c3e5f","depart":"20 Rue Jean-Claude Devouge, 08320 Aubrives, France","arrival":"Via Vincenzo Monti, 08100 Nuoro NU, Italie","disponibility":"2024-12-13T08:00:00.000+00:00","departContact":"owner","arrivalContact":"owner","departComment":null,"arrivalComment":null,"vType":"Moto","vMark":"aaa","vImmatriculation":"aaa","vCap":"4","vBox":"Manual","vComment":null,"ownerContact":"Jona Jo - +33760835425","service":"car","price":"0","payment_capture":null,"status":0,"$id":"675b5e950031fad5e49d","$createdAt":"2024-12-12T22:07:17.982+00:00","$updatedAt":"2024-12-12T22:07:17.982+00:00","$permissions":["read(\"user:6756adfbddc9313c3e5f\")"],"$databaseId":"67191662002c0864f95c","$collectionId":"6738e84d001e20e49755"},{"owner":"6756adfbddc9313c3e5f","depart":"20 Rue Jean-Claude Devouge, 08320 Aubrives, France","arrival":"Via Vincenzo Monti, 08100 Nuoro NU, Italie","disponibility":"2024-12-13T08:00:00.000+00:00","departContact":"owner","arrivalContact":"owner","departComment":null,"arrivalComment":null,"vType":"Moto","vMark":"sssss","vImmatriculation":"ss","vCap":"4","vBox":"Automatic","vComment":null,"ownerContact":"Jona Jo - +33760835425","service":"car","price":"0","payment_capture":null,"status":0,"$id":"675b601d000900f21689","$createdAt":"2024-12-12T22:13:49.339+00:00","$updatedAt":"2024-12-12T22:13:49.339+00:00","$permissions":["read(\"user:6756adfbddc9313c3e5f\")"],"$databaseId":"67191662002c0864f95c","$collectionId":"6738e84d001e20e49755"},{"owner":"6756adfbddc9313c3e5f","depart":"20 Rue Jean-Claude Devouge, 08320 Aubrives, France","arrival":"Via Vincenzo Monti, 08100 Nuoro NU, Italie","disponibility":"2024-12-13T08:00:00.000+00:00","departContact":"owner","arrivalContact":"owner","departComment":null,"arrivalComment":null,"vType":"Moto","vMark":"wwwwwwwww","vImmatriculation":"www","vCap":"2","vBox":"Semi-automatic","vComment":null,"ownerContact":"Jona Jo - +33760835425","service":"car","price":"0","payment_capture":null,"status":0,"$id":"675b61fe0013e4cbf5d4","$createdAt":"2024-12-12T22:21:50.436+00:00","$updatedAt":"2024-12-12T22:21:50.436+00:00","$permissions":["read(\"user:6756adfbddc9313c3e5f\")"],"$databaseId":"67191662002c0864f95c","$collectionId":"6738e84d001e20e49755"},{"owner":"6756adfbddc9313c3e5f","depart":"20 Rue Jean-Claude Devouge, 08320 Aubrives, France","arrival":"Via Vincenzo Monti, 08100 Nuoro NU, Italie","disponibility":"2024-12-13T08:00:00.000+00:00","departContact":"owner","arrivalContact":"owner","departComment":null,"arrivalComment":null,"vType":"Citadine","vMark":"zz","vImmatriculation":"zz","vCap":"4","vBox":"Automatic","vComment":null,"ownerContact":"Jona Jo - +33760835425","service":"car","price":"0","payment_capture":null,"status":0,"$id":"675b624e000a128ecf99","$createdAt":"2024-12-12T22:23:10.262+00:00","$updatedAt":"2024-12-12T22:23:10.262+00:00","$permissions":["read(\"user:6756adfbddc9313c3e5f\")"],"$databaseId":"67191662002c0864f95c","$collectionId":"6738e84d001e20e49755"},{"owner":"6756adfbddc9313c3e5f","depart":"20 Rue Jean-Claude Devouge, 08320 Aubrives, France","arrival":"Via Vincenzo Monti, 08100 Nuoro NU, Italie","disponibility":"2024-12-13T08:00:00.000+00:00","departContact":"owner","arrivalContact":"owner","departComment":null,"arrivalComment":null,"vType":"Citadine","vMark":"aa","vImmatriculation":"aa","vCap":"2","vBox":"Manual","vComment":null,"ownerContact":"Jona Jo - +33760835425","service":"car","price":"0","payment_capture":null,"status":0,"$id":"675b6301002f328d7214","$createdAt":"2024-12-12T22:26:09.949+00:00","$updatedAt":"2024-12-12T22:26:09.949+00:00","$permissions":["read(\"user:6756adfbddc9313c3e5f\")"],"$databaseId":"67191662002c0864f95c","$collectionId":"6738e84d001e20e49755"}]}
+
+I need to display the routes in a table with the following informations , the one whit v is for vehicles 
+try to display the table in a nice way with tailwind css and shadcn/ui if needed
+the status is 0 meaning "A traiter"  and i whant a way to change it via the table. call an emplty function il make the fech later 
+i whant to be able to delete a route via the table.
+i whant to be able too sort the table by each column.
+i whant a research bar to search by each column.
+
+- Depart
+- Arrival
+- Disponibility
+- Owner Contact
+- Depart Contact
+- Arrival Contact
+- Depart Comment
+- Arrival Comment
+- V Type
+- V Mark
+- V Immatriculation
+- V Cap
+- V Box
+- V Comment
+- Service
+- Price
+- Status
+- Created At
+- Updated At
+
+Depart
+Arrival
+Disponibility
+Owner Contact
+V Type
+V Mark
+V Immatriculation
+Status
+Created At
+Updated At
+
+------------------------------------
+
+I whant my answer to be in sveltekit and typescript not other languages
+Tailwind CSS for styling
+Lucide Icons for iconography
+Responsive design for all devices
+Aos for animations if needed
+you can use shadcn/ui for components if needed
+Ensure responsive design for mobile devices, tablets, and desktop computers.
+Optimize performance following SvelteKit best practices.
+
+I need to display a route  the data i will receive is in the format under  , make 
+a neet presentation with a nice design and a nice animation if needed. 
+Add some icons make it more beautiful.
+
+<script lang="ts">
+    import { onMount } from "svelte";
+    import { page } from "$app/stores";
+    import { getRoutes} from "$lib/appwrite";
+    $: id = $page.params.id;
+    let route: any;
+
+    onMount(async () => {
+        route = await getRoutes(id);
+        console.log(route);
+    });
+</script>
+
+<div>
+    <h1>Route {id}</h1>
+    <p>
+        {JSON.stringify(route)}
+    </p>
+</div>
+gave me this : 
+{"owner":"6756adfbddc9313c3e5f","depart":"10 Rue de l'Abbé Niort, 93150 Le Blanc-Mesnil","arrival":"Via Vincenzo Monti, 08100 Nuoro NU, Italie","disponibility":"2024-12-14T08:00:00.000+00:00","departContact":"owner","arrivalContact":"owner","departComment":"aaaaaaaaaaaa","arrivalComment":"aaaaaaaaaa","vType":"Moto","vMark":"Susuki","vImmatriculation":"BA-555-CD","vCap":"2","vBox":"Manual","vComment":null,"ownerContact":"Jona Jo - +33760835425","service":"car","price":"741.13","payment_capture":null,"status":0,"$id":"675c8caa00188a8e0150","$createdAt":"2024-12-13T19:36:10.747+00:00","$updatedAt":"2024-12-13T19:36:10.747+00:00","$permissions":["read(\"user:6756adfbddc9313c3e5f\")"],"$databaseId":"67191662002c0864f95c","$collectionId":"6738e84d001e20e49755"}
+
+arrivalContact can be owner or look like this {name - phone} make it look nice and beautiful

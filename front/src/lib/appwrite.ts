@@ -3,13 +3,19 @@ import {PUBLIC_APPWRITE_PROJECT_ID, PUBLIC_APPWRITE_URL } from '$env/static/publ
 //import { DATABASE_ID, DATABASE_ROUTE_COLLECTION_ID } from '$env/static/private';
 
 const client = new Client();
+
+client.setProject(PUBLIC_APPWRITE_PROJECT_ID) ;
+client.setEndpoint("https://appwrite.amstram.eu/v1");
+
 const functions = new Functions(client);
 const account = new Account(client);
 export const database = new Databases(client);
-const url_base = PUBLIC_APPWRITE_URL;
+const url_base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';
 
 
-client.setProject(PUBLIC_APPWRITE_PROJECT_ID!) ;
+
+
+// project specific
 
 export interface IRoute {
     // Required fields
@@ -23,7 +29,9 @@ export interface IRoute {
     vImmatriculation: string;
     vCap: string;
     vBox: string;
-
+    price: string;
+    service: string;
+    status: number;
     // Optional fields
     departContact?: string;
     arrivalContact?: string;
@@ -39,13 +47,15 @@ export interface IAppwriteRoute extends IRoute {
 }
 
 
+
+
 export async function addRoute(routeinfo: IRoute) {
     try {
         const response = await fetch('/api/routes', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-               // 'X-Appwrite-JWT': await account.getSession().then(session => session.jwt)
+                'X-Appwrite-JWT':   await account.createJWT().then(jwt => jwt.jwt)
             },
             body: JSON.stringify(routeinfo)
         });
@@ -62,8 +72,30 @@ export async function addRoute(routeinfo: IRoute) {
         throw error;
     }
 }
+ 
+export async function getRoutes(route_id: string = "") {
+    const response = await fetch('/api/routes' + (route_id ? "/" + route_id : "") , {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Appwrite-JWT': await account.createJWT().then(jwt => jwt.jwt)
+        }
+    });
+    const data = await response.json();
+    return data.route;
+}
 
-// project specific
+export async function updateRoute(route: IAppwriteRoute) {
+    const response = await fetch('/api/routes', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Appwrite-JWT': await account.createJWT().then(jwt => jwt.jwt)
+        },
+        body: JSON.stringify(route)
+    });
+}
+
 export async function handleAutocomplete(val: string, countryCode : string = "FRA" , lang : string = "fr") {
     let result;
     try {
@@ -87,16 +119,6 @@ export async function handleAutocomplete(val: string, countryCode : string = "FR
 }
   
 
-export async function updateNumber(number: string , user_id: string) {
-    try {
-        const val = "/update_phone?number=" + encodeURIComponent(number) + "&user_id=" + encodeURIComponent(user_id);
-        const data = await execute('674d83cf000c3a2c2341', val);
-        return (JSON.parse(data.responseBody));
-    } catch (error) {
-        console.error('Erreur:', error);
-        return null;
-    }
-}
 
 export async function calculatePrice(departure: string, arrival: string, vehicle: string  = "car") {
     try {
@@ -125,6 +147,34 @@ async function execute(func_name : string, val : string) {
     );
 }
 
+async function executePost(func_name : string, val : string, body : string) {
+    return await functions.createExecution( // Modifiez cette ligne
+        func_name, // ID de la fonction
+        body, // Corps de la requête
+        false, // Exécutions programmées doivent être asynchrones
+        val, // Chemin (optionnel)
+        ExecutionMethod.POST, // Méthode (optionnel)
+        
+    );
+}
+
+export async function sendConfirmationEmail(user_id: string, subject: string, content: string) {
+    const val = "/send_email"
+    const data = await executePost('67647c3c003e72b3ee8d', val, JSON.stringify({user_id: user_id, subject: subject, content: content}));
+    return (JSON.parse(data.responseBody));
+}
+
+export async function updateNumber(number: string , user_id: string) {
+    try {
+        const val = "/update_phone?number=" + encodeURIComponent(number) + "&user_id=" + encodeURIComponent(user_id);
+        const data = await execute('674d83cf000c3a2c2341', val);
+        return (JSON.parse(data.responseBody));
+    } catch (error) {
+        console.error('Erreur:', error);
+        return null;
+    }
+}
+
 export async function signupEmail(email: string, password: string , passwordConfirmation: string , name: string , telephone: string) {
     try {
         if (password != passwordConfirmation) {
@@ -149,9 +199,9 @@ export async function loginEmail(email: string, password: string) {
     try {   
         //return 
         let ret = await account.createEmailPasswordSession(email, password );
-        const jwt = await account.createJWT();
-        //console.log("jwt", jwt);
-        client.setJWT(jwt.jwt);
+        //const jwt = await account.createJWT();
+        ////console.log("jwt", jwt);
+        //client.setJWT(jwt.jwt);
         return ret;
     } catch (error) {
         console.error('Erreur:', error);
@@ -173,15 +223,10 @@ export async function loginGoogle( redirect_url :string = "") {
         console.log("redirect_url ->", redirect_url);
         let ret = await account.createOAuth2Session(
             OAuthProvider.Google,
-        url_base + "/?" + redirect_url,
-        url_base + "/failure"
-        //,["profile", "email"]
-    ).then(async session => {
-            const jwt = await account.createJWT();
-            client.setJWT(jwt.jwt);
-            return session;
-        });
-    return ret;
+            url_base + "/?" + redirect_url,
+            url_base + "/failure"
+        )
+        return ret;
     } catch (error) {
         console.error('Erreur:', error);
         return null;
@@ -190,6 +235,7 @@ export async function loginGoogle( redirect_url :string = "") {
 
 export async function getUser() {
     try {
+        
         return await account.get();
     } catch (error) {
         console.log("Get user failed : user probably not logged in");

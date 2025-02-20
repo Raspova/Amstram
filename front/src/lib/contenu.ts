@@ -72,6 +72,8 @@ const contenu : any = {
       addNewContact: "Ajouter un nouveau contact",
       selectContact: "Sélectionner un contact",
       commentsDriver: "Commentaire pour le chauffeur",
+      myRoutes: "Mes courses",
+      verifyEmail: "Vérification de l'email",
     },
     en : {
       title : "Your vehicle, our route",
@@ -146,7 +148,17 @@ const contenu : any = {
       deliveryUntilHelp: "The collection date must be at least 3 days after the collection date",
       collectionNoEarlierThanHelp : "The collection date must be at least the next day",
       commentsDriver: "Comment for the driver?",
+      myRoutes: "My routes",
+      verifyEmail: "Email verification",
     }
 }
 
-export { contenu };
+
+const intStatus : { [key: number]: string } = {
+  0: "À traiter",
+  1: "Accepter",
+  2: "Annuler",
+  3: "Completer"
+} 
+
+export { contenu , intStatus};

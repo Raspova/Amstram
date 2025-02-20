@@ -4,8 +4,9 @@
     import { onMount } from 'svelte';
     import { getUser, logout } from '$lib/appwrite';   
     import { createEventDispatcher } from 'svelte'
-
-
+    import { goto } from '$app/navigation';
+    import { page } from '$app/stores';
+     
     const dispatch = createEventDispatcher()
     let user: any = null;
     let isLoggedIn = false;
@@ -44,7 +45,7 @@
 </script>
 
 {#if !isLoggedIn && !showAuthComponent}
-    <button on:click={() => showAuthComponent = true} class="flex items-center space-x-1 bg-amstram-purple px-3 py-1 rounded">
+    <button on:click={() => showAuthComponent = true} class="flex items-center space-x-1 text-black font-bold bg-amstram-purple px-3 py-1 rounded">
         <LogIn class="w-4 h-4" />
         <span>{contenu[lang].login}</span>
     </button>    
@@ -64,15 +65,21 @@
 {/if}
 
 {#if isLoggedIn && !showAuthComponent}
-    <p class="text-lg text-center hidden md:block ">{contenu[lang].welcome}, {user.name}</p>
+    <p class="text-lg text-center font-bold hidden md:block ">{contenu[lang].welcome}, {user.name}</p>
     <button 
         on:click={() => {
             logout().then(() => {
                 getUser();
                 isLoggedIn = false;
+                if ($page.url.pathname !== '/') {
+                    goto('/');
+                }
+                else {
+                    location.reload();
+                }
             });
         }} 
-        class=" py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amstram-purple hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition duration-300 ease-in-out"
+        class=" py-2 px-4 border border-transparent rounded-md shadow-sm  font-bold text-black bg-amstram-purple hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition duration-300 ease-in-out"
     >
         {contenu[lang].logout}
     </button>

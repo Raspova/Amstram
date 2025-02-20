@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import { loginGoogle, loginEmail, signupEmail, getUser, logout } from "$lib/appwrite";
     import { onMount } from "svelte";
     let isSignIn = true; // État pour basculer entre la connexion et l'inscription
@@ -91,9 +92,13 @@
     };
 
     async function getUserInfo() {
-        user = await getUser();
-        console.log("->>>  getUser", user);
-        isLoggedIn = user ? true : false;
+        try {
+            user = await getUser();
+            //console.log("->>>  getUser", user);
+            isLoggedIn = user ? true : false;
+        } catch (error) {
+            console.error("Error during getUserInfo:", error);
+        }
     }
     onMount(() => {
         getUserInfo();
@@ -195,7 +200,7 @@
             </div>
             <div class="p-8">
                 <p class="text-sm">Email: {user.email}</p>
-                <button on:click={() => {logout().then(() => getUserInfo())}} class="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition duration-300 ease-in-out">
+                <button on:click={() => {logout().then(() =>  goto('/')  )}} class="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition duration-300 ease-in-out">
                     {contenu[lang].logout}
                 </button>
             </div>
