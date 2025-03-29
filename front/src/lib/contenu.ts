@@ -1,8 +1,27 @@
+import { icons } from "lucide-svelte";
+import { Description } from "./components/ui/card";
+
 const contenu : any = {
     fr : {
-      title : "Votre véhicule, notre route",
-      subtitle : "Livraison sur mesure dans toute l'Europe",
-      description : "Que vous soyez un particulier ou une entreprise, AMSTRAM vous offre une solution de transport de véhicules adaptée à vos besoins.",
+      Convoyage: {
+        name : "Convoyage",
+        title : "Votre véhicule, notre route",
+        description : "Transport point A → point B partout en France et en Europe, assuré par un professionnel du convoyage pour une prise en charge sécurisée et fiable.",
+      },
+      Remorquage:{
+        name : "Remorquage",
+        title:"Votre véhicule, notre route",
+        description: "Transport sécurisé de votre véhicule jusqu'à un garage partenaire ou l'adresse de votre choix."
+      },
+      Dépannage :{
+        name: "Dépannage",
+        title:"Votre véhicule, notre route",
+        description: ["Dépannage sur place : Intervention rapide pour les pannes mécaniques courantes.",
+            "Dépannage d'essence : Livraison de carburant sur place en cas de panne sèche.",
+         "Dépannage électrique : Assistance immédiate avec un booster de batterie ou une station VE portative pour véhicules électriques."]
+      },
+      subtitle : "Prise en charge de véhicule sur mesure",
+     // description1 : "Que vous soyez un particulier ou une entreprise, AMSTRAM vous offre une solution de transport de véhicules adaptée à vos besoins.",
       why_choose_us : "Pourquoi nous choisir ?",
       reserve : "Réserver",
       offersTitle: "Nos offres",
@@ -62,10 +81,10 @@ const contenu : any = {
       phoneNumber: "Numéro de téléphone commence par + (+337 ou +336)",
       enterPhoneNumber: "Entrez votre numéro de téléphone",
       vehiculeAvailability: "Disponibilité du véhicule",
-      collectionNoEarlierThan: "Collection pas avant",
+      collectionNoEarlierThan: "Collecte pas avant",
       deliveryUntilHelp: "La date de collection doit être au moins 3 jours après la date de collection",
       deliveryUntil: "Livraison jusqu'au",
-      collectionNoEarlierThanHelp: "La date de collection, doit etres au moins a 24h d'aujourd'hui",
+      collectionNoEarlierThanHelp: "La date de collecte doit être au moins à 24h d'aujourd'hui",
       availabilityDescription: "Plus la période d'utilisation est longue, plus votre demande sera priorisée",
       addContact: "Ajouter un contact",
       cancel: "Annuler",
@@ -74,12 +93,18 @@ const contenu : any = {
       commentsDriver: "Commentaire pour le chauffeur",
       myRoutes: "Mes courses",
       verifyEmail: "Vérification de l'email",
+      depannage_type: "Type de Dépannage",
+      depannage: [
+        { name: "Dépannage", icon: "Wrench" },
+        { name: "Essence", icon: "Fuel" },
+        { name: "Électrique", icon: "PlugZap" },
+        {name : "Vidange" , icon: "Droplets"}
+      ]
     },
     en : {
       title : "Your vehicle, our route",
       subtitle : "Custom delivery across Europe",
       why_choose_us : "Why choose us ?",
-      description : "Whether you're a private individual or a business, AMSTRAM offers a vehicle transport solution tailored to your needs.",
       reserve : "Reserve",
       offersTitle: "Our Offers",
       deliveryDescription: "Custom delivery across Europe",
@@ -150,6 +175,30 @@ const contenu : any = {
       commentsDriver: "Comment for the driver?",
       myRoutes: "My routes",
       verifyEmail: "Email verification",
+      Convoyage: {
+        name: "Convoy",
+        title: "Your vehicle, our route",
+        description: "Transport from point A → point B throughout France and Europe, provided by a professional driver for secure and reliable handling.",
+      },
+      Remorquage: {
+        name: "Towing",
+        title: "Your vehicle, our route",
+        description: "Secure transport of your vehicle to a partner garage or address of your choice."
+      },
+      "Dépannage": {
+        name: "Breakdown Service",
+        title: "Your vehicle, our route",
+        description: ["On-site breakdown assistance: Rapid intervention for common mechanical failures.",
+            "Fuel breakdown assistance: On-site fuel delivery in case of running out of gas.",
+            "Electrical breakdown assistance: Immediate assistance with a battery booster or portable EV station for electric vehicles."]
+      },
+      depannage_type: "Type of Breakdown",
+      depannage: [
+        { name: "Mechanical", icon: "Wrench" },
+        { name: "Fuel", icon: "Fuel" },
+        { name: "Electrical", icon: "PlugZap" }
+      ],
+      description1: "Whether you're a private individual or a business, AMSTRAM offers a vehicle transport solution tailored to your needs.",
     }
 }
 

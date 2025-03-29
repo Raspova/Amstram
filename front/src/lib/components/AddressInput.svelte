@@ -44,6 +44,16 @@
     return input.value;
   }
 
+  export function empty(){
+    input.value="";
+    value_set = false;
+    dispatch("value_set", false);
+    autocompleteResults = [];
+    autocompletePressions = [];
+    showAutocomplete = false;
+    precise = false;
+  }
+
   export function getShowAutocomplete() {
     return showAutocomplete;
   }
