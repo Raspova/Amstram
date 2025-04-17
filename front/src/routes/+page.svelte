@@ -1,6 +1,6 @@
 <script lang="ts">
   import { browser } from '$app/environment';
-  import { MapPin, PlugZap, Fuel, ChevronDown, Truck, Wrench, Anchor } from 'lucide-svelte'
+  import { MapPin, PlugZap, Fuel, ChevronDown, Truck, Wrench, Anchor , Droplets} from 'lucide-svelte'
   import { Instagram as InstagramIcon, Facebook as FacebookIcon } from 'svelte-simples';
   import  Login  from "$lib/components/auth/Login.svelte";  
   import * as Card from "$lib/components/ui/card/index.js";
@@ -189,7 +189,7 @@ layduhurdevelopment@gmail.com");
       );
       }
       iconInterval = setInterval(() => {
-        currentIcon = (currentIcon + 1) % 3;
+        currentIcon = (currentIcon + 1) % 4;
       }, 3000) as unknown as number;
   
   
@@ -354,6 +354,12 @@ layduhurdevelopment@gmail.com");
            class:scale-75={currentIcon !== 2}>
         <Wrench size={20} />
       </div>
+      <div class="absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-in-out opacity-0 transform transition-transform" 
+        class:opacity-100={currentIcon === 3} 
+        class:scale-100={currentIcon === 3} 
+        class:scale-75={currentIcon !== 3}>
+        <Droplets size={20} />
+      </div>
     </div>
                {contenu[lang]['Dépannage'].name} 
               </button>
@@ -399,6 +405,8 @@ layduhurdevelopment@gmail.com");
                         <Fuel size={20} class="mr-3" />
                       {:else if type.icon === "PlugZap"}
                         <PlugZap size={20} class="mr-3" />
+                      {:else if type.icon === "Droplets"}
+                        <Droplets size={20} class="mr-3" />
                       {/if}
                       {type.name}
                     </button>
@@ -594,10 +602,38 @@ layduhurdevelopment@gmail.com");
     <!-- Indicateurs de position de défilement -->
     <div class="fixed right-4 top-1/2 transform -translate-y-1/2 z-50">
       <div class="flex flex-col space-y-2">
-        <div class="w-3 h-3 rounded-full bg-amstram-purple scroll-indicator cursor-pointer" class:active={currentSection === 0} on:click={() => scrollToSection(0)}></div>
-        <div class="w-3 h-3 rounded-full bg-amstram-purple scroll-indicator cursor-pointer" class:active={currentSection === 1} on:click={() => scrollToSection(1)}></div>
-        <div class="w-3 h-3 rounded-full bg-amstram-purple scroll-indicator cursor-pointer" class:active={currentSection === 2} on:click={() => scrollToSection(2)}></div>
-        <div class="w-3 h-3 rounded-full bg-amstram-purple scroll-indicator cursor-pointer" class:active={currentSection === 3} on:click={scrollToFooter}></div>
+        <button 
+          type="button"
+          class="w-3 h-3 rounded-full bg-amstram-purple scroll-indicator cursor-pointer" 
+          class:active={currentSection === 0} 
+          on:click={() => scrollToSection(0)}
+          on:keydown={(e) => e.key === 'Enter' && scrollToSection(0)}
+          aria-label="Aller à la section 1">
+        </button>
+        <button 
+          type="button"
+          class="w-3 h-3 rounded-full bg-amstram-purple scroll-indicator cursor-pointer" 
+          class:active={currentSection === 1} 
+          on:click={() => scrollToSection(1)}
+          on:keydown={(e) => e.key === 'Enter' && scrollToSection(1)}
+          aria-label="Aller à la section 2">
+        </button>
+        <button 
+          type="button"
+          class="w-3 h-3 rounded-full bg-amstram-purple scroll-indicator cursor-pointer" 
+          class:active={currentSection === 2} 
+          on:click={() => scrollToSection(2)}
+          on:keydown={(e) => e.key === 'Enter' && scrollToSection(2)}
+          aria-label="Aller à la section 3">
+        </button>
+        <button 
+          type="button"
+          class="w-3 h-3 rounded-full bg-amstram-purple scroll-indicator cursor-pointer" 
+          class:active={currentSection === 3} 
+          on:click={scrollToFooter}
+          on:keydown={(e) => e.key === 'Enter' && scrollToFooter()}
+          aria-label="Aller au pied de page">
+        </button>
       </div>
     </div>
 

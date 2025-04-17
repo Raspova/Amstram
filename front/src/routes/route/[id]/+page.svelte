@@ -40,6 +40,7 @@
     price: string;
     payment_capture: string | null;
     status: number;
+    paid:boolean;
   }
 
   $: id = $page.params.id;
@@ -47,6 +48,7 @@
 
   onMount(async () => {
     route = await getRoutes(id);
+    console.log(route)
     AOS.init({
       duration: 800,
       once: true,
@@ -72,6 +74,28 @@
     const [name, phone] = contact.split(' - ');
     return { name, phone };
   }
+
+
+  async function pay() {
+    const data = await fetch("/checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        price:route?.price,
+        id:route?.$id,
+        vType:route?.vType,
+        origin: route?.depart,
+        destination:route?.arrival,
+        //customerEmail: route?.ownerContact, 
+        //customerName: route?.,
+        //customerPhone:route
+      }),
+    }).then((data) => data.json());
+    window.location.replace(data.url);
+  }
+   
 </script>
 
 <div class="min-h-screen   py-8 px-4">
@@ -91,7 +115,7 @@
               <p class="text-white font-medium">{route.service === 'car' ? 'Le Pilote Express' : 'Le Cocon Roulant'}</p>
             </div>
           </div>
-
+          
           <div class="flex items-center space-x-4 p-4 bg-white/5 rounded-lg" data-aos="fade-right" data-aos-delay="200">
             <CreditCard class="text-purple-400" size={28} />
             <div>
@@ -108,7 +132,9 @@
             </div>
           </div>
         </div>
-
+        {#if !route.paid}
+        <button on:click={pay}>PAY</button>
+        {/if}
         <!-- Owner Contact -->
         <div class="bg-white/20 p-6 rounded-xl backdrop-blur-sm border border-purple-500/20" data-aos="fade-up">
           <div class="flex items-center space-x-3 mb-4">

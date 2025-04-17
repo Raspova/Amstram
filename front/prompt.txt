@@ -114,3 +114,47 @@ gave me this :
 {"owner":"6756adfbddc9313c3e5f","depart":"10 Rue de l'Abbé Niort, 93150 Le Blanc-Mesnil","arrival":"Via Vincenzo Monti, 08100 Nuoro NU, Italie","disponibility":"2024-12-14T08:00:00.000+00:00","departContact":"owner","arrivalContact":"owner","departComment":"aaaaaaaaaaaa","arrivalComment":"aaaaaaaaaa","vType":"Moto","vMark":"Susuki","vImmatriculation":"BA-555-CD","vCap":"2","vBox":"Manual","vComment":null,"ownerContact":"Jona Jo - +33760835425","service":"car","price":"741.13","payment_capture":null,"status":0,"$id":"675c8caa00188a8e0150","$createdAt":"2024-12-13T19:36:10.747+00:00","$updatedAt":"2024-12-13T19:36:10.747+00:00","$permissions":["read(\"user:6756adfbddc9313c3e5f\")"],"$databaseId":"67191662002c0864f95c","$collectionId":"6738e84d001e20e49755"}
 
 arrivalContact can be owner or look like this {name - phone} make it look nice and beautiful
+
+
+
+
+
+Amstram
+
+Abdoulatif Tall 
+CEO, 
+Adresse : 28 Avenue Des Pepinieres, 94260 Fresnes
+
+Jonathan Layduhur 
+Chem. de Fontainebleau,
+77760 Achères-la-Forêt
+ 
+
+À Paris, le 26/12/2024
+
+Objet : Promesse d’embauche
+
+Monsieur,
+
+Nous avons le plaisir de vous annoncer que a votre travail concluant sur le site amstram.eu votre profil a été retenu pour occuper le poste de CTO en CDI  à temps plein au sein de notre entreprise, Amstram.
+
+À ce titre, veuillez prendre connaissance des informations suivantes : 
+ 
+Vous exercerez vos fonctions a à compter du 15 janvier;
+Vous percevrez une rémunération annuelle  brute de 60000 €, à laquelle s’ajouteront les avantages sociaux et fiscaux applicables à votre statut.
+ 
+Vous êtes libre d’accepter ou de refuser cette promesse d’embauche et disposez d’un délai de 20 jours à compter de la réception du présent courrier  pour nous faire connaître votre réponse. 
+
+Sans réponse de votre part d’ici le 11/01/2024, votre silence sera interprété comme un refus au contrat de travail proposé.
+
+En cas d’acceptation, nous vous remercions de nous faire parvenir le présent document signé et précédé de la mention manuscrite “Lu et approuvé”.
+
+Veuillez agréer,  Monsieur ,  l’expression de ma considération distinguée.
+
+Jonathan Layduhur
+« Signature du salarié »
+
+(Précédé de la mention « Lu et approuvé »)
+
+Abdoulatif Tall
+« Signature du représentant »

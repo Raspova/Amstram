@@ -196,7 +196,8 @@ const contenu : any = {
       depannage: [
         { name: "Mechanical", icon: "Wrench" },
         { name: "Fuel", icon: "Fuel" },
-        { name: "Electrical", icon: "PlugZap" }
+        { name: "Electrical", icon: "PlugZap" },
+        {name :"Emptying" ,icon : "Droplets"}
       ],
       description1: "Whether you're a private individual or a business, AMSTRAM offers a vehicle transport solution tailored to your needs.",
     }
