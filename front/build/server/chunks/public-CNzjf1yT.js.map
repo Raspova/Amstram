@@ -1,1 +1,0 @@
-{"version":3,"file":"public-CNzjf1yT.js","sources":["../../../.svelte-kit/adapter-node/chunks/public.js"],"sourcesContent":["const PUBLIC_APPWRITE_PROJECT_ID = \"6718cd3b00059671fa73\";\nexport {\n  PUBLIC_APPWRITE_PROJECT_ID as P\n};\n"],"names":[],"mappings":"AAAK,MAAC,0BAA0B,GAAG;;;;"}

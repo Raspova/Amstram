@@ -1,5 +1,0 @@
-const DATABASE_ID = "67191662002c0864f95c";
-const DATABASE_ROUTE_COLLECTION_ID = "6738e84d001e20e49755";
-
-export { DATABASE_ID as D, DATABASE_ROUTE_COLLECTION_ID as a };
-//# sourceMappingURL=private-Br0gTHzt.js.map
