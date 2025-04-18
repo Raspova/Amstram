@@ -1,4 +1,4 @@
-import { stripe } from "../stripe";
+import { stripe } from "$lib/stripe";
 import type { RequestHandler } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
 import { contenu } from "$lib/contenu";

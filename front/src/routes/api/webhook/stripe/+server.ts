@@ -8,10 +8,10 @@ import {
   STRIPE_SECRET_KEY
 } from '$env/static/private';
 import { PUBLIC_APPWRITE_URL, PUBLIC_APPWRITE_PROJECT_ID } from '$env/static/public';
-import Stripe from 'stripe';
+import {stripe} from '$lib/stripe';
 
 // Initialiser Stripe avec votre clé secrète
-const stripe = new Stripe(STRIPE_SECRET_KEY);
+//const stripe = new Stripe(STRIPE_SECRET_KEY);
 
 // Initialiser le client Appwrite (serveur)
 const client = new Client();
