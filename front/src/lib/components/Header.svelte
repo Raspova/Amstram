@@ -36,13 +36,13 @@
     }
 
   </script>
-  
+ 
   <header class="flex justify-between items-center p-4 max-w-7xl mx-auto">
-    <div class="absolute left-0 top-0 mt-5 ml-10" data-aos="zoom-in-right" on:click={() => goto("/")}>
+    <button type="button" class="absolute left-0 top-0 mt-5 ml-10" data-aos="zoom-in-right" on:click={() => goto("/")}>
       <Logo />
-    </div>
+    </button>
     <button 
-    class="md:hidden absolute right-5 top-12  text-amstram-white hover:text-amstram-purple transition-colors"
+    class=" absolute right-5 top-12  text-amstram-white hover:text-amstram-purple transition-colors"
     data-aos="fade-left"
     data-aos-delay="100"
     data-aos-duration="1000"
@@ -52,22 +52,27 @@
     <Settings2 size={40} />
   </button>
   
-    <div class="hidden md:flex absolute right-1   md:top-9 flex flex-col md:flex-row items-center space-x-4 md:mr-20 mr-1 md:mt-5 mt-5" data-aos="fade-left"
+    <div  class="flex absolute right-1 md:top-9 flex-col md:flex-row items-center space-x-4 md:mr-20 mr-1 md:mt-5 mt-5"
+    data-aos="fade-left"
     data-aos-delay="100"
     data-aos-duration="1500"
     >
+      <div class="-mt-40 md:mt-0">
       <Login bind:this={loginComponent} {lang} on:login={(e) => { reserve(last_service, last_price); e.preventDefault();}}/>
-      {#if admin}
+      </div>
+        {#if admin}
         <button on:click={() => goto("/admin")} class="bg-amstram-purple text-black font-bold py-2 px-4 rounded hover:bg-blue-700">Admin Page</button>
       {:else if connected}
         <button on:click={() => goto("/route")} class="bg-amstram-purple text-black font-bold py-2 px-4 rounded hover:bg-blue-700">{contenu[lang].myRoutes}</button>
       {/if}
       <label for="language-select" class="sr-only">Choisir la langue</label>
-      <select id="language-select" bind:value={lang} class="flex mt-5 md:mt-0 items-center space-x-1 border border-amstram-white px-2 py-1 rounded bg-transparent text-amstram-white">
-        <option value="fr" class="text-amstram-black bg-gray-600">FR</option>
-        <option value="en" class="text-amstram-black bg-gray-600">EN</option>
-      </select>
-    </div>
+        <!--
+          <select id="language-select" bind:value={lang} class="hidden md:flex mt-5 md:mt-0 items-center space-x-1 border border-amstram-white px-2 py-1 rounded bg-transparent text-amstram-white">
+          <option value="fr" class="text-amstram-black bg-gray-600">FR</option>
+          <option value="en" class="text-amstram-black bg-gray-600">EN</option>
+        </select>
+        -->
+      </div>
 
   <!-- Mobile Menu -->
   {#if isMenuOpen}
@@ -83,7 +88,7 @@
   >
     <div class="flex flex-col space-y-4">
       <Login 
-        bind:this={loginComponent} 
+         
         {lang} 
         on:login={(e) => { 
           reserve(last_service, last_price); 

@@ -39,6 +39,10 @@
         showAuthComponent = true;
     }
 
+    export function isAuthComponentOpenr(){
+        return showAuthComponent;
+    }
+
     export function closeAuthComponent() {
         showAuthComponent = false;
     }
