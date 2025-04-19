@@ -1,6 +1,7 @@
 import Stripe from "stripe";
-import { env } from "$env/dynamic/private";
+import { STRIPE_SECRET_KEY, SECRET_TEST } from "$env/static/private";
 
-export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+
+export const stripe = new Stripe(STRIPE_SECRET_KEY, {
   apiVersion: "2025-02-24.acacia",
 });

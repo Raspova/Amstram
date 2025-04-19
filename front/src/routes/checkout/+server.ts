@@ -1,6 +1,6 @@
 import { stripe } from "$lib/stripe";
 import type { RequestHandler } from "@sveltejs/kit";
-import { env } from "$env/dynamic/private";
+//import { env } from "$env/dynamic/private";
 import { contenu } from "$lib/contenu";
 import type { List } from "lucide-svelte";
 

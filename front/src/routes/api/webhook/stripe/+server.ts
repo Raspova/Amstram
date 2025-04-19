@@ -4,8 +4,7 @@ import { Client, Databases } from 'appwrite';
 import { 
   DATABASE_ID, 
   DATABASE_ROUTE_COLLECTION_ID, 
-  STRIPE_WEBHOOK_SECRET ,
-  STRIPE_SECRET_KEY
+  STRIPE_WEBHOOK_SECRET 
 } from '$env/static/private';
 import { PUBLIC_APPWRITE_URL, PUBLIC_APPWRITE_PROJECT_ID } from '$env/static/public';
 import {stripe} from '$lib/stripe';
@@ -48,7 +47,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
     // Traiter l'événement de paiement réussi
     if (event.type === 'checkout.session.completed') {
-        const session = event.data.object as Stripe.Checkout.Session;
+        const session = event.data.object ; //as tripe.Checkout.Session;
         
         console.log('Session complétée, métadonnées:', session.metadata);
         
