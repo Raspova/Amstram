@@ -12,7 +12,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-node": "^5.2.9",
-		"@sveltejs/kit": "^2.0.0",
+		"@sveltejs/kit": "^2.20.7",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/aos": "^3.0.7",
 		"bits-ui": "^0.21.16",
