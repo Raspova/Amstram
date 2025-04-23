@@ -14,10 +14,10 @@ import {stripe} from '$lib/stripe';
 
 // Initialiser le client Appwrite (serveur)
 const client = new Client();
-client.setEndpoint(PUBLIC_APPWRITE_URL);
+//client.setEndpoint(PUBLIC_APPWRITE_URL);
 client.setProject(PUBLIC_APPWRITE_PROJECT_ID);
 // Pour le webhook, nous utiliserons une clé API plutôt qu'un JWT
-client.setKey(process.env.APPWRITE_API_KEY || '');
+//client.setAPIKey(process.env.APPWRITE_API_KEY || '');
 const database = new Databases(client);
 
 export const POST: RequestHandler = async ({ request }) => {
