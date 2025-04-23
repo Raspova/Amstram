@@ -3,6 +3,9 @@ import { Description } from "./components/ui/card";
 
 const contenu : any = {
     fr : {
+      welcome: "Bienvenue",
+      login: "Se connecter",
+      logout: "Se déconnecter",
       Convoyage: {
         name : "Convoyage",
         title : "Votre véhicule, notre route",
@@ -102,6 +105,9 @@ const contenu : any = {
       ]
     },
     en : {
+      welcome: "Welcome",
+      login: "Login",
+      logout: "Logout",
       title : "Your vehicle, our route",
       subtitle : "Custom delivery across Europe",
       why_choose_us : "Why choose us ?",

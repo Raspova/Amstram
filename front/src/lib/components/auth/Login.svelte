@@ -6,7 +6,7 @@
     import { createEventDispatcher } from 'svelte'
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
-     
+    import {contenu} from '$lib/contenu'
     const dispatch = createEventDispatcher()
     let user: any = null;
     let isLoggedIn = false;
@@ -14,19 +14,6 @@
     export let lang = "fr";
     
  
-    const contenu: any = {
-        fr: {
-            welcome: "Bienvenue",
-            login: "Se connecter",
-            logout: "Se déconnecter"
-        },
-        en: {
-            welcome: "Welcome",
-            login: "Login",
-            logout: "Logout"
-        }
-    }
-
     async function refreshUser() {
         user = await getUser();
         isLoggedIn = user ? true : false;
@@ -69,7 +56,10 @@
 {/if}
 
 {#if isLoggedIn && !showAuthComponent}
-    <p class="text-lg text-center font-bold hidden md:block ">{contenu[lang].welcome}, {user.name}</p>
+   
+    <!-- 
+        <p class="text-lg text-center font-bold hidden md:block ">{contenu[lang].welcome}, {user.name}</p>
+    -->
     <button 
         on:click={() => {
             logout().then(() => {

@@ -102,9 +102,7 @@ async function updateRoutePaymentStatus(routeId: string) {
             DATABASE_ROUTE_COLLECTION_ID,
             routeId,
             {
-                is_paid: true,
-                payment_date: new Date().toISOString(),
-                payment_status: 'paid'
+                paid: true,
             }
         );
         
