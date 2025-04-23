@@ -17,10 +17,10 @@ const client = new Client();
 //client.setEndpoint(PUBLIC_APPWRITE_URL);
 client.setProject(PUBLIC_APPWRITE_PROJECT_ID);
 // Pour le webhook, nous utiliserons une clé API plutôt qu'un JWT
-client.setJWT(await getJTW());
 const database = new Databases(client);
 
 export const POST: RequestHandler = async ({ request }) => {
+    client.setJWT(await getJTW());
     const body = await request.text();
     const signature = request.headers.get('stripe-signature');
 
