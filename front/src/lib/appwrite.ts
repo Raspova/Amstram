@@ -44,6 +44,8 @@ export interface IAppwriteRoute extends IRoute {
     $id: string;
     $createdAt: string;
     $updatedAt: string;
+    //$databaseId: string;
+    //$collectionId: string;
 }
 
 

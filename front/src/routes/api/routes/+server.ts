@@ -74,7 +74,7 @@ export const PATCH: RequestHandler = async ({ request, params }) => {
         // remove   '$databaseId': field
         delete routeInfo.$databaseId;
         delete routeInfo.$collectionId;
-        console.log(routeInfo);
+        //console.log(routeInfo);
         const route = await database.updateDocument(DATABASE_ID, DATABASE_ROUTE_COLLECTION_ID, routeInfo.$id, routeInfo);
         console.log("route response", route);
         return json({ success: true });

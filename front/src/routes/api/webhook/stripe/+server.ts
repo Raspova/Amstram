@@ -17,7 +17,7 @@ const client = new Client();
 client.setEndpoint(PUBLIC_APPWRITE_URL);
 client.setProject(PUBLIC_APPWRITE_PROJECT_ID);
 // Pour le webhook, nous utiliserons une clé API plutôt qu'un JWT
-//client.setKey(process.env.APPWRITE_API_KEY || '');
+client.setJWT(process.env.APPWRITE_API_KEY || '');
 const database = new Databases(client);
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -84,15 +84,19 @@ export const POST: RequestHandler = async ({ request }) => {
 
 async function updateRoutePaymentStatus(routeId: string) {
     try {
+        console.log(`Tentative de mise à jour du statut de paiement pour la route ${routeId}`);
+        console.log(`Utilisation de la base de données ${DATABASE_ID} et collection ${DATABASE_ROUTE_COLLECTION_ID}`);
+        
         // Vérifier d'abord que la route existe
         try {
-            await database.getDocument(
+            const route = await database.getDocument(
                 DATABASE_ID,
                 DATABASE_ROUTE_COLLECTION_ID,
                 routeId
             );
+            console.log('Route trouvée:', route);
         } catch (error) {
-            console.error(`Route ${routeId} non trouvée dans la base de données`);
+            console.error(`Erreur détaillée lors de la recherche de la route ${routeId}:`, error);
             throw new Error(`Route ${routeId} non trouvée`);
         }
         
