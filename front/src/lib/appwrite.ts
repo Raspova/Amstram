@@ -50,6 +50,9 @@ export interface IAppwriteRoute extends IRoute {
 
 
 
+export async function getJTW() {
+    return await account.createJWT().then(jwt => jwt.jwt);
+}
 
 export async function addRoute(routeinfo: IRoute) {
     try {

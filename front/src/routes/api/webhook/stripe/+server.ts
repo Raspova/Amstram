@@ -8,7 +8,7 @@ import {
 } from '$env/static/private';
 import { PUBLIC_APPWRITE_URL, PUBLIC_APPWRITE_PROJECT_ID } from '$env/static/public';
 import {stripe} from '$lib/stripe';
-
+import { getJTW } from '$lib/appwrite';
 // Initialiser Stripe avec votre clé secrète
 //const stripe = new Stripe(STRIPE_SECRET_KEY);
 
@@ -17,7 +17,7 @@ const client = new Client();
 //client.setEndpoint(PUBLIC_APPWRITE_URL);
 client.setProject(PUBLIC_APPWRITE_PROJECT_ID);
 // Pour le webhook, nous utiliserons une clé API plutôt qu'un JWT
-//client.setAPIKey(process.env.APPWRITE_API_KEY || '');
+client.setJWT(await getJTW());
 const database = new Databases(client);
 
 export const POST: RequestHandler = async ({ request }) => {
