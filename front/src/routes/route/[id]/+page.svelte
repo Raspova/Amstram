@@ -18,7 +18,7 @@
   import Header from "$lib/components/Header.svelte";
   import { intStatus } from "$lib/contenu";
   import "aos/dist/aos.css";
-  import {} from ""
+
   interface Route {
     $id: string;
     owner: string;
