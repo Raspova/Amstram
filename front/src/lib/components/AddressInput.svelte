@@ -20,7 +20,7 @@
   export const focus: boolean = false;
   export let route: string = '';
   export let placeholder: string = contenu[lang].departLocation;
-
+  let showTooltip : boolean;
   const MAX_RESULTS = 10; // Maximum number of autocomplete results to display
 
   function handleKeyDown(event: KeyboardEvent) {

@@ -21,6 +21,7 @@ const database = new Databases(client);
 
 export const POST: RequestHandler = async ({ request }) => {
     const jwt = await getJTW();
+    console.log(jwt)
     client.setJWT(jwt);
     const body = await request.text();
     const signature = request.headers.get('stripe-signature');
