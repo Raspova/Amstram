@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { page } from "$app/stores";
-  import { getRoutes } from "$lib/appwrite";
+  import { getRoutes , getJWT} from "$lib/appwrite";
   import {
     MapPin,
     Calendar,
@@ -18,7 +18,7 @@
   import Header from "$lib/components/Header.svelte";
   import { intStatus } from "$lib/contenu";
   import "aos/dist/aos.css";
-
+  import {} from ""
   interface Route {
     $id: string;
     owner: string;
@@ -77,6 +77,8 @@
 
 
   async function pay() {
+    const jwt = await getJWT();
+    console.log(jwt)
     const data = await fetch("/checkout", {
       method: "POST",
       headers: {
@@ -88,6 +90,7 @@
         vType:route?.vType,
         origin: route?.depart,
         destination:route?.arrival,
+        jwt:jwt,
         //customerEmail: route?.ownerContact, 
         //customerName: route?.,
         //customerPhone:route

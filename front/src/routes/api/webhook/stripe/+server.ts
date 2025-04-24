@@ -8,7 +8,7 @@ import {
 } from '$env/static/private';
 import { PUBLIC_APPWRITE_URL, PUBLIC_APPWRITE_PROJECT_ID } from '$env/static/public';
 import {stripe} from '$lib/stripe';
-import { getJTW } from '$lib/appwrite';
+import { getJWT } from '$lib/appwrite';
 // Initialiser Stripe avec votre clé secrète
 //const stripe = new Stripe(STRIPE_SECRET_KEY);
 
@@ -20,21 +20,20 @@ client.setProject(PUBLIC_APPWRITE_PROJECT_ID);
 const database = new Databases(client);
 
 export const POST: RequestHandler = async ({ request }) => {
-    //const jwt = await getJTW();
+    //const jwt = await getJWT();
     //console.log(jwt)
-    //client.setJWT(jwt);
     const body = await request.text();
     const signature = request.headers.get('stripe-signature');
-
+    
     console.log('Webhook Stripe reçu');
-
+    
     if (!signature) {
         console.error('Signature manquante');
         return json({ success: false, error: 'Signature manquante' }, { status: 400 });
     }
-
+    
     let event;
-
+    
     try {
         // Vérifier la signature de l'événement
         event = stripe.webhooks.constructEvent(
@@ -46,7 +45,7 @@ export const POST: RequestHandler = async ({ request }) => {
         console.error('Erreur de vérification de signature:', error);
         return json({ success: false, error: 'Signature invalide' }, { status: 400 });
     }
-
+    
     // Traiter l'événement de paiement réussi
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object ; //as tripe.Checkout.Session;
@@ -56,6 +55,10 @@ export const POST: RequestHandler = async ({ request }) => {
         // Vérifier que le paiement est bien confirmé
         if (session.payment_status === 'paid') {
             try {
+                if (!session.metadata?.jwt) {
+                    throw new Error('JWT manquant dans les métadonnées');
+                }
+                client.setJWT(session.metadata.jwt);
                 const routeId = session.metadata?.routeId;
                 
                 if (!routeId) {
