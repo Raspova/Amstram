@@ -79,6 +79,7 @@ export const POST: RequestHandler = async ({ request }) => {
     },
     payment_method_types: ['card'],
     metadata: {
+      jwt:data.jwt,
       vehicleType: data.vType,
       routeId: routId,
       origin: data.origin,
