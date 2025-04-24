@@ -6,7 +6,7 @@
     import { Button } from "$lib/components/ui/button";
     import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "$lib/components/ui/table";
     import { Search, ArrowUpDown, Trash2 } from "lucide-svelte";
-    import { intStatus } from "$lib/contenu";
+    import { intStatus ,contenu} from "$lib/contenu";
     import AOS from "aos";
     import Header from "$lib/components/Header.svelte";
 
@@ -95,16 +95,17 @@
     }
 
     $: filteredRoutes = routes.filter(filterRoutes);
+    let lang = "fr";
 </script>
 
 <div class="my-10">
-    <Header />
+    <Header  bind:lang/>
 </div>
 
 <div class="min-h-screen  p-6">
     <div class="max-w-[1400px] mx-auto space-y-6">
         <div class="flex items-center justify-between">
-            <h1 class="text-3xl font-bold">Tableau de bord</h1>
+            <h1 class="text-3xl font-bold">{contenu[lang].board}</h1>
             <div class="relative w-96">
                <!--
                 <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />

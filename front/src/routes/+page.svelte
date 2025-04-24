@@ -242,7 +242,7 @@ async function handlePrice(set_param: boolean = true) {
     window.history.replaceState({}, "", `/?${params.toString()}`);
     let user = await getUser();
     if (user) {
-      console.log("User is logged in", user);
+      //console.log("User is logged in", user);
       nextStep(service, price);
     } else {
       last_service = service;
@@ -444,6 +444,7 @@ layduhurdevelopment@gmail.com");
               {lang}
               on:value_set={handleDepartSet}
               focus={true}
+              placeholder={contenu[lang].departLocation}
             />
             {#if selectedService == "Dépannage"}
               <div class="relative">
@@ -502,7 +503,7 @@ layduhurdevelopment@gmail.com");
                 bind:this={arrivalInput}
                 {lang}
                 on:value_set={handleArrivalSet}
-                placeholder={contenu[lang].arrivalLocation}
+                placeholder={contenu[lang].arrivalLocation + (selectedService == "Remorquage" ? " "+contenu[lang].optional : "")}
                 countryCode="FRA,CHE,ITA,ESP,NLD,BEL,DEU,POL"
               />
             {/if}
@@ -541,11 +542,11 @@ layduhurdevelopment@gmail.com");
               bind:this={reserveButton}
               disabled={!(
                 selectedVehicle &&
-                (arrival_set || selectedDepannage != "") &&
+                (arrival_set || selectedDepannage != "" || selectedService == "Remorquage") &&
                 depart_set
               )}
               class="{selectedVehicle &&
-              (arrival_set || selectedDepannage != '') &&
+              (arrival_set || selectedDepannage != '' || selectedService == "Remorquage") &&
               depart_set
                 ? 'bg-amstram-purple scale-105 transition-all duration-1000'
                 : 'bg-black bg-opacity-10'} text-white py-3 px-6 rounded-lg text-lg font-semibold"
@@ -600,9 +601,13 @@ layduhurdevelopment@gmail.com");
               </a>
             </div>
           </div>
+          {#if lang != "mu"}
           <div class="hidden lg:block">
             <Eumap />
           </div>
+          {:else}
+          <img src="map-mu.png" alt="map of glorious mauritus" class="hidden md:flex md:w-1/3 lg:w-1/4 mx-auto">
+          {/if}
         </section>
 
         <img
@@ -936,7 +941,7 @@ layduhurdevelopment@gmail.com");
           class="text-gray-300 flex flex-col md:flex-row justify-between items-center"
         >
           <div class="md:text-left text-center py-2">
-            Contactez-nous - <a
+            {contenu[lang].contact} - <a
               href="mailto:administration@amstram.eu"
               class="text-white text-lg font-bold hover:underline"
               >administration@amstram.eu</a

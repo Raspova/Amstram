@@ -50,7 +50,7 @@ export const POST: RequestHandler = async ({ request }) => {
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object ; //as tripe.Checkout.Session;
         
-        console.log('Session complétée, métadonnées:', session.metadata);
+        //console.log('Session complétée, métadonnées:', session.metadata);
         
         // Vérifier que le paiement est bien confirmé
         if (session.payment_status === 'paid') {
@@ -90,7 +90,7 @@ export const POST: RequestHandler = async ({ request }) => {
 async function updateRoutePaymentStatus(routeId: string) {
     try {
         console.log(`Tentative de mise à jour du statut de paiement pour la route ${routeId}`);
-        console.log(`Utilisation de la base de données ${DATABASE_ID} et collection ${DATABASE_ROUTE_COLLECTION_ID}`);
+        //console.log(`Utilisation de la base de données ${DATABASE_ID} et collection ${DATABASE_ROUTE_COLLECTION_ID}`);
         
         // Vérifier d'abord que la route existe
         try {
@@ -99,7 +99,6 @@ async function updateRoutePaymentStatus(routeId: string) {
                 DATABASE_ROUTE_COLLECTION_ID,
                 routeId
             );
-            console.log('Route trouvée:', route);
         } catch (error) {
             console.error(`Erreur détaillée lors de la recherche de la route ${routeId}:`, error);
             throw new Error(`Route ${routeId} non trouvée`);
@@ -115,6 +114,7 @@ async function updateRoutePaymentStatus(routeId: string) {
             }
         );
         
+        console.log('Route trouvée et payer');
         return result;
     } catch (error) {
         console.error('Erreur Appwrite lors de la mise à jour:', error);

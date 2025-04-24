@@ -16,6 +16,20 @@
     console.log(service, price);
   }
 
+  // Liste des langues avec leurs drapeaux emoji
+  const languages = [
+    { code: "fr", name: "Français", flag: "🇫🇷" },
+    { code: "en", name: "English", flag: "🇬🇧" },
+    { code: "it", name: "Italiano", flag: "🇮🇹" },
+    { code: "de", name: "Deutsch", flag: "🇩🇪" },
+    { code: "es", name: "Español", flag: "🇪🇸" },
+    { code: "pt", name: "Português", flag: "🇵🇹" },
+    { code: "mu", name: "Kreol Morisien", flag: "🇲🇺" },
+    { code: "nl", name: "Nederlands", flag: "🇳🇱" },
+    { code: "vl", name: "Vlaams", flag: "🇧🇪" },
+    { code: "pl", name: "Polski", flag: "🇵🇱" }
+  ];
+
   let admin: boolean = false;
   let isMenuOpen = false;
   let connected = false;
@@ -62,52 +76,64 @@
     data-aos-delay="100"
     data-aos-duration="1500"
   >
-    <div >
+    <div>
+      <p class="text-lg text-center font-bold hidden md:block">
+        {contenu[lang].welcome}, {user ? user.name : ""}
+      </p>
 
-  
-    <p class="text-lg text-center font-bold hidden md:block">
-      {contenu[lang].welcome}, {user ? user.name : ""}
-    </p>
-
-    <div class="flex flex-row gap-4">
-
-    
-    <div class="-mt-40 md:mt-0"> <!-- mt-40 = BC AUTH SHIT-->
-      <Login
-        bind:this={loginComponent}
-        {lang}
-        on:login={(e) => {
-          reserve(last_service, last_price);
-          e.preventDefault();
-        }}
-      />
+      <div class="flex flex-row gap-4">
+        <div class="-mt-40 md:mt-0">
+          <!-- mt-40 = BC AUTH SHIT-->
+          <Login
+            bind:this={loginComponent}
+            {lang}
+            on:login={(e) => {
+              reserve(last_service, last_price);
+              e.preventDefault();
+            }}
+          />
+        </div>
+        <div class="hidden md:block">
+          {#if admin}
+            <button
+              on:click={() => goto("/admin")}
+              class="bg-amstram-purple text-black font-bold py-2 px-4 rounded hover:bg-blue-700"
+            >
+              Admin Page
+            </button>
+          {:else if connected}
+            <button
+              on:click={() => goto("/route")}
+              class="bg-amstram-purple text-black font-bold py-2 px-4 rounded hover:bg-blue-700"
+            >
+              {contenu[lang].myRoutes}
+            </button>
+          {/if}
+        </div>
+      </div>
     </div>
-    <div class="hidden md:block">
 
-      {#if admin}
-      <button
-      on:click={() => goto("/admin")}
-      class="bg-amstram-purple text-black font-bold py-2 px-4 rounded hover:bg-blue-700"
-      >Admin Page</button
-      >
-      {:else if connected}
-      <button
-      on:click={() => goto("/route")}
-      class="bg-amstram-purple text-black font-bold py-2 px-4 rounded hover:bg-blue-700"
-      >{contenu[lang].myRoutes}</button
-      >
-      {/if}
-    </div>
-  </div>  
-</div>
-    <!--
     <label for="language-select" class="sr-only">Choisir la langue</label>
- 
-          <select id="language-select" bind:value={lang} class="hidden md:flex mt-5 md:mt-0 items-center space-x-1 border border-amstram-white px-2 py-1 rounded bg-transparent text-amstram-white">
-          <option value="fr" class="text-amstram-black bg-gray-600">FR</option>
-          <option value="en" class="text-amstram-black bg-gray-600">EN</option>
-        </select>
-        -->
+
+    <div class="hidden md:block mt-7 relative">
+      <select
+        id="language-select"
+        bind:value={lang}
+        class="appearance-none pl-8 pr-10 py-1 rounded bg-transparent text-amstram-white border border-amstram-white focus:outline-none focus:ring-1 focus:ring-amstram-purple"
+      >
+        {#each languages as language}
+          <option value={language.code} class="text-amstram-black bg-gray-700 py-2 flex items-center">
+            {language.flag} {language.code.toUpperCase()}
+          </option>
+        {/each}
+      </select>
+      
+      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+        <svg class="fill-current h-4 w-4 text-amstram-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+        </svg>
+      </div>
+    </div>
   </div>
 
   <!-- Mobile Menu -->
@@ -143,7 +169,7 @@
           >
             Admin Page
           </button>
-        {:else}
+        {:else if connected}
           <button
             on:click={() => {
               goto("/route");
@@ -155,13 +181,24 @@
           </button>
         {/if}
 
-        <select
-          bind:value={lang}
-          class="border border-amstram-white px-2 py-1 rounded bg-transparent text-amstram-white w-full"
-        >
-          <option value="fr" class="text-amstram-black bg-gray-600">FR</option>
-          <option value="en" class="text-amstram-black bg-gray-600">EN</option>
-        </select>
+        <div class="relative">
+          <select
+            bind:value={lang}
+            class="appearance-none pl-8 pr-10 py-2 rounded bg-transparent text-amstram-white border border-amstram-white focus:outline-none focus:ring-1 focus:ring-amstram-purple w-full"
+          >
+            {#each languages as language}
+              <option value={language.code} class="text-amstram-black bg-gray-700 py-2">
+                {language.flag} {language.name}
+              </option>
+            {/each}
+          </select>
+          
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+            <svg class="fill-current h-4 w-4 text-amstram-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
   {/if}
