@@ -951,6 +951,8 @@ layduhurdevelopment@gmail.com");
           <div class="py-2">
             Adresse : 10 Rue de la Paix, 75002 Paris<br />
             {contenu[lang].phone} :
+            <!--
+            -->
             <a
               href="tel:+33652940060"
               class="text-amstram-white hover:underline"

@@ -20,7 +20,8 @@ client.setProject(PUBLIC_APPWRITE_PROJECT_ID);
 const database = new Databases(client);
 
 export const POST: RequestHandler = async ({ request }) => {
-    client.setJWT(await getJTW());
+    const jwt = await getJTW();
+    client.setJWT(jwt);
     const body = await request.text();
     const signature = request.headers.get('stripe-signature');
 
