@@ -50,7 +50,7 @@ export const POST: RequestHandler = async ({ request }) => {
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object ; //as tripe.Checkout.Session;
         
-        //console.log('Session complétée, métadonnées:', session.metadata);
+        console.log('Session complétée, métadonnées:', session );//,.metadata);
         
         // Vérifier que le paiement est bien confirmé
         if (session.payment_status === 'paid') {
