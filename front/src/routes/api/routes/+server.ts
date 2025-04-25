@@ -26,7 +26,7 @@ export const POST: RequestHandler = async ({ request }) => {
             DATABASE_ROUTE_COLLECTION_ID,
             ID.unique(),
             routeInfo,
-            [Permission.read(Role.user(routeInfo.owner))]
+            [Permission.read(Role.user(routeInfo.owner)), Permission.update(routeInfo.owner)]
         );
         return json({ success: true, route: newRoute });
     } catch (error) {
