@@ -7,6 +7,8 @@
     import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "$lib/components/ui/table";
     import { Search, ArrowUpDown, Trash2 } from "lucide-svelte";
     import { intStatus , contenu } from "$lib/contenu";
+    import { fade } from 'svelte/transition';
+
     import Header from "$lib/components/Header.svelte";
     import AOS from "aos";
 

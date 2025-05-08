@@ -165,41 +165,56 @@ function checkComponentsReady(callback: Function) {
     callback();
   }
 }
-
-// Modification de handlePrice pour inclure la vérification
-async function handlePrice(set_param: boolean = true) {
-  if (!componentsInitialized || !departInput) {
-    console.log("Les composants ne sont pas encore initialisés");
-    return;
-  }
+let isCalculatingPrice = false;
   
-  try {
-    const depart_value = departInput.getValue();
-    const arrival_value = arrivalInput ? arrivalInput.getValue() : "";
-    data_price = await calculatePrice(depart_value, arrival_value, selectedVehicle || "");
-    price_set = true;
-    price_car = data_price["car"]["price"];
-    price_truck = data_price["truck"]["price"];
+  // Modify your handlePrice function
+  async function handlePrice(set_param: boolean = true) {
+    if (!componentsInitialized || !departInput) {
+      console.log("Les composants ne sont pas encore initialisés");
+      return;
+    }
     
-    if (set_param) {
-      const params = new URLSearchParams({
-        r1: depart_value,
-        r2: arrival_value,
-        selected: selectedVehicle || "",
-        lang: lang
-      });
-      window.history.replaceState({}, '', `/?${params.toString()}`);
-    }
+    // Show loading animation
+    isCalculatingPrice = true;
+    
+    try {
+      const depart_value = departInput.getValue();
+      const arrival_value = arrivalInput ? arrivalInput.getValue() : "";
+      
+      // Calculate price
+      data_price = await calculatePrice(depart_value, arrival_value, selectedVehicle || "");
+      
+      // Only proceed if we got valid data
+      if (data_price) {
+        price_set = true;
+        price_car = data_price["car"]["price"];
+        price_truck = data_price["truck"]["price"];
+        
+        if (set_param) {
+          const params = new URLSearchParams({
+            r1: depart_value,
+            r2: arrival_value,
+            selected: selectedVehicle || "",
+            lang: lang
+          });
+          window.history.replaceState({}, '', `/?${params.toString()}`);
+        }
 
-    scrollToSection(1);
-    if (reserveButton) {
-      reserveButton.focus();
+        // Scroll to section and focus
+        setTimeout(() => {
+          scrollToSection(1);
+          if (reserveButton) {
+            reserveButton.focus();
+          }
+        }, 300); // Small delay to ensure modal closes first
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+    } finally {
+      // Hide loading animation - this MUST execute!
+      isCalculatingPrice = false;
     }
-  } catch (error) {
-    console.error('Erreur:', error);
   }
-}
-
   function handleKeyDown(event: KeyboardEvent) {
     if (
       departInput.getShowAutocomplete() ||
@@ -346,6 +361,33 @@ layduhurdevelopment@gmail.com");
 <PasswordProtection onPasswordCorrect={handlePasswordCorrect} />
 
 {#if isAuthenticated}
+
+{#if isCalculatingPrice}
+<div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+  <div class="bg-black bg-opacity-80 p-8 rounded-xl border border-amstram-purple shadow-lg max-w-md w-full mx-auto">
+    <div class="flex flex-col items-center">
+      <h3 class="text-2xl font-bold text-white mb-6">{contenu[lang].calculatingPrice || "Calcul en cours..."}</h3>
+      
+      <div class="relative w-full h-16 mb-6 overflow-hidden">
+        <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+          <div class="bg-amstram-purple h-full animate-pulse rounded-full"></div>
+        </div>
+        
+        <img 
+          src="/truck.webp" 
+          alt="Truck" 
+          class="absolute h-12 top-4 truck-calculation-animation"
+        />
+      </div>
+      
+      <p class="text-gray-300 text-center">
+        {contenu[lang].calculatingPriceMessage || "Nous calculons le meilleur tarif pour votre trajet."}
+      </p>
+    </div>
+  </div>
+</div>
+{/if}
+
   <main class="w-full text-amstram-white font-sans">
     <div
       class="section min-h-screen flex flex-col relative transition-colors duration-1000"
@@ -1008,6 +1050,19 @@ layduhurdevelopment@gmail.com");
 
   .section {
     transition: background-color 0.8s ease;
+  }
+
+  @keyframes truckCalculationMove {
+    0% {
+      transform: translateX(-50px);
+    }
+    100% {
+      transform: translateX(calc(100% + 50px));
+    }
+  }
+
+  .truck-calculation-animation {
+    animation: truckCalculationMove 1.5s infinite ease-in-out;
   }
 
   @keyframes truckMove {

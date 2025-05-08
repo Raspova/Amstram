@@ -7,16 +7,52 @@ import type { List } from "lucide-svelte";
 
 export const POST: RequestHandler = async ({ request }) => {
   const data = await request.json();
-  const cartItems: number = data.price;
-  const routId: string = data.id;
+  //const cartItems: number = data.price;
+  const routId: string = data.route_id;
   let customerId;
-  
+  if (data.price < 1) {
+    return new Response(JSON.stringify({ error: 'Le prix doit être supérieur à 1' }), {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+  if (data.customerEmail) {
+    const existingCustomers = await stripe.customers.list({
+      email: data.customerEmail,
+      limit: 1
+    });
+    
+    if (existingCustomers.data.length > 0) {
+      // Customer exists, use existing ID
+      customerId = existingCustomers.data[0].id;
+      // Optionally update customer data if needed
+      //if (data.customerName || data.customerPhone) {
+      //  await stripe.customers.update(customerId, {
+      //    name: data.customerName || existingCustomers.data[0].name,
+      //    phone: data.customerPhone || existingCustomers.data[0].phone
+      //  });
+      //}
+    } else {
+      // Create new customer if not found
+      const customer = await stripe.customers.create({
+        email: data.customerEmail,
+        name: data.customerName || "",
+        phone: data.customerPhone || ""
+      });
+      customerId = customer.id;
+    }
+  } else {
+    // Create new customer if no email; should not happen
     const customer = await stripe.customers.create({
       email: data.customerEmail || "",
       name: data.customerName || "",
       phone: data.customerPhone || ""
     });
     customerId = customer.id;
+  }
+    
  
   // Parcourir les langues pour trouver l'index
   let vehicleTypeIndex = -1;
@@ -55,6 +91,7 @@ export const POST: RequestHandler = async ({ request }) => {
   // Create session
   const session = await stripe.checkout.sessions.create({
     line_items: lineItems,
+    client_reference_id:data.route_id + "_checkout",
     //shipping_address_collection: {
     //  allowed_countries: ["FR", "BE", "LU", "CH", "DE", "ES", "IT"],
     //},
@@ -62,8 +99,8 @@ export const POST: RequestHandler = async ({ request }) => {
     mode: "payment",
     success_url: `https://amstram.eu/route/${routId}?success=true`,
     cancel_url: `https://amstram.eu/route/${routId}?canceled=true`,
-   // customer: customerId,
-
+    customer: customerId, // CHECK EEFFECTT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    customer_email : data.customerEmail || null,
     phone_number_collection: {
       enabled: true,
     },

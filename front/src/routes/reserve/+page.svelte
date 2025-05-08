@@ -1,6 +1,6 @@
 <script lang="ts">
     import PhoneVerification from "$lib/components/auth/PhoneVerification.svelte";
-    import AuthComponant from "$lib/components/auth/AuthComponant.svelte";
+   // import AuthComponant from "$lib/components/auth/AuthComponant.svelte";
     import TravelContainer from "$lib/components/TravelContainer.svelte";
     import Vehicule from "$lib/components/Vehicule.svelte";
     import { getUser } from "$lib/appwrite";
@@ -11,6 +11,8 @@
     import type { IRoute } from '$lib/appwrite';
     import Header from "$lib/components/Header.svelte";
     import { goto } from "$app/navigation";
+    import { contenu } from '$lib/contenu';
+
 
     let depart: TravelContainer;
     let arrival: TravelContainer;
@@ -112,7 +114,7 @@
         try {
             const res = await addRoute(route);
             
-            goto(`/route/${res.$id}`);
+            goto(`/route/${res.$id}?lang=` + lang);
         } catch (error) {
             console.error(error);
         }
@@ -190,7 +192,7 @@
                 class="flex items-center justify-center gap-2 {valid && verified ? 'bg-amstram-purple hover:bg-purple-700' : 'bg-gray-400'} text-white font-semibold py-3 px-8 rounded-lg shadow-sm transition-colors duration-200 text-lg w-full max-w-md"
             >
                 <Check class="w-5 h-5" />
-                Valider
+                {contenu[lang].valid}
             </button>
         </div>
     </div>

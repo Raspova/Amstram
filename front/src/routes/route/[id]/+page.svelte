@@ -45,9 +45,13 @@
 
   $: id = $page.params.id;
   let route: Route | null = null;
-  let lang = "fr";
+  let lang : string = "fr" ;
 
   onMount(async () => {
+
+    const urlParams = new URLSearchParams(window.location.search);
+      
+    lang = urlParams.get('lang') || 'fr';
     route = await getRoutes(id);
     console.log(route);
     AOS.init({
@@ -86,7 +90,7 @@
       },
       body: JSON.stringify({
         price: route?.price,
-        id: route?.$id,
+        route_id: route?.$id,
         vType: route?.vType,
         origin: route?.depart,
         destination: route?.arrival,

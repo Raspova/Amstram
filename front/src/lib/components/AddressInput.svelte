@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MapPin, AlertCircle } from "lucide-svelte";
+  import { MapPin, AlertCircle, Crosshair } from "lucide-svelte";
   import { contenu } from "$lib/contenu";
   import { handleAutocomplete } from "$lib/appwrite";
   import { onMount } from "svelte";
@@ -13,6 +13,8 @@
   let autocompleteResults: string[] = [];
   let autocompletePressions: boolean[] = [];
   let isLoadingDepart = false;
+  let isGettingLocation = false;
+  let geolocationError = "";
   let precise: boolean = true;
   export let showAutocomplete = false;
   export let value_set: boolean = false;
@@ -20,7 +22,7 @@
   export const focus: boolean = false;
   export let route: string = '';
   export let placeholder: string = contenu[lang].departLocation;
-  let showTooltip : boolean;
+  let showTooltip: boolean;
   const MAX_RESULTS = 10; // Maximum number of autocomplete results to display
 
   function handleKeyDown(event: KeyboardEvent) {
@@ -44,8 +46,8 @@
     return input.value;
   }
 
-  export function empty(){
-    input.value="";
+  export function empty() {
+    input.value = "";
     value_set = false;
     dispatch("value_set", false);
     autocompleteResults = [];
@@ -93,6 +95,101 @@
     precise = pressise;
   }
 
+  async function getCurrentLocation() {
+    if (!navigator.geolocation) {
+      geolocationError = "Geolocation is not supported by your browser";
+      return;
+    }
+
+    isGettingLocation = true;
+    geolocationError = "";
+
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
+        });
+      });
+
+      const { latitude, longitude } = position.coords;
+      
+      // Use reverse geocoding to get address from coordinates
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch address');
+      }
+      
+      const data = await response.json();
+      
+      // Format the address based on available data
+      const formattedAddress = formatAddress(data);
+      
+      // Use the formatted address
+      input.value = formattedAddress;
+      
+      // Trigger the input event to validate the address
+      const inputEvent = new Event('input', { bubbles: true });
+      input.dispatchEvent(inputEvent);
+      
+      // Wait for autocomplete results to load, then auto-select if only one result
+      setTimeout(async () => {
+        // If there's only one autocomplete result after geolocation, select it automatically
+        if (autocompleteResults.length === 1) {
+          selectLocation(autocompleteResults[0], autocompletePressions[0]);
+        }
+      }, 800); // Wait a bit for the autocomplete to process
+      
+    } catch (error) {
+      if (error instanceof GeolocationPositionError) {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            geolocationError = "User denied the request for geolocation";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            geolocationError = "Location information is unavailable";
+            break;
+          case error.TIMEOUT:
+            geolocationError = "The request to get user location timed out";
+            break;
+        }
+      } else {
+        geolocationError = "An error occurred while getting location";
+      }
+    } finally {
+      isGettingLocation = false;
+      
+      // If there was an error, show it temporarily and then hide it
+      if (geolocationError) {
+        setTimeout(() => {
+          geolocationError = "";
+        }, 3000);
+      }
+    }
+  }
+
+  function formatAddress(data: any): string {
+    // Extract relevant address components
+    const { address } = data;
+    
+    if (!address) return data.display_name || "";
+    
+    const components = [];
+    
+    if (address.road) components.push(address.road);
+    if (address.house_number) components.push(address.house_number);
+    if (address.city || address.town || address.village) 
+      components.push(address.city || address.town || address.village);
+    if (address.postcode) components.push(address.postcode);
+    if (address.country) components.push(address.country);
+    
+    return components.join(", ");
+  }
+
   onMount(() => {
     window.addEventListener('keydown', handleKeyDown);
     if (focus) input.focus();
@@ -110,12 +207,24 @@
       bind:value={route}
       type="text" 
       placeholder={placeholder} 
-      class="w-full pl-10 pr-4 py-2 rounded-lg bg-white text-gray-900 text-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ease-in-out {value_set ? 'ring-2 ring-purple-500' : ''} {precise ? '' : 'ring-2 ring-red-500'} {isLoadingDepart ? 'opacity-50' : ''}" 
+      class="w-full pl-10 pr-12 py-2 rounded-lg bg-white text-gray-900 text-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ease-in-out {value_set ? 'ring-2 ring-purple-500' : ''} {precise ? '' : 'ring-2 ring-red-500'} {isLoadingDepart ? 'opacity-50' : ''}" 
       on:input={handleDepart}
     />
+    
+    <!-- Location button -->
+    <button 
+      type="button"
+      class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-amstram-purple transition-colors duration-200"
+      on:click={getCurrentLocation}
+      title="Use current location"
+      disabled={isGettingLocation}
+    >
+      <Crosshair class={`h-5 w-5 ${isGettingLocation ? 'animate-spin text-amstram-purple' : ''}`} />
+    </button>
+    
     {#if !precise}
       <div 
-        class="absolute right-0 top-1/2 transform -translate-y-1/2 mr-2"
+        class="absolute right-10 top-1/2 transform -translate-y-1/2 mr-2"
         on:mouseenter={() => showTooltip = true}
         on:mouseleave={() => showTooltip = false}
       >
@@ -123,6 +232,7 @@
       </div>
     {/if}
   </div>
+  
   {#if showAutocomplete}
     <div 
       class="absolute z-10 w-full mt-1"
@@ -143,12 +253,22 @@
       </ul>
     </div>
   {/if}
+  
   {#if !precise}
     <div 
       class="absolute z-20 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md shadow-lg mt-2 right-0"
       transition:fly={{ y: 10, duration: 200 }}
     >
       {contenu[lang].needMorePreciseAddress}
+    </div>
+  {/if}
+  
+  {#if geolocationError}
+    <div 
+      class="absolute z-20 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md shadow-lg mt-2 left-0 right-0"
+      transition:fly={{ y: 10, duration: 200 }}
+    >
+      {geolocationError}
     </div>
   {/if}
 </div>
