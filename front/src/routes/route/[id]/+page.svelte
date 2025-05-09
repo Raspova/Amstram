@@ -18,7 +18,8 @@
   import Header from "$lib/components/Header.svelte";
   import { intStatus, contenu } from "$lib/contenu";
   import "aos/dist/aos.css";
-
+  import { getUser } from "$lib/appwrite";
+ 
   interface Route {
     $id: string;
     owner: string;
@@ -79,10 +80,20 @@
     const [name, phone] = contact.split(' - ');
     return { name, phone };
   }
-
   async function pay() {
+  try {
+    const user = await getUser();
+    if (!user) {
+      alert("Vous devez être connecté pour effectuer un paiement.");
+      return;
+    }
+
     const jwt = await getJWT();
-    console.log(jwt);
+    
+    // Format date for invoice
+    //console.log(route)
+    const formattedDate = new Date(route?.disponibility || "").toISOString();
+    
     const data = await fetch("/checkout", {
       method: "POST",
       headers: {
@@ -91,14 +102,46 @@
       body: JSON.stringify({
         price: route?.price,
         route_id: route?.$id,
+<<<<<<< HEAD
+        id: route?.$id, // Include both id formats for compatibility
+=======
+>>>>>>> 883700c3ab6afb589706a24bac77acf438dac12d
         vType: route?.vType,
         origin: route?.depart,
         destination: route?.arrival,
+        date: formattedDate,
+        service: route?.service,
+        customerEmail: user?.email,
+        customerName: user?.name,
+        customerPhone: user?.phone,
         jwt: jwt,
+        // Additional info useful for invoice
+        vMark: route?.vMark,
+        vImmatriculation: route?.vImmatriculation,
+        ownerContact: route?.ownerContact
       }),
-    }).then((data) => data.json());
-    window.location.replace(data.url);
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error("Erreur lors de la création du paiement");
+      }
+      return response.json();
+    });
+    
+    if (data.error) {
+      alert(`Erreur: ${data.error}`);
+      return;
+    }
+    
+    if (data.url) {
+      window.location.replace(data.url);
+    } else {
+      alert("Erreur: Impossible de créer la session de paiement");
+    }
+  } catch (error) {
+    console.error("Erreur de paiement:", error);
+    alert("Une erreur est survenue lors de la préparation du paiement.");
   }
+}
 </script>
 
 <div class="min-h-screen py-8 px-4">

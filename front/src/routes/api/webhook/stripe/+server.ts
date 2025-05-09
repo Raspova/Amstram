@@ -83,6 +83,29 @@ export const POST: RequestHandler = async ({ request }) => {
         }
     }
 
+
+
+if (event.type === 'invoice.created') {
+    const invoice = event.data.object;
+    
+    // Check if this is an invoice from our checkout process
+    if (invoice.metadata && invoice.metadata.routeId) {
+      try {
+        // Finalize the invoice if it's not already finalized
+        if (invoice.status === 'draft') {
+          await stripe.invoices.finalizeInvoice(invoice.id);
+        }
+        
+        // Send the invoice by email
+        await stripe.invoices.sendInvoice(invoice.id);
+        
+        console.log(`Invoice ${invoice.id} sent automatically to ${invoice.customer_email}`);
+      } catch (error) {
+        console.error(`Error sending invoice ${invoice.id}:`, error);
+      }
+    }
+  }
+
     // Pour tous les autres types d'événements
     return json({ success: true, received: true });
 };
