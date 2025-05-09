@@ -407,7 +407,7 @@ layduhurdevelopment@gmail.com");
       />
       <div class="w-full flex-grow" data-aos="fade-up" data-aos-duration="1500">
         <section class="max-w-7xl mx-auto mt-24 px-4 sm:px-8">
-          <h2 class="text-5xl font-bold mb-12 text-center xl:-mt-20 lg:mb-24">
+          <h2 class="text-5xl font-bold mb-12 text-center 2xl:-mt-20 xl:mb-24">
             {contenu[lang][selectedService].title}
           </h2>
 
