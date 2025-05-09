@@ -84,7 +84,7 @@ export const POST: RequestHandler = async ({ request }) => {
     }
 
 
-
+/*
 if (event.type === 'invoice.created') {
     const invoice = event.data.object;
     
@@ -105,7 +105,7 @@ if (event.type === 'invoice.created') {
       }
     }
   }
-
+*/
     // Pour tous les autres types d'événements
     return json({ success: true, received: true });
 };

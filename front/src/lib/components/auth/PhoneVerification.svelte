@@ -40,6 +40,7 @@
         const res2 = await createPhoneVerification();
         if (!res || !res2) {
           alert(contenu[lang].phoneUpdateError);
+          console.log("update : ",res, " " , "createPhone : ",res2)
         } else {
           sms_sent = true;
         }
