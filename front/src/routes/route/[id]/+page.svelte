@@ -102,10 +102,7 @@
       body: JSON.stringify({
         price: route?.price,
         route_id: route?.$id,
-<<<<<<< HEAD
         id: route?.$id, // Include both id formats for compatibility
-=======
->>>>>>> 883700c3ab6afb589706a24bac77acf438dac12d
         vType: route?.vType,
         origin: route?.depart,
         destination: route?.arrival,

@@ -8,14 +8,9 @@ import type { List } from "lucide-svelte";
 export const POST: RequestHandler = async ({ request }) => {
   const data = await request.json();
   //const cartItems: number = data.price;
-<<<<<<< HEAD
   const routId: string =  data.route_id;
   let customerId;
   
-=======
-  const routId: string = data.route_id;
-  let customerId;
->>>>>>> 883700c3ab6afb589706a24bac77acf438dac12d
   if (data.price < 1) {
     return new Response(JSON.stringify({ error: 'Le prix doit être supérieur à 1' }), {
       status: 400,
@@ -24,10 +19,7 @@ export const POST: RequestHandler = async ({ request }) => {
       }
     });
   }
-<<<<<<< HEAD
   
-=======
->>>>>>> 883700c3ab6afb589706a24bac77acf438dac12d
   if (data.customerEmail) {
     const existingCustomers = await stripe.customers.list({
       email: data.customerEmail,
@@ -37,7 +29,6 @@ export const POST: RequestHandler = async ({ request }) => {
     if (existingCustomers.data.length > 0) {
       // Customer exists, use existing ID
       customerId = existingCustomers.data[0].id;
-<<<<<<< HEAD
  //     // Optionally update customer data if needed
  //     if (data.customerName || data.customerPhone) {
  //       await stripe.customers.update(customerId, {
@@ -45,15 +36,6 @@ export const POST: RequestHandler = async ({ request }) => {
  //         phone: data.customerPhone || existingCustomers.data[0].phone
  //       });
  //     }
-=======
-      // Optionally update customer data if needed
-      //if (data.customerName || data.customerPhone) {
-      //  await stripe.customers.update(customerId, {
-      //    name: data.customerName || existingCustomers.data[0].name,
-      //    phone: data.customerPhone || existingCustomers.data[0].phone
-      //  });
-      //}
->>>>>>> 883700c3ab6afb589706a24bac77acf438dac12d
     } else {
       // Create new customer if not found
       const customer = await stripe.customers.create({
@@ -115,24 +97,12 @@ export const POST: RequestHandler = async ({ request }) => {
   // Create session with invoice creation enabled
   const session = await stripe.checkout.sessions.create({
     line_items: lineItems,
-<<<<<<< HEAD
     client_reference_id: routId + "_checkout",
-=======
-    client_reference_id:data.route_id + "_checkout",
-    //shipping_address_collection: {
-    //  allowed_countries: ["FR", "BE", "LU", "CH", "DE", "ES", "IT"],
-    //},
->>>>>>> 883700c3ab6afb589706a24bac77acf438dac12d
     billing_address_collection: 'required',
     mode: "payment",
     success_url: `https://amstram.eu/route/${routId}?success=true`,
     cancel_url: `https://amstram.eu/route/${routId}?canceled=true`,
-<<<<<<< HEAD
     customer: customerId,
-=======
-    customer: customerId, // CHECK EEFFECTT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    customer_email : data.customerEmail || null,
->>>>>>> 883700c3ab6afb589706a24bac77acf438dac12d
     phone_number_collection: {
       enabled: true,
     },
