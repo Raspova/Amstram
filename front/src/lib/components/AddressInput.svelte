@@ -24,6 +24,7 @@
   export let placeholder: string = contenu[lang].departLocation;
   let showTooltip: boolean;
   const MAX_RESULTS = 10; // Maximum number of autocomplete results to display
+  let shouldTriggerEvent = false;
 
   function handleKeyDown(event: KeyboardEvent) {
     if (showAutocomplete) {
@@ -64,7 +65,7 @@
     showAutocomplete = show;
   }
 
-  function handleDepart(event: Event) {
+  function handleDepart(event: Event, triggerEvent: boolean = false) {
     const val = (event.target as HTMLInputElement).value;
     value_set = false;
     precise = true;
@@ -81,8 +82,14 @@
       autocompletePressions = (data?.precise || []).slice(0, MAX_RESULTS);
       showAutocomplete = autocompleteResults && autocompleteResults.length > 0;
     }).finally(() => {
-      isLoadingDepart = false;
-    });
+      isLoadingDepart = false; 
+      if (triggerEvent) { 
+      if (autocompleteResults.length === 1) {
+          selectLocation(autocompleteResults[0], autocompletePressions[0]);
+        }
+    }
+    }); 
+    shouldTriggerEvent = false
   }
 
   export function selectLocation(location: string, pressise: boolean) {
@@ -132,18 +139,11 @@
       // Use the formatted address
       input.value = formattedAddress;
       
-      // Trigger the input event to validate the address
+      shouldTriggerEvent = true;
       const inputEvent = new Event('input', { bubbles: true });
       input.dispatchEvent(inputEvent);
       
-      // Wait for autocomplete results to load, then auto-select if only one result
-      setTimeout(async () => {
-        // If there's only one autocomplete result after geolocation, select it automatically
-        if (autocompleteResults.length === 1) {
-          selectLocation(autocompleteResults[0], autocompletePressions[0]);
-        }
-      }, 800); // Wait a bit for the autocomplete to process
-      
+   
     } catch (error) {
       if (error instanceof GeolocationPositionError) {
         switch (error.code) {
@@ -208,7 +208,7 @@
       type="text" 
       placeholder={placeholder} 
       class="w-full pl-10 pr-12 py-2 rounded-lg bg-white text-gray-900 text-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ease-in-out {value_set ? 'ring-2 ring-purple-500' : ''} {precise ? '' : 'ring-2 ring-red-500'} {isLoadingDepart ? 'opacity-50' : ''}" 
-      on:input={handleDepart}
+      on:input={(e) => handleDepart(e, shouldTriggerEvent)}
     />
     
     <!-- Location button -->

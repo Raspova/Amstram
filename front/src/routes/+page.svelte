@@ -53,8 +53,56 @@
   let act = false;
   let data_price: any;
   let last_service = "";
-  let last_price = 0;
+  let last_price : number = 0;
+  let liter_essence : number = 20;
   let showDepannageDropdown = false;
+ 
+  let type_essense :number = 0;
+  let essence = [
+  {
+    "id": 1,
+    "name": "Gazole",
+    "short_name": "Gazole",
+    "type": "D",
+    "picto": "B7",
+    "price":-2
+  },
+  {
+    "id": 3,
+    "name": "Super Ethanol E85",
+    "short_name": "E85",
+    "type": "E",
+    "picto": "E85",
+    "price":-2
+  },
+  {
+    "id": 5,
+    "name": "Super Sans Plomb 95 E10",
+    "short_name": "SP95-E10",
+    "type": "E",
+    "picto": "E10",
+    "price":-2
+  },
+  {
+    "id": 2,
+    "name": "Super Sans Plomb 95",
+    "short_name": "SP95",
+    "type": "E",
+    "picto": "E5",
+    "price":-2
+  },
+  {
+    "id": 6,
+    "name": "Super Sans Plomb 98",
+    "short_name": "SP98",
+    "type": "E",
+    "picto": "E5",
+    "price":-2
+  },
+  
+]
+
+
   function handleDepartSet(event: CustomEvent) {
     depart_set = event.detail;
     if (arrivalInput) arrivalInput.setShowAutocomplete(false);
@@ -348,7 +396,77 @@ layduhurdevelopment@gmail.com");
     } catch {}
   }
 
-  $: console.log(selectedDepannage);
+ 
+  function getPreviousMonthPeriod() {
+    const today = new Date();
+    let year = today.getFullYear();
+    // Get previous month (0-11)
+    let month = today.getMonth();
+    
+    // If it's January, go back to December of previous year
+    if (month === 0) {
+      month = 11;
+      year--;
+    } else {
+      month--; // Otherwise just go back one month
+    }
+    
+    // Format with leading zero for month
+    const formattedMonth = String(month + 1).padStart(2, '0');
+    return `${year}-${formattedMonth}`;
+  }
+
+  // Function to fetch fuel prices
+  async function fetchFuelPrice(id : any) {
+    try {
+      const period = getPreviousMonthPeriod();
+      console.log("POP")
+      const response = await fetch(`https://api.prix-carburants.2aaz.fr/fuel/${id}/price/${period}`);
+      
+      if (!response.ok) {
+        throw new Error(`API returned ${response.status}`);
+      }
+      
+      const data = await response.json();
+      //console.log(data , data.PriceTTC ? parseFloat(data.PriceTTC.value) : 0)
+      return data.PriceTTC ? parseFloat(data.PriceTTC.value) : -1;
+      
+      // Find the essence item and update its price
+      //const index = essence.findIndex(e => e.id === id);
+      //if (index !== -1) {
+      //  essence[index].price = data.PriceHTT ? parseFloat(data.PriceHTT) : 0;
+      //  essence = [...essence]; // Trigger reactivity
+      //}
+    } catch (error) {
+      console.error("Failed to fetch fuel price:", error);
+      return -1;  
+      // Find the essence item and update its price to error state
+      // const index = essence.findIndex(e => e.id === id);
+      // if (index !== -1) {
+      //   essence[index].price = -1; // Error state
+      //   essence = [...essence]; // Trigger reactivity
+      // }
+    }
+  }
+  
+  // This is exactly what you asked for
+  $: {
+    if (type_essense != 0) {
+      // Find the essence item with this ID
+      const index = essence.findIndex(e => e.id === type_essense);
+      if (index !== -1) {
+        // Mark as loading
+        if (essence[index].price == -2) {
+          (async () => {
+            essence[index].price = await fetchFuelPrice(type_essense);
+            essence = [...essence]; // Trigger reactivity
+          })();
+        }        
+        // Fetch the price
+      }
+    }
+  }
+  //$: console.log(selectedDepannage);
 </script>
 
 <svelte:head>
@@ -406,7 +524,7 @@ layduhurdevelopment@gmail.com");
         {reserve}
       />
       <div class="w-full flex-grow" data-aos="fade-up" data-aos-duration="1500">
-        <section class="max-w-7xl mx-auto mt-24 px-4 sm:px-8">
+        <section class="max-w-7xl 2xl:max-w-[70%] mx-auto mt-24 px-4 sm:px-8 ">
           <h2 class="text-5xl font-bold mb-12 text-center 2xl:-mt-20 xl:mb-24">
             {contenu[lang][selectedService].title}
           </h2>
@@ -471,8 +589,9 @@ layduhurdevelopment@gmail.com");
               <button
                 class="{selectedService === 'Remorquage'
                   ? 'bg-amstram-purple text-white border-2 border-white'
-                  : 'text-gray-300 border border-gray-500'} flex items-center justify-center py-2 px-3 rounded-lg transition-all duration-300"
+                  : 'text-gray-300 border border-gray-500'} flex items-center justify-center py-2 px-3 rounded-lg transition-all duration-300  bg-gray-500"
                 on:click={() => (selectedService = "Remorquage")}
+                disabled={true}
               >
                 <Anchor class="mr-2" size={20} />
                 {contenu[lang]["Remorquage"].name}
@@ -595,18 +714,123 @@ layduhurdevelopment@gmail.com");
               >{contenu[lang].reserve}</button
             >
           </form>
+          <!-- ESSENCE ADDITIONAL INPUT  "-->
+          {#if selectedService == "Dépannage" && selectedDepannage == "Essence"}
+  <div class="bg-black/20 backdrop-blur-sm rounded-lg p-4 mx-10 my-4 border border-gray-500 mt-12 pt-2">
+    <h3 class="text-white font-semibold mb-3 flex items-center">
+      <Fuel class="mr-2" size={20} />
+      Type de carburant
+    </h3>
+    
+    <div class="relative mb-6">
+      <select 
+        bind:value={type_essense} 
+        class="w-full pl-4 pr-12 py-3 rounded-lg bg-white text-amstram-black appearance-none text-lg"
+      >
+        <option disabled selected value={0}>Sélectionnez votre carburant</option>
+        {#each essence as carburant, index}
+          <option value={carburant.id}>{carburant.name}</option>
+        {/each}
+      </select>
+      <div class="pointer-events-none absolute right-4 top-1/2 transform -translate-y-1/2">
+        <ChevronDown class="text-gray-400" />
+      </div>
+    </div>
+    
+    {#if type_essense > 0}
+      <div class="mt-3 mb-6 flex items-center justify-between bg-white/20 p-2 rounded-lg">
+        <div class="flex items-center">
+          <div class="bg-amstram-purple text-white rounded-full p-1 mr-2">
+            {essence.find(e => e.id === type_essense)?.picto || ''}
+          </div>
+          <span class="text-white">
+            {essence.find(e => e.id === type_essense)?.short_name || ''}
+          </span>
+        </div>
+        
+        {#if essence.find(e => e.id === type_essense)?.price > 0}
+          <div class="bg-amstram-purple/80 text-white px-3 py-1 rounded-lg font-semibold">
+            {essence.find(e => e.id === type_essense)?.price.toFixed(2)} €/L
+          </div>
+        {:else if essence.find(e => e.id === type_essense)?.price === -2}
+          <div class="bg-gray-600/80 text-white px-3 py-1 rounded-lg flex items-center">
+            <div class="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+            Chargement...
+          </div>
+        {:else}
+          <div class="bg-red-500/80 text-white px-3 py-1 rounded-lg">
+            Prix indisponible
+          </div>
+        {/if}
+      </div>
+      
+      <!-- Fuel quantity slider -->
+      <div class="mt-6">
+        <h3 class="text-white font-semibold mb-3 flex items-center">
+          <Droplets class="mr-2" size={20} />
+          Quantité ({liter_essence} litres)
+        </h3>
+        
+        <div class="relative">
+          <input 
+            type="range" 
+            min="20" 
+            max="100" 
+            step="20" 
+            bind:value={liter_essence}
+            class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-amstram-purple"
+          />
+          
+          <!-- Tick marks for values -->
+          <div class="w-full flex justify-between text-xs text-white mt-2">
+            <span>20L</span>
+            <span>40L</span>
+            <span>60L</span>
+            <span>80L</span>
+            <span>100L</span>
+          </div>
+        </div>
+        
+        <!-- Visual representation of fuel amount and total price -->
+        <div class="mt-4 bg-white/10 rounded-lg p-2">
+          <div class="relative h-8 bg-gray-700 rounded overflow-hidden">
+            <div 
+              class="absolute h-full bg-amstram-purple transition-all duration-300 flex items-center justify-end pr-2"
+              style="width: {liter_essence}%;"
+            >
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="text-white font-bold drop-shadow-lg">{liter_essence} L</span>
+            </div>
+          </div>
+          
+          {#if essence.find(e => e.id === type_essense)?.price > 0}
+            <div class="mt-3 flex justify-between items-center bg-white/20 p-2 rounded-lg">
+              <span class="text-white">Prix total estimé:</span>
+              <span class="text-white font-bold">
+                {(essence.find(e => e.id === type_essense)?.price * liter_essence).toFixed(2)} €
+              </span>
+            </div>
+          {/if}
+        </div>
+      </div>
+    {/if}
+  </div>
+{/if}
         </section>
-
+        {#if selectedDepannage != "Essence"}
         <section
-          class="max-w-7xl mx-auto mr-20 mt-10 px-4 sm:px-8 flex flex-col md:flex-row items-center"
+          class="max-w-7xl 2xl:max-w-[70%] mx-auto lg:mr-16 mt-10 px-4 sm:px-8 flex flex-col md:flex-row items-center  " 
         >
-          <div class="md:w-1/2 mb-12 md:mb-0">
+          <div class="lg:w-1/2 mb-12 md:mb-0">
             <p class="text-5xl font-bold mb-6">{contenu[lang].subtitle}</p>
 
             <p class="text-gray-300 text-3xl">
               {#if selectedService != "Dépannage"}
                 {contenu[lang][selectedService].description}
-              {:else}
+              {:else if selectedDepannage != "Essence"}
+                 <p class="block lg:hidden text-center text-gray-300 text-xl font-bold   mb-4">Service disponible uniquement à Paris et sa banlieue.</p>
+
                 <div class="space-y-1 text-xl">
                   <div class="flex items-center gap-3">
                     <Wrench size="20" class=" flex-shrink-0" />
@@ -644,14 +868,25 @@ layduhurdevelopment@gmail.com");
             </div>
           </div>
           {#if lang != "mu"}
-          <div class="hidden lg:block">
+          {#if selectedService != "Convoyage" }
+          <div class="flex flex-col hidden lg:block ml-10">
+
+            <p class="text-center text-gray-300 text-xl font-bold   mb-4">Service disponible uniquement à Paris et sa banlieue.</p>
+            <div class="flex justify-center">
+
+              <img src="/paris.png" class=" w-[400px]" alt="carte de Paris" >
+            </div>
+          </div>
+          {:else}
+           <div class="hidden lg:block flex justify-center">
             <Eumap />
           </div>
+          {/if}
           {:else}
           <img src="map-mu.png" alt="map of glorious mauritus" class="hidden md:flex md:w-1/3 lg:w-1/4 mx-auto">
           {/if}
         </section>
-
+        {/if}
         <img
           src="/truck.webp"
           alt="Truck"
