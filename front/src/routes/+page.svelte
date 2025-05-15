@@ -9,6 +9,7 @@
     Wrench,
     Anchor,
     Droplets,
+    AlertCircle
   } from "lucide-svelte";
   import {
     Instagram as InstagramIcon,
@@ -19,7 +20,7 @@
   import { onMount } from "svelte";
   import AOS from "aos";
   import Eumap from "$lib/components/Eumap.svelte";
-  import { calculatePrice, getUser } from "$lib/appwrite";
+  import { calculatePrice, getUser , calculatePriceDepanage } from "$lib/appwrite";
   import { contenu } from "$lib/contenu";
   import AddressInput from "$lib/components/AddressInput.svelte";
   import { goto } from "$app/navigation";
@@ -103,9 +104,18 @@
 ]
 
 
-  function handleDepartSet(event: CustomEvent) {
+let route_depanage_price = 0;
+
+  async function handleDepartSet(event: CustomEvent) {
     depart_set = event.detail;
     if (arrivalInput) arrivalInput.setShowAutocomplete(false);
+    //if (selectedService == "Dépannage") {
+    //}
+    if (!depart_set) return;
+    calculatePriceDepanage(departInput.getValue()).then(res => {
+      route_depanage_price = res.price;
+    })
+    //console.log("HOOOOO : " ,res  )
   }
 
   function handleArrivalSet(event: CustomEvent) {
@@ -420,32 +430,17 @@ layduhurdevelopment@gmail.com");
   async function fetchFuelPrice(id : any) {
     try {
       const period = getPreviousMonthPeriod();
-      console.log("POP")
       const response = await fetch(`https://api.prix-carburants.2aaz.fr/fuel/${id}/price/${period}`);
-      
       if (!response.ok) {
         throw new Error(`API returned ${response.status}`);
       }
-      
       const data = await response.json();
-      //console.log(data , data.PriceTTC ? parseFloat(data.PriceTTC.value) : 0)
       return data.PriceTTC ? parseFloat(data.PriceTTC.value) : -1;
-      
-      // Find the essence item and update its price
-      //const index = essence.findIndex(e => e.id === id);
-      //if (index !== -1) {
-      //  essence[index].price = data.PriceHTT ? parseFloat(data.PriceHTT) : 0;
-      //  essence = [...essence]; // Trigger reactivity
-      //}
+ 
     } catch (error) {
       console.error("Failed to fetch fuel price:", error);
       return -1;  
-      // Find the essence item and update its price to error state
-      // const index = essence.findIndex(e => e.id === id);
-      // if (index !== -1) {
-      //   essence[index].price = -1; // Error state
-      //   essence = [...essence]; // Trigger reactivity
-      // }
+     
     }
   }
   
@@ -458,7 +453,7 @@ layduhurdevelopment@gmail.com");
         // Mark as loading
         if (essence[index].price == -2) {
           (async () => {
-            essence[index].price = await fetchFuelPrice(type_essense);
+            essence[index].price = await fetchFuelPrice(type_essense) + 0.05;
             essence = [...essence]; // Trigger reactivity
           })();
         }        
@@ -638,9 +633,10 @@ layduhurdevelopment@gmail.com");
                     {#each contenu[lang].depannage as type}
                       <button
                         type="button"
-                        class="w-full px-4 py-2 text-left flex items-center hover:bg-gray-100"
+                        class="w-full px-4 py-2 text-left flex items-center  {(type.icon == "PlugZap" ? "bg-gray-600"  : "hover:bg-gray-100")}"
+                        disabled={(type.icon == "PlugZap" ? true  : false)}
                         on:click={() => {
-                          selectedDepannage = type.name;
+                          selectedDepannage = type.id;
                           showDepannageDropdown = false;
                         }}
                       >
@@ -805,11 +801,40 @@ layduhurdevelopment@gmail.com");
           </div>
           
           {#if essence.find(e => e.id === type_essense)?.price > 0}
-            <div class="mt-3 flex justify-between items-center bg-white/20 p-2 rounded-lg">
-              <span class="text-white">Prix total estimé:</span>
-              <span class="text-white font-bold">
-                {(essence.find(e => e.id === type_essense)?.price * liter_essence).toFixed(2)} €
-              </span>
+            <div class="mt-3 flex flex-col  bg-white/20 p-2 rounded-lg my-2">
+              <div  class="flex justify-between items-center">
+                <span class="text-white">Prix estimé:</span>
+                <span class="text-white font-bold">
+                  {(essence.find(e => e.id === type_essense)?.price * liter_essence).toFixed(2)} €
+                </span>
+              </div>
+              {#if route_depanage_price != 0 && route_depanage_price != -1 && selectedService == "Dépannage"}
+              <div class="flex justify-between items-center my-2 ">
+                <span class="text-white">
+                  Frais de déplacement 
+                </span>
+                <span class="text-white font-bold">
+                  {route_depanage_price.toFixed(2)} €
+                </span>
+              </div>
+              <div class="flex justify-between items-center my-2 ">
+                <span class="text-white">
+                  Prix Total: 
+                </span>
+                <span class="text-white font-bold">
+                  {(route_depanage_price + (essence.find(e => e.id === type_essense)?.price * liter_essence) ).toFixed(2)} €
+                </span>
+              </div>
+              {:else if route_depanage_price == -1}
+              <div class="bg-red-900/30 backdrop-blur-sm p-4 rounded-lg border border-red-500/50 mb-6">
+                <div class="flex items-center space-x-3">
+                  <AlertCircle class="text-red-400" size={24} />
+                  <p class="text-white font-medium">
+                    Service disponible uniquement à Paris et sa banlieue
+                  </p>
+                </div>
+              </div>
+            {/if}
             </div>
           {/if}
         </div>
@@ -818,17 +843,84 @@ layduhurdevelopment@gmail.com");
   </div>
 {/if}
         </section>
-        {#if selectedDepannage != "Essence"}
-        <section
-          class="max-w-7xl 2xl:max-w-[70%] mx-auto lg:mr-16 mt-10 px-4 sm:px-8 flex flex-col md:flex-row items-center  " 
-        >
+        
+        {#if selectedDepannage != "Essence" }
+        <section class="max-w-7xl 2xl:max-w-[70%] mx-auto lg:mr-16 mt-10 px-4 sm:px-8 flex flex-col md:flex-row items-center">
           <div class="lg:w-1/2 mb-12 md:mb-0">
+            {#if route_depanage_price != 0 && route_depanage_price != -1 && selectedService == "Dépannage" && selectedDepannage != ""}
+              <div class="bg-black/30 backdrop-blur-sm p-5 rounded-lg border border-amstram-purple/30 mb-6">
+                <div class="flex items-center space-x-3 mb-4">
+                  <Truck class="text-amstram-purple" size={24} />
+                  <h3 class="text-white text-xl font-semibold">Résumé des frais</h3>
+                </div>
+                
+                <div class="space-y-3">
+                  <!-- Travel fees -->
+                  <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                    <div class="flex items-center space-x-2">
+                      <MapPin class="text-amstram-purple" size={20} />
+                      <span class="text-gray-300">Frais de déplacement</span>
+                    </div>
+                    <span class="text-white font-semibold">
+                      {route_depanage_price.toFixed(2)} €
+                    </span>
+                  </div>
+                  
+                  <!-- Service fee if applicable -->
+                  {#if selectedDepannage == "Vidange"}
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                      <div class="flex items-center space-x-2">
+                        <Droplets class="text-amstram-purple" size={20} />
+                        <span class="text-gray-300">Forfait d'intervention</span>
+                      </div>
+                      <span class="text-white font-semibold">
+                        80.00 €
+                      </span>
+                    </div>
+                    
+                    <!-- Total -->
+                    <div class="flex justify-between items-center p-4 bg-amstram-purple/20 rounded-lg mt-4 border-t border-amstram-purple/30">
+                      <span class="text-white font-bold">Prix total estimé</span>
+                      <span class="text-white text-xl font-bold">
+                        {(route_depanage_price + 80).toFixed(2)} €
+                      </span>
+                    </div>
+                    {:else if selectedDepannage = "Dépannage"}
+                    <!-- Just travel fee as total -->
+                    <div class="flex justify-between items-center p-4 bg-amstram-purple/20 rounded-lg mt-4 border-t border-amstram-purple/30">
+                      <span class="text-white font-bold">Le prix de l'intervention sera evaluer sur place</span>
+                       
+                    </div>
+                  {:else}
+                    <!-- Just travel fee as total -->
+                    <div class="flex justify-between items-center p-4 bg-amstram-purple/20 rounded-lg mt-4 border-t border-amstram-purple/30">
+                      <span class="text-white font-bold">Prix total estimé</span>
+                      <span class="text-white text-xl font-bold">
+                        {route_depanage_price.toFixed(2)} €
+                      </span>
+                    </div>
+                  {/if}
+                </div>
+              </div>
+            {:else if route_depanage_price == -1 && selectedService == "Dépannage"}
+              <div class="bg-red-900/30 backdrop-blur-sm p-4 rounded-lg border border-red-500/50 mb-6">
+                <div class="flex items-center space-x-3">
+                  <AlertCircle class="text-red-400" size={24} />
+                  <p class="text-white font-medium">
+                    Service disponible uniquement à Paris et sa banlieue
+                  </p>
+                </div>
+              </div>
+            {/if}
+          
+            {#if selectedService != "Dépannage" || (selectedDepannage == "" || !depart_set)}
+              
             <p class="text-5xl font-bold mb-6">{contenu[lang].subtitle}</p>
-
+            
             <p class="text-gray-300 text-3xl">
               {#if selectedService != "Dépannage"}
                 {contenu[lang][selectedService].description}
-              {:else if selectedDepannage != "Essence"}
+              {:else  }
                  <p class="block lg:hidden text-center text-gray-300 text-xl font-bold   mb-4">Service disponible uniquement à Paris et sa banlieue.</p>
 
                 <div class="space-y-1 text-xl">
@@ -847,7 +939,8 @@ layduhurdevelopment@gmail.com");
                 </div>
               {/if}
             </p>
-
+            {/if}
+            
             <div class="flex mt-8 mb-2 space-x-4">
               <a
                 href="https://www.instagram.com/amstram.eu"

@@ -103,10 +103,10 @@ const contenu : any = {
     verifyEmail: "Vérification de l'email",
     depannage_type: "Type de Dépannage",
     depannage: [
-      { name: "Dépannage", icon: "Wrench" },
-      { name: "Essence", icon: "Fuel" },
-      { name: "Électrique", icon: "PlugZap" },
-      {name : "Vidange" , icon: "Droplets"}
+      { name: "Dépannage", icon: "Wrench" , id: "Dépannage" },
+      { name: "Essence", icon: "Fuel" ,id: "Essence"},
+      { name: "Électrique", icon: "PlugZap",id:"Électrique" },
+      {name : "Vidange" , icon: "Droplets",id: "Vidange"}
     ],
     // Nouvelles traductions pour la page de détails de route
     ownerContact: "Contact propriétaire",
@@ -252,10 +252,10 @@ const contenu : any = {
     },
     depannage_type: "Type of Breakdown",
     depannage: [
-      { name: "Mechanical", icon: "Wrench" },
-      { name: "Fuel", icon: "Fuel" },
-      { name: "Electrical", icon: "PlugZap" },
-      {name :"Emptying" ,icon : "Droplets"}
+      { name: "Mechanical", icon: "Wrench", id: "Dépannage" },
+      { name: "Fuel", icon: "Fuel", id: "Essence" },
+      { name: "Electrical", icon: "PlugZap", id: "Électrique" },
+      { name: "Emptying", icon: "Droplets", id: "Vidange" }
     ],
     description1: "Whether you're a private individual or a business, AMSTRAM offers a vehicle transport solution tailored to your needs.",
     ownerContact: "Owner Contact",
@@ -400,10 +400,10 @@ const contenu : any = {
       verifyEmail: "E-Mail-Bestätigung",
       depannage_type: "Art der Panne",
       depannage: [
-        { name: "Mechanisch", icon: "Wrench" },
-        { name: "Kraftstoff", icon: "Fuel" },
-        { name: "Elektrisch", icon: "PlugZap" },
-        { name: "Entleerung", icon: "Droplets" }
+        { name: "Mechanisch", icon: "Wrench", id: "Dépannage" },
+        { name: "Kraftstoff", icon: "Fuel", id: "Essence" },
+        { name: "Elektrisch", icon: "PlugZap", id: "Électrique" },
+        { name: "Entleerung", icon: "Droplets", id: "Vidange" }
       ],
       description1: "Ob Privatperson oder Unternehmen, AMSTRAM bietet eine auf Ihre Bedürfnisse zugeschnittene Fahrzeugtransportlösung.",
       ownerContact: "Eigentümerkontakt",
@@ -552,10 +552,10 @@ const contenu : any = {
       verifyEmail: "Verificação de e-mail",
       depannage_type: "Tipo de assistência",
       depannage: [
-        { name: "Mecânica", icon: "Wrench" },
-        { name: "Combustível", icon: "Fuel" },
-        { name: "Elétrica", icon: "PlugZap" },
-        { name: "Esvaziamento", icon: "Droplets" }
+        { name: "Mecânica", icon: "Wrench", id: "Dépannage" },
+        { name: "Combustível", icon: "Fuel", id: "Essence" },
+        { name: "Elétrica", icon: "PlugZap", id: "Électrique" },
+        { name: "Esvaziamento", icon: "Droplets", id: "Vidange" }
       ],
       description1: "Seja você um indivíduo privado ou uma empresa, a AMSTRAM oferece uma solução de transporte de veículos adaptada às suas necessidades.",
       ownerContact: "Contato do proprietário",
@@ -704,10 +704,10 @@ const contenu : any = {
       verifyEmail: "Verifica email",
       depannage_type: "Tipo di assistenza",
       depannage: [
-        { name: "Meccanica", icon: "Wrench" },
-        { name: "Carburante", icon: "Fuel" },
-        { name: "Elettrica", icon: "PlugZap" },
-        { name: "Svuotamento", icon: "Droplets" }
+        { name: "Meccanica", icon: "Wrench", id: "Dépannage" },
+        { name: "Carburante", icon: "Fuel", id: "Essence" },
+        { name: "Elettrica", icon: "PlugZap", id: "Électrique" },
+        { name: "Svuotamento", icon: "Droplets", id: "Vidange" }
       ],
       description1: "Che tu sia un privato o un'azienda, AMSTRAM offre una soluzione di trasporto veicoli su misura per le tue esigenze.",
       ownerContact: "Contatto proprietario",
@@ -856,10 +856,10 @@ const contenu : any = {
       verifyEmail: "Verificación de correo electrónico",
       depannage_type: "Tipo de asistencia",
       depannage: [
-        { name: "Mecánica", icon: "Wrench" },
-        { name: "Combustible", icon: "Fuel" },
-        { name: "Eléctrica", icon: "PlugZap" },
-        { name: "Vaciado", icon: "Droplets" }
+        { name: "Mecánica", icon: "Wrench", id: "Dépannage" },
+        { name: "Combustible", icon: "Fuel", id: "Essence" },
+        { name: "Eléctrica", icon: "PlugZap", id: "Électrique" },
+        { name: "Vaciado", icon: "Droplets", id: "Vidange" }
       ],
       description1: "Ya sea un particular o una empresa, AMSTRAM ofrece una solución de transporte de vehículos adaptada a sus necesidades.",
       ownerContact: "Contacto del propietario",
@@ -1008,10 +1008,10 @@ const contenu : any = {
       verifyEmail: "E-mailverificatie",
       depannage_type: "Type pechverhelping",
       depannage: [
-        { name: "Mechanisch", icon: "Wrench" },
-        { name: "Brandstof", icon: "Fuel" },
-        { name: "Elektrisch", icon: "PlugZap" },
-        { name: "Leging", icon: "Droplets" }
+        { name: "Mechanisch", icon: "Wrench", id: "Dépannage" },
+        { name: "Brandstof", icon: "Fuel", id: "Essence" },
+        { name: "Elektrisch", icon: "PlugZap", id: "Électrique" },
+        { name: "Leging", icon: "Droplets", id: "Vidange" }
       ],
       description1: "Of u nu een particulier of een bedrijf bent, AMSTRAM biedt een voertuigtransportoplossing op maat van uw behoeften.",
       ownerContact: "Contact eigenaar",
@@ -1160,10 +1160,10 @@ const contenu : any = {
       verifyEmail: "E-mailverificatie",
       depannage_type: "Type pechbijstand",
       depannage: [
-        { name: "Mechanisch", icon: "Wrench" },
-        { name: "Brandstof", icon: "Fuel" },
-        { name: "Elektrisch", icon: "PlugZap" },
-        { name: "Leging", icon: "Droplets" }
+        { name: "Mechanisch", icon: "Wrench", id: "Dépannage" },
+        { name: "Brandstof", icon: "Fuel", id: "Essence" },
+        { name: "Elektrisch", icon: "PlugZap", id: "Électrique" },
+        { name: "Leging", icon: "Droplets", id: "Vidange" }
       ],
       description1: "Of u nu een particulier of een bedrijf bent, AMSTRAM biedt een voertuigtransportoplossing op maat van uw behoeften.",
       ownerContact: "Contact eigenaar",
@@ -1312,10 +1312,10 @@ const contenu : any = {
       verifyEmail: "Weryfikacja e-mail",
       depannage_type: "Typ pomocy drogowej",
       depannage: [
-        { name: "Mechaniczna", icon: "Wrench" },
-        { name: "Paliwo", icon: "Fuel" },
-        { name: "Elektryczna", icon: "PlugZap" },
-        { name: "Opróżnianie", icon: "Droplets" }
+        { name: "Mechaniczna", icon: "Wrench", id: "Dépannage" },
+        { name: "Paliwo", icon: "Fuel", id: "Essence" },
+        { name: "Elektryczna", icon: "PlugZap", id: "Électrique" },
+        { name: "Opróżnianie", icon: "Droplets", id: "Vidange" }
       ],
       description1: "Niezależnie od tego, czy jesteś osobą prywatną czy firmą, AMSTRAM oferuje rozwiązanie transportu pojazdów dostosowane do Twoich potrzeb.",
       ownerContact: "Kontakt właściciela",
@@ -1462,10 +1462,10 @@ const contenu : any = {
       verifyEmail: "Verifikasion imel",
       depannage_type: "Tip depanaz",
       depannage: [
-        { name: "Mekanique", icon: "Wrench" },
-        { name: "Lessans", icon: "Fuel" },
-        { name: "Elektrik", icon: "PlugZap" },
-        { name: "Vidanz", icon: "Droplets" }
+        { name: "Mekanique", icon: "Wrench", id: "Dépannage" },
+        { name: "Lessans", icon: "Fuel", id: "Essence" },
+        { name: "Elektrik", icon: "PlugZap", id: "Électrique" },
+        { name: "Vidanz", icon: "Droplets", id: "Vidange" }
       ],
       description1: "Ki ou enn individi ou enn lantrepriz, AMSTRAM ofri enn solision transpor loto adapte a ou bann bezwin.",
       ownerContact: "Kontak proprieter",

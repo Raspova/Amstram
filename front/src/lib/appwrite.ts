@@ -124,6 +124,20 @@ export async function handleAutocomplete(val: string, countryCode : string = "FR
 }
   
 
+export async function calculatePriceDepanage(departure: string) {
+    try {
+        const val = "/route_calculation_depanage?r1=" + encodeURIComponent(departure);
+        const data = await execute('prices_by_location', val);
+        if (!data) {
+            console.log("Price execution empty")
+            return null;
+        }
+        return (JSON.parse(data.responseBody));
+    } catch (error) {
+        console.error('Erreur:', error);
+        return null;
+    }
+}
 
 export async function calculatePrice(departure: string, arrival: string, vehicle: string  = "car") {
     try {
