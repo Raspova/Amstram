@@ -57,9 +57,16 @@
   let last_price : number = 0;
   let liter_essence : number = 20;
   let showDepannageDropdown = false;
- 
+  let max_essence : number = 60;
   let type_essense :number = 0;
-  let essence = [
+  let essence : {
+    id: number;
+    name: string;
+    short_name: string;
+    type: string;
+    picto: string;
+    price: number;
+}[] = [
   {
     "id": 1,
     "name": "Gazole",
@@ -70,7 +77,7 @@
   },
   {
     "id": 3,
-    "name": "Super Ethanol E85",
+    "name": "Ethanol E85",
     "short_name": "E85",
     "type": "E",
     "picto": "E85",
@@ -78,7 +85,7 @@
   },
   {
     "id": 5,
-    "name": "Super Sans Plomb 95 E10",
+    "name": "Sans Plomb 95 E10",
     "short_name": "SP95-E10",
     "type": "E",
     "picto": "E10",
@@ -86,7 +93,7 @@
   },
   {
     "id": 2,
-    "name": "Super Sans Plomb 95",
+    "name": "Sans Plomb 95",
     "short_name": "SP95",
     "type": "E",
     "picto": "E5",
@@ -94,7 +101,7 @@
   },
   {
     "id": 6,
-    "name": "Super Sans Plomb 98",
+    "name": "Sans Plomb 98",
     "short_name": "SP98",
     "type": "E",
     "picto": "E5",
@@ -163,6 +170,52 @@ let route_depanage_price = 0;
     });
   }
 
+  function scrollToEssenceSection() {
+  // Attendre que le DOM soit mis à jour
+  setTimeout(() => {
+    // Trouver la section essence
+    const essenceSection = document.querySelector('[data-essence-section]');
+    if (essenceSection) {
+      // Calculer si la section dépasse l'écran
+      const rect = essenceSection.getBoundingClientRect();
+      const isVisible = rect.bottom <= window.innerHeight;
+      
+      if (!isVisible) {
+        // Faire défiler en douceur jusqu'à ce que la section soit visible
+        essenceSection.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }
+    }
+  }, 100);
+}
+
+function scrollIntoViewWhenVisible(node) {
+  // Déclencher le défilement quand le noeud est monté dans le DOM
+  scrollToEssenceSection();
+  
+  return {
+    update() {
+      // Déclencher le défilement quand les données sont mises à jour
+      scrollToEssenceSection();
+    }
+  };
+}
+$: {
+  if (selectedService == "Dépannage" && selectedDepannage == "Essence") {
+    scrollToEssenceSection();
+  }
+}
+
+$: {
+  if (type_essense != 0) {
+    scrollToEssenceSection();
+  }
+}
+
+$: {
+  if (liter_essence && selectedService == "Dépannage" && selectedDepannage == "Essence") {
+    scrollToEssenceSection();
+  }
+}
   function updateScrollIndicators() {
     const sections = document.querySelectorAll(".section");
     sections.forEach((section, index) => {
@@ -238,10 +291,9 @@ let isCalculatingPrice = false;
     try {
       const depart_value = departInput.getValue();
       const arrival_value = arrivalInput ? arrivalInput.getValue() : "";
-      
+      //if 
       // Calculate price
       data_price = await calculatePrice(depart_value, arrival_value, selectedVehicle || "");
-      
       // Only proceed if we got valid data
       if (data_price) {
         price_set = true;
@@ -394,19 +446,7 @@ layduhurdevelopment@gmail.com");
       clearInterval(iconInterval);
     };
   }
-});
-  //SERVICE TYPE Reactive
-  $: {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      params.set("serviceType", selectedService);
-      window.history.replaceState({}, "", `/?${params.toString()}`);
-      if (selectedService == "Dépannage") arrivalInput.empty();
-      else selectedDepannage = "";
-    } catch {}
-  }
-
- 
+});  
   function getPreviousMonthPeriod() {
     const today = new Date();
     let year = today.getFullYear();
@@ -443,6 +483,19 @@ layduhurdevelopment@gmail.com");
      
     }
   }
+  //SERVICE TYPE Reactive
+  $: {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      params.set("serviceType", selectedService);
+      window.history.replaceState({}, "", `/?${params.toString()}`);
+      if (selectedService == "Dépannage") arrivalInput.empty();
+      else selectedDepannage = "";
+    } catch {}
+  }
+
+ 
+
   
   // This is exactly what you asked for
   $: {
@@ -453,7 +506,7 @@ layduhurdevelopment@gmail.com");
         // Mark as loading
         if (essence[index].price == -2) {
           (async () => {
-            essence[index].price = await fetchFuelPrice(type_essense) + 0.05;
+            essence[index].price = await fetchFuelPrice(type_essense) + 0.25;
             essence = [...essence]; // Trigger reactivity
           })();
         }        
@@ -600,7 +653,7 @@ layduhurdevelopment@gmail.com");
               {lang}
               on:value_set={handleDepartSet}
               focus={true}
-              placeholder={contenu[lang].departLocation}
+              placeholder={ selectedService != "Dépannage" ? contenu[lang].departLocation : "Lieux de prise en charge"}
             />
             {#if selectedService == "Dépannage"}
               <div class="relative">
@@ -669,6 +722,8 @@ layduhurdevelopment@gmail.com");
               <label for="vehicleType" class="sr-only"
                 >{contenu[lang].vehicleType}</label
               >
+              
+              {#if selectedDepannage != "Essence"}
               <select
                 id="vehicleType"
                 class="w-full pl-4 pr-12 py-3 rounded-lg bg-white text-amstram-black appearance-none text-lg {selectedVehicle
@@ -677,19 +732,20 @@ layduhurdevelopment@gmail.com");
                 bind:value={selectedVehicle}
               >
                 <option disabled selected value=""
-                  >{contenu[lang].vehicleType}</option
+                >{contenu[lang].vehicleType}</option
                 >
                 {#each contenu[lang].vehicleTypes as type}
-                  <option value={type}>{type}</option>
+                <option value={type}>{type}</option>
                 {/each}
               </select>
               <div
-                class="pointer-events-none absolute right-4 top-1/2 transform -translate-y-1/2"
+              class="pointer-events-none absolute right-4 top-1/2 transform -translate-y-1/2"
               >
-                <ChevronDown class="text-gray-400" />
-                <!-- CHEVRON POS A DROITE -->
-              </div>
+              <ChevronDown class="text-gray-400" />
+              <!-- CHEVRON POS A DROITE -->
             </div>
+            {/if }
+          </div>
             <!-- EL BUTTON RESERVER-->
             <button
               on:click={(event) => {
@@ -698,13 +754,13 @@ layduhurdevelopment@gmail.com");
               }}
               bind:this={reserveButton}
               disabled={!(
-                selectedVehicle &&
+                (selectedVehicle || (selectedService == "Dépannage" && selectedDepannage == "Essence" && type_essense != 0  )) &&
                 (arrival_set || selectedDepannage != "" || selectedService == "Remorquage") &&
-                depart_set
+                depart_set && (selectedService != "Dépannage" || (route_depanage_price != 0 && route_depanage_price != -1))
               )}
-              class="{selectedVehicle &&
+              class="{ (selectedVehicle || (selectedService == "Dépannage" && selectedDepannage == "Essence" && type_essense != 0 )) &&
               (arrival_set || selectedDepannage != '' || selectedService == "Remorquage") &&
-              depart_set
+              depart_set && (selectedService != "Dépannage" || (route_depanage_price != 0 && route_depanage_price != -1))
                 ? 'bg-amstram-purple scale-105 transition-all duration-1000'
                 : 'bg-black bg-opacity-10'} text-white py-3 px-6 rounded-lg text-lg font-semibold"
               >{contenu[lang].reserve}</button
@@ -712,29 +768,33 @@ layduhurdevelopment@gmail.com");
           </form>
           <!-- ESSENCE ADDITIONAL INPUT  "-->
           {#if selectedService == "Dépannage" && selectedDepannage == "Essence"}
-  <div class="bg-black/20 backdrop-blur-sm rounded-lg p-4 mx-10 my-4 border border-gray-500 mt-12 pt-2">
+  <div class="bg-black/20 backdrop-blur-sm rounded-lg p-4 mx-10 my-4 border border-gray-500 mt-12 pt-2"
+      data-essence-section 
+      use:scrollIntoViewWhenVisible>
     <h3 class="text-white font-semibold mb-3 flex items-center">
       <Fuel class="mr-2" size={20} />
       Type de carburant
     </h3>
     
+    
+ 
     <div class="relative mb-6">
       <select 
         bind:value={type_essense} 
-        class="w-full pl-4 pr-12 py-3 rounded-lg bg-white text-amstram-black appearance-none text-lg"
+        class=" pl-4 pr-12 py-3 rounded-lg bg-white text-amstram-black appearance-none text-lg w-[100%] md:w-auto"
       >
         <option disabled selected value={0}>Sélectionnez votre carburant</option>
         {#each essence as carburant, index}
           <option value={carburant.id}>{carburant.name}</option>
         {/each}
       </select>
-      <div class="pointer-events-none absolute right-4 top-1/2 transform -translate-y-1/2">
+      <!-- <div class="pointer-events-none absolute right-4 top-1/2 transform -translate-y-1/2">
         <ChevronDown class="text-gray-400" />
-      </div>
+      </div> -->
     </div>
     
     {#if type_essense > 0}
-      <div class="mt-3 mb-6 flex items-center justify-between bg-white/20 p-2 rounded-lg">
+      <div class="mt-3 mb-6 flex items-center justify-between bg-white/20 p-2 rounded-lg  ">
         <div class="flex items-center">
           <div class="bg-amstram-purple text-white rounded-full p-1 mr-2">
             {essence.find(e => e.id === type_essense)?.picto || ''}
@@ -759,7 +819,7 @@ layduhurdevelopment@gmail.com");
           </div>
         {/if}
       </div>
-      
+ 
       <!-- Fuel quantity slider -->
       <div class="mt-6">
         <h3 class="text-white font-semibold mb-3 flex items-center">
@@ -771,7 +831,7 @@ layduhurdevelopment@gmail.com");
           <input 
             type="range" 
             min="20" 
-            max="100" 
+            max="{max_essence}" 
             step="20" 
             bind:value={liter_essence}
             class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-amstram-purple"
@@ -782,8 +842,6 @@ layduhurdevelopment@gmail.com");
             <span>20L</span>
             <span>40L</span>
             <span>60L</span>
-            <span>80L</span>
-            <span>100L</span>
           </div>
         </div>
         
@@ -792,7 +850,7 @@ layduhurdevelopment@gmail.com");
           <div class="relative h-8 bg-gray-700 rounded overflow-hidden">
             <div 
               class="absolute h-full bg-amstram-purple transition-all duration-300 flex items-center justify-end pr-2"
-              style="width: {liter_essence}%;"
+              style="width: {(liter_essence/max_essence) * 100}%;"
             >
             </div>
             <div class="absolute inset-0 flex items-center justify-center">
